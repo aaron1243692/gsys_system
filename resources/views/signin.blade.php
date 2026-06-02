@@ -12,6 +12,38 @@
 <main class="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-950 bg-center bg-cover px-5 py-10 font-sans"
     style="background-image: url('{{ asset('images/ccnhs-gate.webp') }}');">
 
+    @if (session('error') || $errors->any())
+        <div id="signin-message-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-5">
+            <div class="relative w-full max-w-md rounded-lg bg-white p-6 text-center text-slate-950 shadow-2xl">
+                <div>
+                    <div>
+                        <p class="text-sm font-bold uppercase tracking-widest text-red-600">Sign In Failed</p>
+                        <h3 class="mt-2 text-2xl font-black">Unable to continue</h3>
+                    </div>
+                    <button type="button" onclick="document.getElementById('signin-message-modal').remove()" class="absolute right-4 top-4 rounded-full px-3 py-1 text-2xl leading-none text-slate-500 hover:bg-slate-100 hover:text-slate-950" aria-label="Close message">
+                        &times;
+                    </button>
+                </div>
+
+                <p class="mt-4 text-sm leading-6 text-slate-600">
+                    {{ session('error') ?? 'Please complete the required fields and try again.' }}
+                </p>
+
+                @if ($errors->any())
+                    <ul class="mt-4 space-y-2 text-center text-sm font-semibold text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                <button type="button" onclick="document.getElementById('signin-message-modal').remove()" class="mt-6 w-full rounded-full bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-700">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    @endif
+
     <div class="absolute inset-0 bg-black/50"></div>
     <div class="absolute inset-0 bg-gradient-to-br from-sky-950/80 via-slate-950/45 to-emerald-950/70"></div>
 
@@ -65,7 +97,8 @@
                     </p>
                 </div>
 
-                <form class="space-y-5">
+                <form method="POST" action="{{ route('signin.store') }}" class="space-y-5">
+                    @csrf
 
                     <div>
                         <label class="text-sm font-bold text-slate-800">
@@ -73,9 +106,16 @@
                         </label>
                         <input
                             type="text"
+                            name="login"
+                            value="{{ old('login') }}"
                             placeholder="Enter email or username"
+                            autocomplete="username"
+                            required
                             class="w-full border-1 border-black/70 rounded-full py-2 px-4 outline-none"
                         >
+                        @error('login')
+                            <p class="mt-2 text-sm font-semibold text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
@@ -84,10 +124,21 @@
                         </label>
                         <input
                             type="password"
+                            name="password"
                             placeholder="Enter password"
+                            autocomplete="current-password"
+                            required
                             class="w-full border-1 border-black/70 rounded-full py-2 px-4 outline-none"
                         >
+                        @error('password')
+                            <p class="mt-2 text-sm font-semibold text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
+
+                    <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <input type="checkbox" name="remember" value="1" class="h-4 w-4 rounded border-slate-300">
+                        Remember me
+                    </label>
 
                     <input type="hidden" name="role" value="{{ $role }}">
 

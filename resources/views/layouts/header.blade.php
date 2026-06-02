@@ -1,5 +1,5 @@
 <header class="w-full border-bottom bg-white shadow-sm">
-    <nav class="flex w-full flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
+    <nav class="flex w-full flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <a href="/dashboard" class="flex items-center gap-3 text-decoration-none">
             <span class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-slate-900 text-sm font-bold text-white shadow-sm">
                 G
@@ -16,7 +16,7 @@
                 data-configuration-open
                 class="whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-white hover:text-slate-950"
             >
-                Configuration
+                Setup
             </button>
             <button
                 type="button"
@@ -33,6 +33,32 @@
                 Report
             </button>
         </nav>
+
+        @auth
+            <details class="group relative shrink-0">
+                <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-slate-200 bg-white py-1.5 pl-2 pr-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-700 text-xs font-bold uppercase text-white">
+                        {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
+                    </span>
+                    <span class="max-w-32 truncate">{{ auth()->user()->username }}</span>
+                    <span class="text-slate-400 transition group-open:rotate-180">▾</span>
+                </summary>
+
+                <div class="absolute right-0 z-40 mt-2 w-52 rounded-lg border border-slate-200 bg-white p-2 text-slate-900 shadow-xl">
+                    <div class="border-b border-slate-100 px-3 py-2">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Signed in as</p>
+                        <p class="mt-1 truncate text-sm font-bold">{{ auth()->user()->username }}</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                        @csrf
+                        <button type="submit" class="w-full rounded-md px-3 py-2 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                            Sign Out
+                        </button>
+                    </form>
+                </div>
+            </details>
+        @endauth
     </nav>
 </header>
 
@@ -44,9 +70,9 @@
     <section class="flex flex-col overflow-hidden rounded-2xl">
         <div class="flex items-start justify-between gap-6 border-b border-slate-200 px-6 py-5">
             <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-blue-700">Configuration</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-blue-700">Setup</p>
                 <h4 id="configuration-pages-title" class="mt-1 text-2xl font-bold tracking-tight text-slate-950">
-                    Configuration Panel
+                    Setup Panel
                 </h4>
                 <p class="mt-1 text-sm leading-6 text-slate-500">
                     Choose a setup area to manage curriculum, accounts, and access settings.
@@ -66,29 +92,29 @@
         <div class="flex flex-row flex-nowrap items-start gap-1 overflow-x-auto bg-slate-50 px-6 py-6">
 
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Curriculum</h6>
+                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Configuration</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.curriculum.grade-level') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Grade Level</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.curriculum.academic-year') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Academic Year</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.curriculum.class') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Class</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.curriculum.subject-category') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Subject Category</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.curriculum.subjects') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Subjects</span>
@@ -99,15 +125,19 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Accounts</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.accounts.students') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Students</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.accounts.guardians') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Guardians</span>
+                    </a>
+                    <a href="{{ route('configuration.accounts.teachers') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
+                        <span>Teachers</span>
                     </a>
                 </div>
             </div>
@@ -115,12 +145,12 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Setting</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.setting.users') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Users</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    <a href="{{ route('configuration.setting.roles') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
                     >
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Roles</span>
@@ -145,7 +175,7 @@
                     Academic Panel
                 </h4>
                 <p class="mt-1 text-sm leading-6 text-slate-500">
-                    Manage teaching assignments, faculty records, students, parents, and teachers.
+                    Manage teaching assignments, faculty records, students, and teachers.
                 </p>
             </div>
 
@@ -165,21 +195,11 @@
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
                     <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Teacher Assign Subjects</span>
+                        <span>Assign Subjects</span>
                     </a>
                     <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Teacher Assign Class</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Teachers</h6>
-                <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
-                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Teachers</span>
+                        <span>Assign Class</span>
                     </a>
                 </div>
             </div>
@@ -193,21 +213,7 @@
                     </a>
                     <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Student Pre-enlistment</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Parents</h6>
-                <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
-                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Guardians</span>
-                    </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
-                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Guardians Pre-enlistment</span>
+                        <span>Pre-enlistment</span>
                     </a>
                 </div>
             </div>

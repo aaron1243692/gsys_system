@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Student extends Model
+class Teacher extends Authenticatable
 {
+    use HasFactory, Notifiable;
+
     protected $fillable = [
+        'name',
         'username',
         'email',
         'password',
@@ -15,6 +19,7 @@ class Student extends Model
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     protected function casts(): array
@@ -22,10 +27,5 @@ class Student extends Model
         return [
             'password' => 'hashed',
         ];
-    }
-
-    public function info(): HasOne
-    {
-        return $this->hasOne(StudentInfo::class, 'student_id');
     }
 }

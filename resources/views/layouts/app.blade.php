@@ -4,7 +4,7 @@
 
     @include('layouts.header')
 
-    <main class="w-full flex-1">
+    <main class="flex w-full flex-1 flex-col min-h-0">
         @yield('content')
     </main>
 
