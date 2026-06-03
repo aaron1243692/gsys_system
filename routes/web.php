@@ -4,13 +4,20 @@ use App\Http\Controllers\SignInController;
 use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SettingRoleController;
 use App\Http\Controllers\SettingUserController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SubjectCategoryController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TrackController;
+use App\Models\GradeLevel;
+use App\Models\SchoolClass;
+use App\Models\StudentInfo;
+use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SignInController::class, 'show'])->middleware('guest')->name('signin');
@@ -48,6 +55,12 @@ Route::middleware('auth')
         Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');
         Route::put('/subjects/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
         Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+        Route::get('/tracks', [TrackController::class, 'index'])->name('tracks');
+        Route::post('/tracks', [TrackController::class, 'store'])->name('tracks.store');
+        Route::put('/tracks/{track}', [TrackController::class, 'update'])->name('tracks.update');
+        Route::delete('/tracks/{track}', [TrackController::class, 'destroy'])->name('tracks.destroy');
+        Route::post('/tracks/{track}/subjects', [TrackController::class, 'storeSubject'])->name('tracks.subjects.store');
+        Route::delete('/track-subjects/{trackSubject}', [TrackController::class, 'destroySubject'])->name('tracks.subjects.destroy');
     });
 
 Route::middleware('auth')
@@ -88,6 +101,89 @@ Route::middleware('auth')
         Route::post('/roles/{role}/permissions/sync', [SettingRoleController::class, 'syncPermissions'])->name('roles.permissions.sync');
         Route::delete('/roles/{role}/permissions/{permission}', [SettingRoleController::class, 'destroyPermission'])->name('roles.permissions.destroy');
         Route::delete('/roles/{role}', [SettingRoleController::class, 'destroy'])->name('roles.destroy');
+    });
+
+Route::middleware('auth')
+    ->prefix('academic')
+    ->name('academic.')
+    ->group(function () {
+        Route::get('/schedule-load/class-schedule', [ClassScheduleController::class, 'index'])->name('schedule-load.class-schedule');
+        Route::post('/schedule-load/class-schedule', [ClassScheduleController::class, 'store'])->name('schedule-load.class-schedule.store');
+        Route::put('/schedule-load/class-schedule/{schoolClass}', [ClassScheduleController::class, 'update'])->name('schedule-load.class-schedule.update');
+        Route::delete('/schedule-load/class-schedule/{schoolClass}', [ClassScheduleController::class, 'destroy'])->name('schedule-load.class-schedule.destroy');
+        Route::post('/schedule-load/class-schedule/{schoolClass}/schedules', [ClassScheduleController::class, 'storeSchedule'])->name('schedule-load.class-schedule.schedules.store');
+        Route::put('/schedule-load/class-schedule/schedules/{classSchedule}', [ClassScheduleController::class, 'updateSchedule'])->name('schedule-load.class-schedule.schedules.update');
+        Route::delete('/schedule-load/class-schedule/schedules/{classSchedule}', [ClassScheduleController::class, 'destroySchedule'])->name('schedule-load.class-schedule.schedules.destroy');
+        Route::get('/schedule-load/teacher-load', function () {
+            $search = request('search');
+            $teachers = Teacher::query()
+                ->with([
+                    'subjects' => fn ($query) => $query->orderBy('name'),
+                    'advisoryClasses' => fn ($query) => $query->orderBy('name'),
+                ])
+                ->when($search, function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhereHas('subjects', fn ($subjectQuery) => $subjectQuery->where('name', 'like', "%{$search}%"))
+                        ->orWhereHas('advisoryClasses', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
+                })
+                ->orderBy('name')
+                ->paginate(10)
+                ->withQueryString();
+
+            return view('academic.scheduleload.teacherload', compact('teachers', 'search'));
+        })->name('schedule-load.teacher-load');
+        Route::get('/schedule-load/rooms', [RoomController::class, 'index'])->name('schedule-load.rooms');
+        Route::post('/schedule-load/rooms', [RoomController::class, 'store'])->name('schedule-load.rooms.store');
+        Route::put('/schedule-load/rooms/{room}', [RoomController::class, 'update'])->name('schedule-load.rooms.update');
+        Route::delete('/schedule-load/rooms/{room}', [RoomController::class, 'destroy'])->name('schedule-load.rooms.destroy');
+        Route::get('/students', function () {
+            $search = trim((string) request('search'));
+
+            $students = StudentInfo::query()
+                ->with(['gradeLevel', 'schoolClass.track'])
+                ->where('admited', 1)
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('lrn', 'like', "%{$search}%")
+                            ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
+                            ->orWhereHas('schoolClass', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
+                    });
+                })
+                ->orderBy('name')
+                ->paginate(10)
+                ->withQueryString();
+
+            return view('academic.students.students', [
+                'students' => $students,
+                'classes' => SchoolClass::query()->orderBy('name')->get(),
+                'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
+                'search' => $search,
+            ]);
+        })->name('students.index');
+        Route::put('/students/{studentInfo}', function (StudentInfo $studentInfo) {
+            $validated = request()->validate([
+                'lrn' => ['nullable', 'string', 'max:50'],
+                'name' => ['required', 'string', 'max:150'],
+                'grlvl_id' => ['nullable', 'integer', 'exists:grlvl,id'],
+                'class_id' => ['nullable', 'integer', 'exists:class,id'],
+            ]);
+
+            $studentInfo->update($validated);
+
+            return redirect()
+                ->route('academic.students.index')
+                ->with('success', 'Student updated successfully.');
+        })->name('students.update');
+        Route::delete('/students/{studentInfo}', function (StudentInfo $studentInfo) {
+            $studentInfo->update(['admited' => 0]);
+
+            return redirect()
+                ->route('academic.students.index')
+                ->with('success', 'Student deleted successfully.');
+        })->name('students.destroy');
+        Route::get('/students/pre-enlistment', fn () => view('academic.students.preenlistment'))
+            ->name('students.pre-enlistment');
     });
 
 Route::post('/logout', [SignInController::class, 'destroy'])->middleware('auth')->name('logout');

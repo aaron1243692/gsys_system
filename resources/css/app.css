@@ -21,8 +21,24 @@ html, body {
     height: 100%;
     min-height: 100%;
     margin: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 body {
     min-height: 100vh;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
 }

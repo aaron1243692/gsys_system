@@ -119,6 +119,11 @@
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Subjects</span>
                     </a>
+                    <a href="{{ route('configuration.curriculum.tracks') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700"
+                    >
+                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
+                        <span>Track</span>
+                    </a>
                 </div>
             </div>
 
@@ -191,15 +196,19 @@
 
         <div class="flex flex-row flex-nowrap items-start gap-1 overflow-x-auto bg-slate-50 px-6 py-6">
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Teacher Assignment</h6>
+                <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Schedule &amp; Load</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('academic.schedule-load.class-schedule') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Assign Subjects</span>
+                        <span>Class Schedule</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('academic.schedule-load.teacher-load') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Assign Class</span>
+                        <span>Teacher Load</span>
+                    </a>
+                    <a href="{{ route('academic.schedule-load.rooms') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                        <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
+                        <span>Rooms</span>
                     </a>
                 </div>
             </div>
@@ -207,13 +216,13 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Students</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('academic.students.index') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Students</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('academic.students.pre-enlistment') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Pre-enlistment</span>
+                        <span>Pre-Admission</span>
                     </a>
                 </div>
             </div>

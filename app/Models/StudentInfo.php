@@ -12,7 +12,7 @@ class StudentInfo extends Model
     protected $fillable = [
         'student_id',
         'lrn',
-        'enlisted',
+        'admited',
         'name',
         'gender',
         'birthdate',
@@ -26,5 +26,20 @@ class StudentInfo extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    public function gradeLevel(): BelongsTo
+    {
+        return $this->belongsTo(GradeLevel::class, 'grlvl_id');
+    }
+
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class, 'acady_id');
     }
 }
