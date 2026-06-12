@@ -46,7 +46,7 @@
             <span>Dashboard</span>
         </a>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isConfigurationGroup) }}" aria-expanded="{{ $isConfigurationGroup ? 'true' : 'false' }}" aria-controls="sidebar-configuration-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isConfigurationGroup) }}" aria-expanded="false" aria-controls="sidebar-configuration-menu">
             <span>Configuration</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -77,7 +77,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAcademicGroup) }}" aria-expanded="{{ $isAcademicGroup ? 'true' : 'false' }}" aria-controls="sidebar-academic-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAcademicGroup) }}" aria-expanded="false" aria-controls="sidebar-academic-menu">
             <span>Academic</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -104,7 +104,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isReportsGroup) }}" aria-expanded="{{ $isReportsGroup ? 'true' : 'false' }}" aria-controls="sidebar-reports-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isReportsGroup) }}" aria-expanded="false" aria-controls="sidebar-reports-menu">
             <span>Reports</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -127,7 +127,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAccountsGroup) }}" aria-expanded="{{ $isAccountsGroup ? 'true' : 'false' }}" aria-controls="sidebar-accounts-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAccountsGroup) }}" aria-expanded="false" aria-controls="sidebar-accounts-menu">
             <span>Accounts</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -146,7 +146,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isSettingGroup) }}" aria-expanded="{{ $isSettingGroup ? 'true' : 'false' }}" aria-controls="sidebar-setting-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isSettingGroup) }}" aria-expanded="false" aria-controls="sidebar-setting-menu">
             <span>Setting</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -243,10 +243,18 @@
         };
 
         groupButtons.forEach((button) => {
-            setGroupOpen(button, button.getAttribute('aria-expanded') === 'true');
+            setGroupOpen(button, false);
 
             button.addEventListener('click', () => {
-                setGroupOpen(button, button.getAttribute('aria-expanded') !== 'true');
+                const shouldOpen = button.getAttribute('aria-expanded') !== 'true';
+
+                groupButtons.forEach((otherButton) => {
+                    setGroupOpen(otherButton, false);
+                });
+
+                if (shouldOpen) {
+                    setGroupOpen(button, true);
+                }
             });
         });
 
