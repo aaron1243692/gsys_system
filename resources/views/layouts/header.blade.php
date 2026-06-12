@@ -26,7 +26,7 @@
 
 <aside
     data-sidebar
-    class="fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col border-r border-slate-200 bg-white px-4 py-5 shadow-xl transition-transform duration-200 lg:translate-x-0 lg:shadow-none"
+    class="scrollbar-none fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-72 -translate-x-full flex-col overflow-x-hidden overflow-y-auto border-r border-slate-200 bg-white px-4 py-5 shadow-xl transition-transform duration-200 lg:translate-x-0 lg:shadow-none"
 >
     <a href="/dashboard" class="flex items-center gap-3 text-decoration-none">
         <span class="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white shadow-sm">
@@ -38,7 +38,7 @@
         </span>
     </a>
 
-    <nav class="mt-8 flex flex-1 flex-col gap-1 overflow-y-auto pb-4" aria-label="Main navigation">
+    <nav class="scrollbar-none mt-8 flex flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto pb-4" aria-label="Main navigation">
         <p class="mb-2 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">Pages</p>
 
         <a href="{{ route('dashboard') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('dashboard')) }}" aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}">
@@ -50,7 +50,7 @@
             <span>Configuration</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
-        <div id="sidebar-configuration-menu" data-sidebar-group-menu class="flex flex-col gap-1 overflow-hidden transition-all duration-300 ease-in-out">
+        <div id="sidebar-configuration-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('configuration.curriculum.grade-level') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.grade-level')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.grade-level') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.grade-level')) }}">
                 <span>Grade Level</span>
@@ -81,7 +81,7 @@
             <span>Academic</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
-        <div id="sidebar-academic-menu" data-sidebar-group-menu class="flex flex-col gap-1 overflow-hidden transition-all duration-300 ease-in-out">
+        <div id="sidebar-academic-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('academic.schedule-load.class-schedule') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.schedule-load.class-schedule')) }}" aria-current="{{ request()->routeIs('academic.schedule-load.class-schedule') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/schedule.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.schedule-load.class-schedule')) }}">
                 <span>Class Schedule</span>
@@ -108,7 +108,7 @@
             <span>Reports</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
-        <div id="sidebar-reports-menu" data-sidebar-group-menu class="flex flex-col gap-1 overflow-hidden transition-all duration-300 ease-in-out">
+        <div id="sidebar-reports-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('report.performance.top-student') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('report.performance.top-student')) }}" aria-current="{{ request()->routeIs('report.performance.top-student') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/print.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('report.performance.top-student')) }}">
                 <span>Top Student</span>
@@ -131,7 +131,7 @@
             <span>Accounts</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
-        <div id="sidebar-accounts-menu" data-sidebar-group-menu class="flex flex-col gap-1 overflow-hidden transition-all duration-300 ease-in-out">
+        <div id="sidebar-accounts-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('configuration.accounts.students') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.students')) }}" aria-current="{{ request()->routeIs('configuration.accounts.students') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/children.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.students')) }}">
                 <span>Students</span>
@@ -150,7 +150,7 @@
             <span>Setting</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
-        <div id="sidebar-setting-menu" data-sidebar-group-menu class="flex flex-col gap-1 overflow-hidden transition-all duration-300 ease-in-out">
+        <div id="sidebar-setting-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('configuration.setting.users') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.setting.users')) }}" aria-current="{{ request()->routeIs('configuration.setting.users') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/user.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.setting.users')) }}">
                 <span>Users</span>
@@ -238,7 +238,7 @@
             }
 
             button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            menu.style.maxHeight = isOpen ? `${menu.scrollHeight}px` : '0px';
+            menu.classList.toggle('hidden', !isOpen);
             arrow?.classList.toggle('-rotate-90', !isOpen);
         };
 
@@ -253,14 +253,6 @@
                 });
 
                 if (shouldOpen) {
-                    setGroupOpen(button, true);
-                }
-            });
-        });
-
-        window.addEventListener('resize', () => {
-            groupButtons.forEach((button) => {
-                if (button.getAttribute('aria-expanded') === 'true') {
                     setGroupOpen(button, true);
                 }
             });
