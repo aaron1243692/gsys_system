@@ -98,31 +98,63 @@
                                                 </div>
 
                                                 <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-                                                    <div>
+                                                    <div class="md:col-span-2">
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-name-{{ $student->id }}">Student</label>
+                                                        <input id="student-name-{{ $student->id }}" type="text" name="name" value="{{ old('name', $student->name) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                    </div>
+                                                    <div class="md:col-span-2">
                                                         <label class="block text-sm font-bold text-slate-800" for="student-lrn-{{ $student->id }}">LRN</label>
                                                         <input id="student-lrn-{{ $student->id }}" type="text" name="lrn" value="{{ old('lrn', $student->lrn) }}" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                                                     </div>
                                                     <div>
-                                                        <label class="block text-sm font-bold text-slate-800" for="student-name-{{ $student->id }}">Student</label>
-                                                        <input id="student-name-{{ $student->id }}" type="text" name="name" value="{{ old('name', $student->name) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-gender-{{ $student->id }}">Gender</label>
+                                                        <select id="student-gender-{{ $student->id }}" name="gender" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                            <option value="">Select gender</option>
+                                                            <option value="Male" @selected(old('gender', $student->gender) === 'Male')>Male</option>
+                                                            <option value="Female" @selected(old('gender', $student->gender) === 'Female')>Female</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-birthdate-{{ $student->id }}">Birthdate</label>
+                                                        <input id="student-birthdate-{{ $student->id }}" type="date" name="birthdate" value="{{ old('birthdate', $student->birthdate) }}" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-acady-{{ $student->id }}">Academic Year</label>
+                                                        <div class="mt-1.5 flex gap-2">
+                                                            <input id="student-acady-{{ $student->id }}" type="hidden" name="acady_id" value="{{ old('acady_id', $student->acady_id) }}">
+                                                            <input id="student-acady-name-{{ $student->id }}" type="text" value="{{ $academicYears->firstWhere('id', (int) old('acady_id', $student->acady_id))?->name }}" placeholder="Select academic year" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                            <button type="button" data-academic-student-picker data-picker-type="academic-year" data-target-id="student-acady-{{ $student->id }}" data-target-name="student-acady-name-{{ $student->id }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select academic year">
+                                                                <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-bold text-slate-800" for="student-grlvl-{{ $student->id }}">Grade Level</label>
-                                                        <select id="student-grlvl-{{ $student->id }}" name="grlvl_id" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                                            <option value="">Select grade level</option>
-                                                            @foreach ($gradeLevels as $gradeLevel)
-                                                                <option value="{{ $gradeLevel->id }}" @selected((string) old('grlvl_id', $student->grlvl_id) === (string) $gradeLevel->id)>{{ $gradeLevel->name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                        <div class="mt-1.5 flex gap-2">
+                                                            <input id="student-grlvl-{{ $student->id }}" type="hidden" name="grlvl_id" value="{{ old('grlvl_id', $student->grlvl_id) }}">
+                                                            <input id="student-grlvl-name-{{ $student->id }}" type="text" value="{{ $gradeLevels->firstWhere('id', (int) old('grlvl_id', $student->grlvl_id))?->name }}" placeholder="Select grade level" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                            <button type="button" data-academic-student-picker data-picker-type="grade-level" data-target-id="student-grlvl-{{ $student->id }}" data-target-name="student-grlvl-name-{{ $student->id }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select grade level">
+                                                                <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-bold text-slate-800" for="student-class-{{ $student->id }}">Class</label>
-                                                        <select id="student-class-{{ $student->id }}" name="class_id" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                                            <option value="">Select class</option>
-                                                            @foreach ($classes as $class)
-                                                                <option value="{{ $class->id }}" @selected((string) old('class_id', $student->class_id) === (string) $class->id)>{{ $class->name }}</option>
-                                                            @endforeach
-                                                        </select>
+                                                        <div class="mt-1.5 flex gap-2">
+                                                            <input id="student-class-{{ $student->id }}" type="hidden" name="class_id" value="{{ old('class_id', $student->class_id) }}">
+                                                            <input id="student-class-name-{{ $student->id }}" type="text" value="{{ $classes->firstWhere('id', (int) old('class_id', $student->class_id))?->name }}" placeholder="Select class" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                            <button type="button" data-academic-student-picker data-picker-type="class" data-target-id="student-class-{{ $student->id }}" data-target-name="student-class-name-{{ $student->id }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select class">
+                                                                <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-contact-{{ $student->id }}">Contact</label>
+                                                        <input id="student-contact-{{ $student->id }}" type="text" name="contact" value="{{ old('contact', $student->contact) }}" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                    </div>
+                                                    <div class="md:col-span-2">
+                                                        <label class="block text-sm font-bold text-slate-800" for="student-address-{{ $student->id }}">Address</label>
+                                                        <input id="student-address-{{ $student->id }}" type="text" name="address" value="{{ old('address', $student->address) }}" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                                                     </div>
                                                 </div>
 
@@ -207,4 +239,226 @@
             </div>
         </section>
     </main>
+
+    <dialog id="academic-student-academic-year-picker-modal" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
+        <div class="p-4">
+            <div class="relative text-center">
+                <h2 class="text-xl font-black">Academic Years</h2>
+                <button type="button" onclick="document.getElementById('academic-student-academic-year-picker-modal').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
+                    &times;
+                </button>
+            </div>
+
+            <input id="academic-student-academic-year-picker-search" type="search" placeholder="Search academic year" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+            <div class="mt-4 max-h-80 overflow-y-auto rounded-lg border border-slate-200">
+                <table class="w-full border-collapse text-left text-sm">
+                    <thead class="bg-blue-700 text-xs uppercase tracking-wider text-white">
+                        <tr>
+                            <th class="w-16 px-3 py-2 font-bold">No</th>
+                            <th class="w-20 px-3 py-2 font-bold">ID</th>
+                            <th class="px-3 py-2 font-bold">Academic Year</th>
+                            <th class="w-24 px-3 py-2 text-right font-bold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($academicYears as $academicYear)
+                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-academic-student-picker-row="academic-year" data-search-text="{{ strtolower($academicYear->id . ' ' . $academicYear->name) }}">
+                                <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $academicYear->id }}</td>
+                                <td class="px-3 py-2 font-bold text-slate-950">{{ $academicYear->name }}</td>
+                                <td class="px-3 py-2 text-right">
+                                    <button type="button" data-select-academic-student-option="academic-year" data-option-id="{{ $academicYear->id }}" data-option-name="{{ $academicYear->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
+                                        Select
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No academic years found.</td>
+                            </tr>
+                        @endforelse
+                        <tr id="academic-student-academic-year-picker-no-results" class="hidden">
+                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No matching academic years found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="academic-student-grade-level-picker-modal" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
+        <div class="p-4">
+            <div class="relative text-center">
+                <h2 class="text-xl font-black">Grade Levels</h2>
+                <button type="button" onclick="document.getElementById('academic-student-grade-level-picker-modal').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
+                    &times;
+                </button>
+            </div>
+
+            <input id="academic-student-grade-level-picker-search" type="search" placeholder="Search grade level" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+            <div class="mt-4 max-h-80 overflow-y-auto rounded-lg border border-slate-200">
+                <table class="w-full border-collapse text-left text-sm">
+                    <thead class="bg-blue-700 text-xs uppercase tracking-wider text-white">
+                        <tr>
+                            <th class="w-16 px-3 py-2 font-bold">No</th>
+                            <th class="w-20 px-3 py-2 font-bold">ID</th>
+                            <th class="px-3 py-2 font-bold">Grade Level</th>
+                            <th class="w-24 px-3 py-2 text-right font-bold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($gradeLevels as $gradeLevel)
+                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-academic-student-picker-row="grade-level" data-search-text="{{ strtolower($gradeLevel->id . ' ' . $gradeLevel->name) }}">
+                                <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $gradeLevel->id }}</td>
+                                <td class="px-3 py-2 font-bold text-slate-950">{{ $gradeLevel->name }}</td>
+                                <td class="px-3 py-2 text-right">
+                                    <button type="button" data-select-academic-student-option="grade-level" data-option-id="{{ $gradeLevel->id }}" data-option-name="{{ $gradeLevel->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
+                                        Select
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No grade levels found.</td>
+                            </tr>
+                        @endforelse
+                        <tr id="academic-student-grade-level-picker-no-results" class="hidden">
+                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No matching grade levels found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="academic-student-class-picker-modal" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
+        <div class="p-4">
+            <div class="relative text-center">
+                <h2 class="text-xl font-black">Classes</h2>
+                <button type="button" onclick="document.getElementById('academic-student-class-picker-modal').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
+                    &times;
+                </button>
+            </div>
+
+            <input id="academic-student-class-picker-search" type="search" placeholder="Search class" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+            <div class="mt-4 max-h-80 overflow-y-auto rounded-lg border border-slate-200">
+                <table class="w-full border-collapse text-left text-sm">
+                    <thead class="bg-blue-700 text-xs uppercase tracking-wider text-white">
+                        <tr>
+                            <th class="w-16 px-3 py-2 font-bold">No</th>
+                            <th class="w-20 px-3 py-2 font-bold">ID</th>
+                            <th class="px-3 py-2 font-bold">Class</th>
+                            <th class="w-24 px-3 py-2 text-right font-bold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($classes as $class)
+                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-academic-student-picker-row="class" data-search-text="{{ strtolower($class->id . ' ' . $class->name) }}">
+                                <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $class->id }}</td>
+                                <td class="px-3 py-2 font-bold text-slate-950">{{ $class->name }}</td>
+                                <td class="px-3 py-2 text-right">
+                                    <button type="button" data-select-academic-student-option="class" data-option-id="{{ $class->id }}" data-option-name="{{ $class->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
+                                        Select
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No classes found.</td>
+                            </tr>
+                        @endforelse
+                        <tr id="academic-student-class-picker-no-results" class="hidden">
+                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No matching classes found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let activePickerType = null;
+            let activeTargetId = null;
+            let activeTargetName = null;
+
+            const pickerConfigs = {
+                'academic-year': {
+                    modal: document.getElementById('academic-student-academic-year-picker-modal'),
+                    search: document.getElementById('academic-student-academic-year-picker-search'),
+                    rows: Array.from(document.querySelectorAll('[data-academic-student-picker-row="academic-year"]')),
+                    noResults: document.getElementById('academic-student-academic-year-picker-no-results'),
+                },
+                'grade-level': {
+                    modal: document.getElementById('academic-student-grade-level-picker-modal'),
+                    search: document.getElementById('academic-student-grade-level-picker-search'),
+                    rows: Array.from(document.querySelectorAll('[data-academic-student-picker-row="grade-level"]')),
+                    noResults: document.getElementById('academic-student-grade-level-picker-no-results'),
+                },
+                class: {
+                    modal: document.getElementById('academic-student-class-picker-modal'),
+                    search: document.getElementById('academic-student-class-picker-search'),
+                    rows: Array.from(document.querySelectorAll('[data-academic-student-picker-row="class"]')),
+                    noResults: document.getElementById('academic-student-class-picker-no-results'),
+                },
+            };
+
+            const filterRows = (config) => {
+                const term = config.search.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                config.rows.forEach((row) => {
+                    const isVisible = row.dataset.searchText.includes(term);
+                    row.classList.toggle('hidden', ! isVisible);
+                    visibleCount += isVisible ? 1 : 0;
+                });
+
+                config.noResults?.classList.toggle('hidden', visibleCount > 0);
+            };
+
+            Object.values(pickerConfigs).forEach((config) => {
+                config.search?.addEventListener('input', () => filterRows(config));
+            });
+
+            document.querySelectorAll('[data-academic-student-picker]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const config = pickerConfigs[button.dataset.pickerType];
+
+                    if (! config?.modal) {
+                        return;
+                    }
+
+                    activePickerType = button.dataset.pickerType;
+                    activeTargetId = button.dataset.targetId;
+                    activeTargetName = button.dataset.targetName;
+
+                    if (config.search) {
+                        config.search.value = '';
+                    }
+
+                    config.rows.forEach((row) => row.classList.remove('hidden'));
+                    config.noResults?.classList.add('hidden');
+                    config.modal.showModal();
+                    config.search?.focus();
+                });
+            });
+
+            document.querySelectorAll('[data-select-academic-student-option]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (activePickerType !== button.dataset.selectAcademicStudentOption) {
+                        return;
+                    }
+
+                    document.getElementById(activeTargetId).value = button.dataset.optionId;
+                    document.getElementById(activeTargetName).value = button.dataset.optionName;
+                    pickerConfigs[activePickerType]?.modal?.close();
+                });
+            });
+        });
+    </script>
 @endsection

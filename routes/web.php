@@ -14,6 +14,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TrackController;
+use App\Models\AcademicYear;
 use App\Models\GradeLevel;
 use App\Models\SchoolClass;
 use App\Models\StudentInfo;
@@ -140,7 +141,7 @@ Route::middleware('auth')
             $search = trim((string) request('search'));
 
             $students = StudentInfo::query()
-                ->with(['gradeLevel', 'schoolClass.track'])
+                ->with(['academicYear', 'gradeLevel', 'schoolClass.track'])
                 ->where('admited', 1)
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
@@ -156,6 +157,7 @@ Route::middleware('auth')
 
             return view('academic.students.students', [
                 'students' => $students,
+                'academicYears' => AcademicYear::query()->orderBy('year_from')->orderBy('name')->get(),
                 'classes' => SchoolClass::query()->orderBy('name')->get(),
                 'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
                 'search' => $search,
@@ -165,25 +167,98 @@ Route::middleware('auth')
             $validated = request()->validate([
                 'lrn' => ['nullable', 'string', 'max:50'],
                 'name' => ['required', 'string', 'max:150'],
+                'gender' => ['nullable', 'string', 'max:20'],
+                'birthdate' => ['nullable', 'date'],
                 'grlvl_id' => ['nullable', 'integer', 'exists:grlvl,id'],
                 'class_id' => ['nullable', 'integer', 'exists:class,id'],
+                'acady_id' => ['nullable', 'integer', 'exists:acady,id'],
+                'contact' => ['nullable', 'string', 'max:100'],
+                'address' => ['nullable', 'string', 'max:255'],
             ]);
 
             $studentInfo->update($validated);
 
+            $redirectRoute = request('redirect_to') === 'pre-enlistment'
+                ? 'academic.students.pre-enlistment'
+                : 'academic.students.index';
+
             return redirect()
-                ->route('academic.students.index')
+                ->route($redirectRoute)
                 ->with('success', 'Student updated successfully.');
         })->name('students.update');
         Route::delete('/students/{studentInfo}', function (StudentInfo $studentInfo) {
             $studentInfo->update(['admited' => 0]);
 
+            $redirectRoute = request('redirect_to') === 'pre-enlistment'
+                ? 'academic.students.pre-enlistment'
+                : 'academic.students.index';
+
             return redirect()
-                ->route('academic.students.index')
+                ->route($redirectRoute)
                 ->with('success', 'Student deleted successfully.');
         })->name('students.destroy');
-        Route::get('/students/pre-enlistment', fn () => view('academic.students.preenlistment'))
-            ->name('students.pre-enlistment');
+        Route::post('/students/{studentInfo}/admit', function (StudentInfo $studentInfo) {
+            $validated = request()->validate([
+                'lrn' => ['nullable', 'string', 'max:50'],
+                'name' => ['required', 'string', 'max:150'],
+                'gender' => ['nullable', 'string', 'max:20'],
+                'birthdate' => ['nullable', 'date'],
+                'grlvl_id' => ['nullable', 'integer', 'exists:grlvl,id'],
+                'class_id' => ['nullable', 'integer', 'exists:class,id'],
+                'acady_id' => ['nullable', 'integer', 'exists:acady,id'],
+                'contact' => ['nullable', 'string', 'max:100'],
+                'address' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            $studentInfo->update(array_merge($validated, ['admited' => 1]));
+
+            return redirect()
+                ->route('academic.students.pre-enlistment')
+                ->with('success', 'Student admitted successfully.');
+        })->name('students.admit');
+        Route::delete('/students/pre-enlistment/{studentInfo}', function (StudentInfo $studentInfo) {
+            $studentInfo->delete();
+
+            return redirect()
+                ->route('academic.students.pre-enlistment')
+                ->with('success', 'Pre-enlistment record deleted successfully.');
+        })->name('students.pre-enlistment.destroy');
+        Route::get('/students/pre-enlistment', function () {
+            $search = trim((string) request('search'));
+
+            $students = StudentInfo::query()
+                ->with(['academicYear', 'gradeLevel', 'schoolClass.track'])
+                ->where('admited', 0)
+                ->when($search !== '', function ($query) use ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('lrn', 'like', "%{$search}%")
+                            ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
+                            ->orWhereHas('schoolClass', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
+                    });
+                })
+                ->orderBy('name')
+                ->paginate(10)
+                ->withQueryString();
+
+            return view('academic.students.preenlistment', [
+                'students' => $students,
+                'academicYears' => AcademicYear::query()->orderBy('year_from')->orderBy('name')->get(),
+                'classes' => SchoolClass::query()->orderBy('name')->get(),
+                'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
+                'search' => $search,
+            ]);
+        })->name('students.pre-enlistment');
+    });
+
+Route::middleware('auth')
+    ->prefix('report')
+    ->name('report.')
+    ->group(function () {
+        Route::get('/performance/top-student', fn () => view('report.performace.topstudent'))->name('performance.top-student');
+        Route::get('/performance/top-class', fn () => view('report.performace.topclass'))->name('performance.top-class');
+        Route::get('/grades', fn () => view('report.grades.grades'))->name('grades');
+        Route::get('/grades/approval', fn () => view('report.grades.aproval'))->name('grades.approval');
     });
 
 Route::post('/logout', [SignInController::class, 'destroy'])->middleware('auth')->name('logout');

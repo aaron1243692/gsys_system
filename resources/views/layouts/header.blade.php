@@ -262,11 +262,11 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Performance</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('report.performance.top-student') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Top Student</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('report.performance.top-class') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Top Class</span>
                     </a>
@@ -276,13 +276,13 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <h6 class="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">Grades</h6>
                 <div class="grid grid-rows-2 grid-flow-col gap-2">
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('report.grades') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
                         <span>Grades</span>
                     </a>
-                    <a href="#" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
+                    <a href="{{ route('report.grades.approval') }}" class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 text-decoration-none transition hover:border-blue-200 hover:bg-white hover:text-blue-700">
                         <img src="{{ asset('icons/crown.png') }}" alt="" class="h-4 w-4 shrink-0">
-                        <span>Final</span>
+                        <span>Approval</span>
                     </a>
                 </div>
             </div>
