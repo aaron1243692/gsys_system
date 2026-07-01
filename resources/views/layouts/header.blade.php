@@ -1,10 +1,10 @@
 @php
     $sidebarLinkClass = fn (bool $active) => ($active
-        ? 'bg-blue-700 text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950')
+        ? 'bg-white text-blue-950 shadow-lg shadow-blue-950/20'
+        : 'text-blue-100 hover:bg-white/10 hover:text-white')
         . ' flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-decoration-none transition-colors';
 
-    $sidebarIconClass = fn (bool $active) => 'h-5 w-5 shrink-0' . ($active ? ' brightness-0 invert' : '');
+    $sidebarIconClass = fn (bool $active) => 'h-5 w-5 shrink-0' . ($active ? '' : ' brightness-0 invert opacity-80');
 
     $isConfigurationGroup = request()->routeIs('configuration.curriculum.*');
     $isAcademicGroup = request()->routeIs('academic.*');
@@ -13,8 +13,8 @@
     $isSettingGroup = request()->routeIs('configuration.setting.*');
 
     $groupButtonClass = fn (bool $active) => ($active
-        ? 'bg-blue-50 text-blue-700'
-        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900')
+        ? 'bg-white/15 text-white'
+        : 'text-blue-200 hover:bg-white/10 hover:text-white')
         . ' mt-4 flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold uppercase tracking-widest transition-colors';
 @endphp
 
@@ -26,27 +26,27 @@
 
 <aside
     data-sidebar
-    class="scrollbar-none fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-72 -translate-x-full flex-col overflow-x-hidden overflow-y-auto border-r border-slate-200 bg-white px-4 py-5 shadow-xl transition-transform duration-200 lg:translate-x-0 lg:shadow-none"
+    class="scrollbar-none fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-72 -translate-x-full flex-col overflow-x-hidden overflow-y-auto bg-gradient-to-b from-blue-950 via-indigo-950 to-slate-950 px-4 py-5 text-white shadow-2xl shadow-blue-950/30 transition-transform duration-200 lg:translate-x-0"
 >
-    <a href="/dashboard" class="flex items-center gap-3 text-decoration-none">
-        <span class="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white shadow-sm">
+    <a href="/dashboard" class="flex items-center gap-3 rounded-2xl bg-white/10 p-3 text-decoration-none ring-1 ring-white/10">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white text-base font-black text-blue-950 shadow-lg">
             G
         </span>
         <span>
-            <span class="block text-lg font-black leading-tight text-slate-950">GSYS</span>
-            <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400">School System</span>
+            <span class="block text-lg font-black leading-tight text-white">GSYS</span>
+            <span class="block text-xs font-semibold uppercase tracking-wider text-blue-200">School System</span>
         </span>
     </a>
 
     <nav class="scrollbar-none mt-8 flex flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto pb-4" aria-label="Main navigation">
-        <p class="mb-2 px-3 text-xs font-bold uppercase tracking-widest text-slate-400">Pages</p>
+        <p class="mb-2 px-3 text-xs font-bold uppercase tracking-widest text-blue-300">Pages</p>
 
         <a href="{{ route('dashboard') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('dashboard')) }}" aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}">
             <img src="{{ asset('icons/list.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('dashboard')) }}">
             <span>Dashboard</span>
         </a>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isConfigurationGroup) }}" aria-expanded="false" aria-controls="sidebar-configuration-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isConfigurationGroup) }}" aria-expanded="{{ $isConfigurationGroup ? 'true' : 'false' }}" aria-controls="sidebar-configuration-menu">
             <span>Configuration</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -77,7 +77,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAcademicGroup) }}" aria-expanded="false" aria-controls="sidebar-academic-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAcademicGroup) }}" aria-expanded="{{ $isAcademicGroup ? 'true' : 'false' }}" aria-controls="sidebar-academic-menu">
             <span>Academic</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -100,11 +100,11 @@
             </a>
             <a href="{{ route('academic.students.pre-enlistment') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.students.pre-enlistment')) }}" aria-current="{{ request()->routeIs('academic.students.pre-enlistment') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/academic-success.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.students.pre-enlistment')) }}">
-                <span>Pre-Admission</span>
+                <span>Pre-Registration</span>
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isReportsGroup) }}" aria-expanded="false" aria-controls="sidebar-reports-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isReportsGroup) }}" aria-expanded="{{ $isReportsGroup ? 'true' : 'false' }}" aria-controls="sidebar-reports-menu">
             <span>Reports</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -127,7 +127,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAccountsGroup) }}" aria-expanded="false" aria-controls="sidebar-accounts-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAccountsGroup) }}" aria-expanded="{{ $isAccountsGroup ? 'true' : 'false' }}" aria-controls="sidebar-accounts-menu">
             <span>Accounts</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -146,7 +146,7 @@
             </a>
         </div>
 
-        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isSettingGroup) }}" aria-expanded="false" aria-controls="sidebar-setting-menu">
+        <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isSettingGroup) }}" aria-expanded="{{ $isSettingGroup ? 'true' : 'false' }}" aria-controls="sidebar-setting-menu">
             <span>Setting</span>
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
@@ -163,37 +163,37 @@
     </nav>
 </aside>
 
-<header class="sticky top-0 z-30 w-full border-bottom bg-white shadow-sm lg:ml-72 lg:w-[calc(100%-18rem)]">
-    <nav class="flex w-full items-center justify-between gap-3 px-4 py-3">
+<header class="sticky top-0 z-30 w-full px-4 pt-4 lg:ml-72 lg:w-[calc(100%-18rem)]">
+    <nav class="flex w-full items-center justify-between gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-lg shadow-slate-200/70 backdrop-blur">
         <div class="flex items-center gap-3">
             <button
                 type="button"
                 data-sidebar-open
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-xl font-bold text-slate-700 transition hover:bg-slate-100 lg:hidden"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-xl font-bold text-slate-700 transition hover:bg-slate-100 lg:hidden"
                 aria-label="Open navigation menu"
             >
                 &#9776;
             </button>
 
             <a href="/dashboard" class="flex items-center gap-3 text-decoration-none">
-                <span class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-slate-900 text-sm font-bold text-white shadow-sm">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-indigo-700 text-sm font-bold text-white shadow-sm">
                     G
                 </span>
-                <span class="text-lg font-semibold text-slate-900">GSYS</span>
+                <span class="text-lg font-black text-slate-950">GSYS</span>
             </a>
         </div>
 
         @auth
             <details class="group relative shrink-0">
-                <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-slate-200 bg-white py-1.5 pl-2 pr-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-50">
-                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-700 text-xs font-bold uppercase text-white">
+                <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 py-1.5 pl-2 pr-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-blue-50">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-700 to-indigo-700 text-xs font-bold uppercase text-white">
                         {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
                     </span>
                     <span class="max-w-32 truncate">{{ auth()->user()->username }}</span>
                     <span class="text-slate-400 transition group-open:rotate-180">&#9662;</span>
                 </summary>
 
-                <div class="absolute right-0 z-40 mt-2 w-52 rounded-lg border border-slate-200 bg-white p-2 text-slate-900 shadow-xl">
+                <div class="absolute right-0 z-40 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 text-slate-900 shadow-2xl shadow-slate-300/60">
                     <div class="border-b border-slate-100 px-3 py-2">
                         <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Signed in as</p>
                         <p class="mt-1 truncate text-sm font-bold">{{ auth()->user()->username }}</p>
@@ -243,7 +243,7 @@
         };
 
         groupButtons.forEach((button) => {
-            setGroupOpen(button, false);
+            setGroupOpen(button, button.getAttribute('aria-expanded') === 'true');
 
             button.addEventListener('click', () => {
                 const shouldOpen = button.getAttribute('aria-expanded') !== 'true';

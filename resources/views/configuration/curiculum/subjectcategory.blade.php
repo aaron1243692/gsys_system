@@ -37,7 +37,7 @@
 
         <section class="flex w-full flex-1 min-h-0">
             <div class="flex w-full flex-1 flex-col rounded-lg border border-slate-200 bg-white px-2 py-3 shadow-sm min-h-0">
-                <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div class="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <form method="GET" action="{{ route('configuration.curriculum.subject-category') }}" class="flex w-full gap-2 md:max-w-md">
                         <input
                             type="search"
@@ -53,8 +53,7 @@
                     <button
                         type="button"
                         onclick="document.getElementById('add-subject-category-modal').showModal()"
-                        class="rounded-[2rem] bg-blue-700 px-4 py-2 text-sm font-bold text-white transition hover:scale-105 hover:bg-blue-800 md:ml-auto"
-                        style="border-radius: 2rem;"
+                        class="rounded-[2rem] bg-blue-700 px-4 py-2 text-sm font-bold text-white transition hover:scale-110 hover:bg-blue-800 md:ml-auto"
                     >
                         Add
                     </button>
