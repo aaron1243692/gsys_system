@@ -69,9 +69,6 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->id }}</td>
                                     <td class="px-4 py-2">
                                         <p class="font-bold text-slate-950">{{ $student->name }}</p>
-                                        @if ($student->lrn)
-                                            <p class="text-xs font-semibold text-slate-500">LRN: {{ $student->lrn }}</p>
-                                        @endif
                                     </td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>

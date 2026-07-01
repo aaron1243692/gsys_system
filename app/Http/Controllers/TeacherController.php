@@ -37,10 +37,11 @@ class TeacherController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'max:255', Rule::unique('teachers', 'username')],
-            'email' => ['nullable', 'email', 'max:100'],
+            'email' => ['required', 'email', 'max:100', Rule::unique('teachers', 'email')],
             'password' => ['required', 'string', 'min:8', 'max:255'],
         ], [
             'username.unique' => 'This username already exists.',
+            'email.unique' => 'This email already exists.',
         ]);
 
         Teacher::create($validated);
@@ -55,9 +56,10 @@ class TeacherController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
             'username' => ['required', 'string', 'max:255', Rule::unique('teachers', 'username')->ignore($teacher->id)],
-            'email' => ['nullable', 'email', 'max:100'],
+            'email' => ['required', 'email', 'max:100', Rule::unique('teachers', 'email')->ignore($teacher->id)],
         ], [
             'username.unique' => 'This username already exists.',
+            'email.unique' => 'This email already exists.',
         ]);
 
         $teacher->update($validated);

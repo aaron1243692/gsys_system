@@ -151,13 +151,6 @@
                         Sign In
                     </button>
 
-                    <p class="text-center text-sm text-slate-600">
-                        Don't have an account?
-                        <a href="/register" class="font-bold text-sky-700 hover:text-sky-900 hover:underline">
-                            Sign Up
-                        </a>
-                    </p>
-
                 </form>
 
             </div>

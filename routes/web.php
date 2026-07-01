@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\SignInController;
+use App\Http\Controllers\BatchController;
+use App\Http\Controllers\CurriculumController;
+use App\Http\Controllers\CurriculumSubjectController;
 use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\AcademicYearController;
@@ -9,6 +12,7 @@ use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SettingRoleController;
 use App\Http\Controllers\SettingUserController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SubjectCategoryController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
@@ -34,10 +38,16 @@ Route::middleware('auth')
     ->prefix('configuration/curriculum')
     ->name('configuration.curriculum.')
     ->group(function () {
+        Route::get('/', [CurriculumController::class, 'index'])->name('index');
+        Route::post('/', [CurriculumController::class, 'store'])->name('store');
         Route::get('/grade-level', [GradeLevelController::class, 'index'])->name('grade-level');
         Route::post('/grade-level', [GradeLevelController::class, 'store'])->name('grade-level.store');
         Route::put('/grade-level/{gradeLevel}', [GradeLevelController::class, 'update'])->name('grade-level.update');
         Route::delete('/grade-level/{gradeLevel}', [GradeLevelController::class, 'destroy'])->name('grade-level.destroy');
+        Route::get('/batch', [BatchController::class, 'index'])->name('batch');
+        Route::post('/batch', [BatchController::class, 'store'])->name('batch.store');
+        Route::put('/batch/{batch}', [BatchController::class, 'update'])->name('batch.update');
+        Route::delete('/batch/{batch}', [BatchController::class, 'destroy'])->name('batch.destroy');
         Route::get('/academic-year', [AcademicYearController::class, 'index'])->name('academic-year');
         Route::post('/academic-year', [AcademicYearController::class, 'store'])->name('academic-year.store');
         Route::put('/academic-year/{academicYear}', [AcademicYearController::class, 'update'])->name('academic-year.update');
@@ -62,6 +72,11 @@ Route::middleware('auth')
         Route::delete('/tracks/{track}', [TrackController::class, 'destroy'])->name('tracks.destroy');
         Route::post('/tracks/{track}/subjects', [TrackController::class, 'storeSubject'])->name('tracks.subjects.store');
         Route::delete('/track-subjects/{trackSubject}', [TrackController::class, 'destroySubject'])->name('tracks.subjects.destroy');
+        Route::get('/subject-map', [CurriculumSubjectController::class, 'index'])->name('subject-map');
+        Route::get('/subject-map/load', [CurriculumSubjectController::class, 'load'])->name('subject-map.load');
+        Route::post('/subject-map/{curriculum}', [CurriculumSubjectController::class, 'store'])->name('subject-map.store');
+        Route::put('/{curriculum}', [CurriculumController::class, 'update'])->name('update');
+        Route::delete('/{curriculum}', [CurriculumController::class, 'destroy'])->name('destroy');
     });
 
 Route::middleware('auth')
@@ -255,10 +270,10 @@ Route::middleware('auth')
     ->prefix('report')
     ->name('report.')
     ->group(function () {
-        Route::get('/performance/top-student', fn () => view('report.performace.topstudent'))->name('performance.top-student');
-        Route::get('/performance/top-class', fn () => view('report.performace.topclass'))->name('performance.top-class');
-        Route::get('/grades', fn () => view('report.grades.grades'))->name('grades');
-        Route::get('/grades/approval', fn () => view('report.grades.aproval'))->name('grades.approval');
+        Route::get('/performance/top-student', [ReportController::class, 'topStudent'])->name('performance.top-student');
+        Route::get('/performance/top-class', [ReportController::class, 'topClass'])->name('performance.top-class');
+        Route::get('/grades', [ReportController::class, 'grades'])->name('grades');
+        Route::get('/grades/approval', [ReportController::class, 'gradeApproval'])->name('grades.approval');
     });
 
 Route::post('/logout', [SignInController::class, 'destroy'])->middleware('auth')->name('logout');
