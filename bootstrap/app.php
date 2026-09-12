@@ -12,7 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->redirectGuestsTo(fn () => route('signin'));
+        $middleware->alias(['portal' => App\Http\Middleware\PortalAccess::class]);
+        $middleware->web(append: [App\Http\Middleware\SeparatePortalAccess::class]);
+        $middleware->prependToPriorityList(
+            \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+            App\Http\Middleware\SeparatePortalAccess::class,
+        );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

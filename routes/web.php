@@ -83,6 +83,7 @@ Route::middleware('auth')
     ->prefix('configuration/accounts')
     ->name('configuration.accounts.')
     ->group(function () {
+        Route::view('/registrations', 'configuration.accounts.registrations')->name('registrations');
         Route::get('/students', [StudentController::class, 'index'])->name('students');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
@@ -272,8 +273,17 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('/performance/top-student', [ReportController::class, 'topStudent'])->name('performance.top-student');
         Route::get('/performance/top-class', [ReportController::class, 'topClass'])->name('performance.top-class');
-        Route::get('/grades', [ReportController::class, 'grades'])->name('grades');
+        Route::get('/grades', [\App\Http\Controllers\AdminGradeController::class, 'index'])->name('grades');
         Route::get('/grades/approval', [ReportController::class, 'gradeApproval'])->name('grades.approval');
     });
 
 Route::post('/logout', [SignInController::class, 'destroy'])->middleware('auth')->name('logout');
+
+require __DIR__.'/portals.php';
+
+// Read-only frontend schedule preview; no schedule persistence or enforcement.
+Route::get('/configuration/grade-encoding-schedule', function () {
+    abort_unless(auth()->user()->hasRole('admin'), 403);
+    return view('grading.schedule');
+})->middleware('auth')
+    ->name('configuration.grade-encoding-schedule');

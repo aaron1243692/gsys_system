@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\Gate::define('view-grades', function (\App\Models\User $user): bool {
+            return $user->hasAnyRole(config('grading.report_roles'))
+                || $user->getAllPermissions()->contains('codename', config('grading.report_permission'));
+        });
     }
 }

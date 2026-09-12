@@ -1,0 +1,9 @@
+@extends('portal.layout')
+@section('title', 'Dashboard')
+@section('portal-content')
+<div class="gs-hero"><div><p class="gs-eyebrow">Teacher Dashboard</p><h1>Welcome back, {{ auth('teacher')->user()->name }}.</h1><p class="gs-muted">Review your teaching workspace and open the page you need.</p></div><div class="gs-hero-mark"><img src="{{ asset('icons/employee.png') }}" alt=""></div></div>
+<div class="gs-stats">@include('portal.partials.stat', ['label'=>'Assigned Classes','value'=>'—','hint'=>'Open My Classes for assignments','icon'=>'higher-education'])@include('portal.partials.stat', ['label'=>'Assigned Subjects','value'=>'—','hint'=>'Available with each class','icon'=>'stack-of-books'])@include('portal.partials.stat', ['label'=>'Students Handled','value'=>'—','hint'=>'Available in grade entry','icon'=>'children'])@include('portal.partials.stat', ['label'=>'Grade Sheets','value'=>'—','hint'=>'Workflow summary not supplied','icon'=>'academic-success'])</div>
+@include('grading.dashboard-schedule')
+<section class="gs-section"><div class="gs-section-heading"><h2>Quick Links</h2></div><div class="gs-card-grid"><a class="gs-card gs-card-body" href="{{ route('teacher.classes') }}"><h3>View My Classes</h3><p class="gs-muted gs-small">Browse assigned class and subject combinations.</p></a><a class="gs-card gs-card-body" href="{{ route('teacher.grades.index') }}"><h3>Encode Grades</h3><p class="gs-muted gs-small">Choose an assigned class before opening grade entry.</p></a></div></section>
+<section class="gs-section"><div class="gs-section-heading"><h2>Recent Activity</h2></div><div class="gs-card">@include('portal.partials.empty', ['icon'=>'folder','heading'=>'No activity feed available','description'=>'Recent grade-sheet activity requires backend workflow data.'])</div></section>
+@endsection

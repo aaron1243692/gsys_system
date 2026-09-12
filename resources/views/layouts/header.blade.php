@@ -6,7 +6,7 @@
 
     $sidebarIconClass = fn (bool $active) => 'h-5 w-5 shrink-0' . ($active ? '' : ' brightness-0 invert opacity-80');
 
-    $isConfigurationGroup = request()->routeIs('configuration.curriculum.*');
+    $isConfigurationGroup = request()->routeIs('configuration.curriculum.*', 'configuration.grade-encoding-schedule');
     $isAcademicGroup = request()->routeIs('academic.*');
     $isReportsGroup = request()->routeIs('report.*');
     $isAccountsGroup = request()->routeIs('configuration.accounts.*');
@@ -51,6 +51,9 @@
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
         <div id="sidebar-configuration-menu" data-sidebar-group-menu class="flex flex-col gap-1">
+            @if(auth()->user()?->hasRole('admin'))
+            <a href="{{ route('configuration.grade-encoding-schedule') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.grade-encoding-schedule')) }}"><img src="{{ asset('icons/schedule.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.grade-encoding-schedule')) }}"><span>Grade Encoding Schedule</span></a>
+            @endif
             <a href="{{ route('configuration.curriculum.grade-level') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.grade-level')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.grade-level') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.grade-level')) }}">
                 <span>Grade Level</span>
@@ -132,6 +135,10 @@
             <span data-sidebar-group-arrow class="text-sm transition-transform duration-300">&#9662;</span>
         </button>
         <div id="sidebar-accounts-menu" data-sidebar-group-menu class="flex flex-col gap-1">
+            <a href="{{ route('configuration.accounts.registrations') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.registrations')) }}" aria-current="{{ request()->routeIs('configuration.accounts.registrations') ? 'page' : 'false' }}">
+                <img src="{{ asset('icons/list.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.registrations')) }}">
+                <span>Account Registrations</span>
+            </a>
             <a href="{{ route('configuration.accounts.students') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.students')) }}" aria-current="{{ request()->routeIs('configuration.accounts.students') ? 'page' : 'false' }}">
                 <img src="{{ asset('icons/children.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.students')) }}">
                 <span>Students</span>

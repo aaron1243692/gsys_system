@@ -1,0 +1,12 @@
+﻿<div class="gs-card gs-section" data-sheet-controls>
+    <div class="gs-card-body">
+        <p class="gs-alert">Workflow demonstration. Save Draft and Submit do not save or send grades. Reloading resets this demonstration.</p>
+        <div class="gs-section-heading"><div><p class="gs-eyebrow">Grade sheet</p><h2><span class="gs-badge" data-sheet-badge>DRAFT</span></h2></div><div class="gs-actions"><label class="gs-field">Preview sheet state<select data-sheet-state><option>DRAFT</option><option>SUBMITTED</option><option>RETURNED</option><option>APPROVED</option></select></label><label class="gs-field">Preview encoding period<select data-sheet-period><option>OPEN</option><option>UPCOMING</option><option>CLOSED</option></select></label></div></div>
+        <p data-sheet-message role="status"></p>
+        <p class="gs-muted gs-small" data-period-message></p>
+        <div data-return-info class="gs-alert gs-alert-warning" hidden style="margin-top:16px"><strong>CORRECTION ACCESS</strong><p>Returned grade sheet is available for correction in this preview.</p><p>Reason: Please verify the grade of the first student.</p><p class="gs-small">Returned by: Sample Reviewer / Sep 21, 2026 at 9:32 AM</p><p class="gs-small">Correction deadline and authorization await backend configuration.</p><button type="button" class="gs-btn" data-edit-returned>Edit Grades</button></div>
+        <p data-approval-info class="gs-muted gs-small" hidden>Approved by: Sample Reviewer / Sep 21, 2026 at 2:15 PM (demonstration)</p>
+    </div>
+</div>
+<dialog id="submit-sheet-dialog" class="gs-dialog" aria-labelledby="submit-sheet-title"><div class="gs-dialog-head"><h2 id="submit-sheet-title">Submit Grade Sheet?</h2><button type="button" class="gs-close" data-close-dialog aria-label="Close confirmation">&times;</button></div><div class="gs-card-body"><h3>{{ $schoolClass->name }}</h3><p>{{ $subject->name }} / Quarter {{ $quarter }}</p><p>{{ $students->count() }} students</p><p class="gs-alert gs-alert-warning" data-submit-missing></p><p>After submission, you will not be able to edit these grades unless the grade sheet is returned for correction.</p><p class="gs-footnote">Demonstration only. No grades are sent for review.</p><div class="gs-actions" style="justify-content:flex-end;margin-top:20px"><button type="button" class="gs-btn" data-close-dialog>Cancel</button><button type="button" class="gs-btn gs-btn-primary" data-confirm-sheet>Submit Grade Sheet</button></div></div></dialog>
+<script src="{{ asset('js/grade-sheet-workflow.js') }}" defer></script>

@@ -9,8 +9,12 @@ use Illuminate\View\View;
 
 class SignInController extends Controller
 {
-    public function show(): View
+    public function show(Request $request): View|RedirectResponse
     {
+        if (in_array($request->query('role'), ['teacher', 'student', 'guardian'], true)) {
+            return redirect()->route('portal.login', ['portal' => $request->query('role')]);
+        }
+
         return view('signin');
     }
 
@@ -34,6 +38,10 @@ class SignInController extends Controller
         }
 
         $request->session()->regenerate();
+
+        foreach (['teacher', 'student', 'guardian'] as $portal) {
+            Auth::guard($portal)->logout();
+        }
 
         return redirect()
             ->intended(route('dashboard'))
