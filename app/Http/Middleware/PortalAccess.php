@@ -21,6 +21,7 @@ class PortalAccess
             return redirect()->route('portal.login', ['portal' => $portal]);
         }
 
+        abort_unless(Auth::guard($portal)->user()->status === 'ACTIVE', 403, 'This account is not active. Contact authorized school staff.');
         return $next($request);
     }
 }

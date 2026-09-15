@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Authenticatable
 {
+    protected static function booted(): void
+    {
+        static::creating(function ($student) { $student->student_number = (string) random_int(10000000000, 99999999999); });
+        static::updating(function ($student) {
+            if ($student->isDirty('student_number')) throw new \LogicException('Student Number is permanent.');
+        });
+    }
     protected $fillable = [
         'username',
         'email',

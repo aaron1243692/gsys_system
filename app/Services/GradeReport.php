@@ -20,6 +20,7 @@ class GradeReport
             'search' => ['nullable', 'string', 'max:150'],
         ]);
         $base = Grade::recorded()->when($studentId !== null, fn ($q) => $q->where('student_id', $studentId));
+        if ($studentId !== null) $base->approved();
         $options = [];
         foreach (['academic_year', 'grade_level', 'class', 'subject', 'teacher', 'student'] as $field) {
             $options[$field] = (clone $base)->select($field.'_id', $field.'_name')->distinct()->orderBy($field.'_name')->get();

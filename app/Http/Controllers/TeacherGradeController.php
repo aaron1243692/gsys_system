@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ClassSubject, Grade, SchoolClass, StudentInfo, Subject};
+use App\Models\{ClassSubject, Grade, GradeSheet, GradeEncodingSchedule, SchoolClass, StudentInfo, Subject};
+use App\Services\{GradeWorkflow, Audit};
 use App\Services\GradingRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, DB, Validator};
@@ -13,7 +14,7 @@ class TeacherGradeController extends Controller
     public function index(Request $request)
     {
         $search = trim((string) $request->query('search'));
-        $classes = SchoolClass::with(['academicYear', 'classSubjects.subject'])
+        $classes = SchoolClass::with(['academicYear', 'classSubjects'=>fn($q)=>$q->whereHas('subject',fn($q)=>$q->where('teacher_id',Auth::guard('teacher')->id())),'classSubjects.subject'])
             ->whereHas('classSubjects.subject', fn ($q) => $q->where('teacher_id', Auth::guard('teacher')->id()))
             ->when($search !== '', fn ($q) => $q->where('name', 'like', '%'.$search.'%'))
             ->orderBy('name')->paginate(15)->withQueryString();
@@ -39,13 +40,15 @@ class TeacherGradeController extends Controller
         $this->authorizeAssignment($schoolClass, $subject);
         $validated = $request->validate(['quarter' => ['sometimes', 'integer', 'in:1,2,3']]);
         $quarter = (int) ($validated['quarter'] ?? 1);
-        $students = $this->roster($schoolClass)->orderBy('name')->get()->unique('student_id');
+        $students = $this->roster($schoolClass)->with('student')->orderBy('name')->get()->unique('student_id');
+        $sheet = GradeSheet::where(['teacher_id'=>Auth::guard('teacher')->id(),'class_id'=>$schoolClass->id,'subject_id'=>$subject->id,'academic_year_id'=>$schoolClass->acady_id,'quarter'=>$quarter])->first();
+        $schedule = GradeEncodingSchedule::where('academic_year_id',$schoolClass->acady_id)->where('quarter',$quarter)->first();
         $grades = Grade::recorded()->where('class_id', $schoolClass->id)->where('subject_id', $subject->id)
             ->where('academic_year_id', $schoolClass->acady_id)->where('quarter', $quarter)->get()->keyBy('student_id');
         $excluded = StudentInfo::where('class_id', $schoolClass->id)->where('admited', 1)->count() - $students->count();
 
-        return view('portal.teacher.entry', compact('schoolClass', 'subject', 'quarter', 'students', 'grades', 'excluded') + [
-            'portal' => 'teacher', 'editable' => in_array($quarter, config('grading.editable_quarters'), true),
+        return view('portal.teacher.entry', compact('schoolClass', 'subject', 'quarter', 'students', 'grades', 'excluded','sheet','schedule') + [
+            'portal' => 'teacher', 'editable' => app(GradeWorkflow::class)->editable($sheet,(int)$schoolClass->acady_id,$quarter),
         ]);
     }
 
@@ -54,6 +57,7 @@ class TeacherGradeController extends Controller
         $this->authorizeAssignment($schoolClass, $subject);
         $validated = $request->validate([
             'quarter' => ['required', 'integer', 'in:1,2,3'],
+            'action' => ['sometimes', 'in:draft,submit'],
             'academic_year_id' => ['required', 'integer'],
             'complete' => ['required', 'accepted'],
             'rows' => ['required', 'array', 'min:1', 'max:1000'],
@@ -70,6 +74,16 @@ class TeacherGradeController extends Controller
             $this->authorizeAssignment($schoolClass, $subject);
             abort_unless($schoolClass->acady_id && (int) $validated['academic_year_id'] === (int) $schoolClass->acady_id, 403, 'Class school year changed. Reload the grade sheet.');
             $students = $this->roster($schoolClass)->lockForUpdate()->get()->keyBy('student_id');
+            $identity=['teacher_id'=>Auth::guard('teacher')->id(),'class_id'=>$schoolClass->id,'subject_id'=>$subject->id,'academic_year_id'=>$schoolClass->acady_id,'quarter'=>$quarter];
+            $sheet=GradeSheet::where($identity)->lockForUpdate()->first();
+            // Lock the schedule row so schedule changes and saves serialize.
+            GradeEncodingSchedule::where('academic_year_id',$schoolClass->acady_id)->where('quarter',$quarter)->lockForUpdate()->first();
+            abort_unless(app(GradeWorkflow::class)->editable($sheet,(int)$schoolClass->acady_id,$quarter),403,'This sheet is locked or its encoding/correction window is closed.');
+            if($sheet?->status==='RETURNED') {
+                // A returned submission retains the original roster even after a student transfers.
+                $students=StudentInfo::whereIn('student_id',$sheet->roster)->get()->keyBy('student_id');
+                abort_unless($students->count()===count($sheet->roster),422,'A student record is missing; contact staff.');
+            }
             $errors = [];
             $nonempty = 0;
             foreach ($validated['rows'] as $index => $row) {
@@ -95,6 +109,11 @@ class TeacherGradeController extends Controller
             $teacher = Auth::guard('teacher')->user();
             $schoolClass->load(['academicYear', 'gradeLevel']);
             abort_unless($schoolClass->academicYear && $schoolClass->gradeLevel, 422, 'Class academic year or grade level is missing.');
+            if(!$sheet) {
+                $sheet=GradeSheet::create($identity+['roster'=>$students->keys()->values()->all(),'teacher_name'=>$teacher->name,'class_name'=>$schoolClass->name,'subject_name'=>$subject->name,'academic_year_name'=>$schoolClass->academicYear->name,'grade_level_id'=>$schoolClass->grlvl_id,'grade_level_name'=>$schoolClass->gradeLevel->name]);
+            } elseif($sheet->status==='DRAFT') {
+                $sheet->roster=$students->keys()->values()->all(); $sheet->save();
+            }
 
             foreach ($validated['rows'] as $row) {
                 if (($row['grade'] ?? null) === null || $row['grade'] === '') {
@@ -103,6 +122,7 @@ class TeacherGradeController extends Controller
                 $key = ['student_id' => $row['student_id'], 'class_id' => $schoolClass->id,
                     'subject_id' => $subject->id, 'academic_year_id' => $schoolClass->acady_id];
                 $grade = Grade::firstOrNew($key + ['quarter' => $quarter]);
+                abort_if($grade->exists && $grade->grade_sheet_id && (int)$grade->grade_sheet_id !== (int)$sheet->id,409,'A historical grade already belongs to another teacher’s sheet. Staff must resolve the assignment.');
                 if (! $grade->exists) {
                     $previous = Grade::recorded()->where($key)->orderBy('id')->first();
                     $grade->fill([
@@ -116,10 +136,16 @@ class TeacherGradeController extends Controller
                         'grade_level_name' => $previous?->grade_level_name ?? $schoolClass->gradeLevel->name,
                     ]);
                 }
-                $grade->fill(['grade' => $row['grade'], 'remarks' => $row['remarks'] ?? null, 'updated_by' => $teacher->id])->save();
+                $grade->fill(['grade_sheet_id'=>$sheet->id,'grade' => $row['grade'], 'remarks' => $row['remarks'] ?? null, 'updated_by' => $teacher->id])->save();
+            }
+            Audit::record('teacher',$teacher->id,'sheet.draft_saved',$sheet);
+            if(($validated['action']??'draft')==='submit') {
+                app(GradeWorkflow::class)->assertComplete($sheet);
+                $sheet->fill(['status'=>'SUBMITTED','submitted_by'=>$teacher->id,'submitted_at'=>now()])->save();
+                Audit::record('teacher',$teacher->id,'sheet.submitted',$sheet);
             }
         });
 
-        return redirect()->route('teacher.grades', [$schoolClass, $subject, 'quarter' => $quarter])->with('success', 'Grades saved.');
+        return redirect()->route('teacher.grades', [$schoolClass, $subject, 'quarter' => $quarter])->with('success', ($validated['action']??'draft')==='submit' ? 'Grade sheet submitted for review.' : 'Draft saved.');
     }
 }

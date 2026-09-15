@@ -19,15 +19,15 @@ class PortalGradeController extends Controller
 
     public function children()
     {
-        $children = Student::with('info')->whereIn('id', GuardianChild::where('guardian_id', Auth::guard('guardian')->id())->select('student_id'))
+        $children = Student::with('info')->whereIn('id', GuardianChild::where('guardian_id', Auth::guard('guardian')->id())->where('status','VERIFIED')->select('student_id'))
             ->orderBy('username')->paginate(20);
 
-        return view('portal.guardian.children', ['portal' => 'guardian', 'children' => $children]);
+        return view('portal.guardian.children', ['portal' => 'guardian', 'children' => $children,'requests'=>GuardianChild::where('guardian_id',Auth::guard('guardian')->id())->where('status','!=','VERIFIED')->get()]);
     }
 
     public function child(Request $request, Student $student, GradeReport $report)
     {
-        abort_unless(GuardianChild::where('guardian_id', Auth::guard('guardian')->id())->where('student_id', $student->id)->exists(), 403);
+        abort_unless(GuardianChild::where('guardian_id', Auth::guard('guardian')->id())->where('status','VERIFIED')->where('student_id', $student->id)->exists(), 403);
         abort_if($request->has('student_id') && (string) $request->input('student_id') !== (string) $student->id, 403);
 
         return view('portal.grades', $report->data($request, $student->id) + ['portal' => 'guardian', 'student' => $student]);

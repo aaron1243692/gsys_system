@@ -21,8 +21,15 @@ class PortalAuthController extends Controller
         ]);
 
         $guard = Auth::guard($portal);
+        if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $credentials['username'];
+            unset($credentials['username']);
+        }
         if (! $guard->validate($credentials)) {
             throw ValidationException::withMessages(['username' => 'Invalid username or password.']);
+        }
+        if ($guard->getProvider()->retrieveByCredentials($credentials)->status !== 'ACTIVE') {
+            throw ValidationException::withMessages(['username' => 'Your account is not active. School staff must review and activate it before portal access.']);
         }
         // Switching portals must not carry an administrative or another portal identity.
         foreach (['web', 'teacher', 'student', 'guardian'] as $name) {
