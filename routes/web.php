@@ -7,7 +7,10 @@ use App\Http\Controllers\CurriculumSubjectController;
 use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\AcademicYearController;
+use App\Http\Controllers\AccountReviewController;
 use App\Http\Controllers\ClassScheduleController;
+use App\Http\Controllers\EncodingScheduleController;
+use App\Http\Controllers\GradeApprovalController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SettingRoleController;
 use App\Http\Controllers\SettingUserController;
@@ -83,7 +86,10 @@ Route::middleware('auth')
     ->prefix('configuration/accounts')
     ->name('configuration.accounts.')
     ->group(function () {
-        Route::view('/registrations', 'configuration.accounts.registrations')->name('registrations');
+        Route::get('/registrations', [AccountReviewController::class, 'index'])->name('registrations');
+        Route::get('/registrations/{type}/{id}', [AccountReviewController::class, 'show'])->name('registrations.show');
+        Route::post('/registrations/{type}/{id}', [AccountReviewController::class, 'update'])->name('registrations.update');
+        Route::post('/guardian-childs/{link}/verify', [AccountReviewController::class, 'verify'])->name('guardians.childs.verify');
         Route::get('/students', [StudentController::class, 'index'])->name('students');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
@@ -274,16 +280,18 @@ Route::middleware('auth')
         Route::get('/performance/top-student', [ReportController::class, 'topStudent'])->name('performance.top-student');
         Route::get('/performance/top-class', [ReportController::class, 'topClass'])->name('performance.top-class');
         Route::get('/grades', [\App\Http\Controllers\AdminGradeController::class, 'index'])->name('grades');
-        Route::get('/grades/approval', [ReportController::class, 'gradeApproval'])->name('grades.approval');
+        Route::get('/grades/approval', [GradeApprovalController::class, 'index'])->name('grades.approval');
+        Route::get('/grades/approval/{sheet}', [GradeApprovalController::class, 'show'])->name('grades.approval.show');
+        Route::post('/grades/approval/{sheet}', [GradeApprovalController::class, 'update'])->name('grades.approval.update');
     });
 
 Route::post('/logout', [SignInController::class, 'destroy'])->middleware('auth')->name('logout');
 
 require __DIR__.'/portals.php';
 
-// Read-only frontend schedule preview; no schedule persistence or enforcement.
-Route::get('/configuration/grade-encoding-schedule', function () {
-    abort_unless(auth()->user()->hasRole('admin'), 403);
-    return view('grading.schedule');
-})->middleware('auth')
+Route::get('/configuration/grade-encoding-schedule', [EncodingScheduleController::class, 'index'])
+    ->middleware('auth')
     ->name('configuration.grade-encoding-schedule');
+Route::post('/configuration/grade-encoding-schedule', [EncodingScheduleController::class, 'store'])
+    ->middleware('auth')
+    ->name('configuration.grade-encoding-schedule.store');

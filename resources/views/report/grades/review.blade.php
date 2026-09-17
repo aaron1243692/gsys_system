@@ -1,0 +1,14 @@
+@extends('layouts.app')
+@section('title', 'Review Grade Sheet')
+@section('content')
+@include('portal.partials.styles')
+<div class="gs-portal gs-approval-page" style="padding:24px">
+    <div class="gs-page-header"><div><p class="gs-eyebrow">Reports / Grades</p><h1>Review Grade Sheet</h1><p>{{ $sheet->class_name }} / {{ $sheet->subject_name }} / Q{{ $sheet->quarter }}</p></div><a class="gs-btn" href="{{ route('report.grades.approval') }}">Back</a></div>
+    @if(session('success'))<p class="gs-alert">{{ session('success') }}</p>@endif
+    @if($errors->any())<p class="gs-error">{{ $errors->first() }}</p>@endif
+    <div class="gs-card gs-section"><div class="gs-card-body"><dl class="gs-context"><div><dt>Teacher</dt><dd>{{ $sheet->teacher_name }}</dd></div><div><dt>Status</dt><dd><span class="gs-badge" data-status="{{ $sheet->status }}">{{ $sheet->status }}</span></dd></div><div><dt>School Year</dt><dd>{{ $sheet->academic_year_name }}</dd></div><div><dt>Submitted</dt><dd>{{ $sheet->submitted_at?->format('M d, Y h:i A') ?? '-' }}</dd></div></dl></div></div>
+    <div class="gs-card"><div class="gs-table-wrap"><table class="gs-table"><thead><tr><th>No.</th><th>Student Number</th><th>Student Name</th><th>Final Grade</th></tr></thead><tbody>@forelse($sheet->grades as $i => $grade)<tr><td>{{ $i + 1 }}</td><td>{{ $grade->student_id }}</td><td>{{ $grade->student_name }}</td><td>{{ $grade->grade }}</td></tr>@empty<tr><td colspan="4">No grades encoded.</td></tr>@endforelse</tbody></table></div></div>
+    @if($sheet->status === 'SUBMITTED')<section class="gs-section"><div class="gs-section-heading"><h2>Review Action</h2></div><div class="gs-card gs-card-body"><form method="POST" action="{{ route('report.grades.approval.update', $sheet) }}" class="gs-grid">@csrf<label class="gs-field">Action<select name="action" required><option value="approve">Approve</option><option value="return">Return for Correction</option></select></label><label class="gs-field">Correction Deadline<input type="datetime-local" name="correction_until"></label><label class="gs-field gs-field-wide">Return Reason<textarea name="reason" rows="3" placeholder="Required when returning"></textarea></label><div class="gs-actions"><button class="gs-btn gs-btn-primary">Save Review</button></div></form></div></section>@endif
+    <section class="gs-section"><div class="gs-section-heading"><h2>Audit Trail</h2></div><div class="gs-card"><div class="gs-table-wrap"><table class="gs-table"><thead><tr><th>When</th><th>Actor</th><th>Action</th></tr></thead><tbody>@forelse($audit as $event)<tr><td>{{ $event->created_at }}</td><td>{{ $event->actor_type }} #{{ $event->actor_id }}</td><td>{{ $event->action }}</td></tr>@empty<tr><td colspan="3">No audit events yet.</td></tr>@endforelse</tbody></table></div></div></section>
+</div>
+@endsection

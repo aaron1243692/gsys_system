@@ -44,7 +44,8 @@ class GradeReport
         foreach ([1, 2, 3] as $quarter) {
             $query->selectRaw("MAX(CASE WHEN quarter = $quarter THEN grade END) as q$quarter")
                 ->selectRaw("MAX(CASE WHEN quarter = $quarter THEN remarks END) as remarks$quarter")
-                ->selectRaw("MAX(CASE WHEN quarter = $quarter THEN teacher_name END) as teacher$quarter");
+                ->selectRaw("MAX(CASE WHEN quarter = $quarter THEN teacher_name END) as teacher$quarter")
+                ->selectRaw("MAX(CASE WHEN quarter = $quarter THEN 'APPROVED' END) as q{$quarter}_status");
         }
 
         return ['grades' => $query->orderBy('academic_year_id', 'desc')->orderBy('student_name')->orderBy('subject_name')

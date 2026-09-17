@@ -15,6 +15,7 @@ class GradeWorkflow
         $ids=collect($sheet->roster)->map(fn($id)=>(int)$id)->sort()->values();
         $grades=$sheet->grades()->get();
         abort_unless($ids->isNotEmpty() && $grades->pluck('student_id')->map(fn($id)=>(int)$id)->sort()->values()->all()===$ids->all(),422,'Every enrolled student must have a final grade before submission.');
-        foreach($grades as $grade) \Illuminate\Support\Facades\Validator::make(['grade'=>$grade->grade],['grade'=>array_merge(['required'],app(GradingRules::class)->gradeRules())])->validate();
+        $rules=array_values(array_filter(app(GradingRules::class)->gradeRules(), fn($rule)=>$rule!=='nullable'));
+        foreach($grades as $grade) \Illuminate\Support\Facades\Validator::make(['grade'=>$grade->grade],['grade'=>array_merge(['required'],$rules)])->validate();
     }
 }
