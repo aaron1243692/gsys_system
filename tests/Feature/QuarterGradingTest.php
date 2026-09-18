@@ -604,6 +604,30 @@ class QuarterGradingTest extends TestCase
         $this->actingAs($otherAccount, 'student')->get(route('student.grades'))->assertOk()->assertDontSee('85.25');
     }
 
+    public function test_guardian_opens_latest_approved_year_and_keeps_historical_subject_without_load(): void
+    {
+        $this->submitAndApprove(1, '99');
+        DB::table('acady')->insert(['id' => 2, 'name' => '2026-2027']);
+        $this->student->info()->update(['acady_id' => 2]);
+        DB::table('classsub')->where('class_id', $this->schoolClass->id)->delete();
+        $guardian = Guardian::create(['username' => 'historical-parent', 'password' => 'test-password'])->refresh();
+        $link = GuardianChild::create(['guardian_id' => $guardian->id, 'student_id' => $this->student->id]);
+        $link->forceFill(['status' => 'VERIFIED'])->save();
+
+        $this->forgetIdentities();
+        $this->actingAs($this->studentAccount, 'student')->get(route('student.grades'))
+            ->assertOk()->assertSee('Mathematics')->assertSee('>99<', false);
+        $this->forgetIdentities();
+        $this->assertDatabaseHas('guardianchilds', ['guardian_id' => $guardian->id, 'student_id' => $this->student->id, 'status' => 'VERIFIED']);
+        $this->actingAs($guardian, 'guardian')->get(route('guardian.children'))->assertOk()->assertSee('Student One');
+        $this->actingAs($guardian, 'guardian')->get(route('guardian.grades', $this->student))
+            ->assertOk()->assertSee('2025-2026')->assertSee('Mathematics')->assertSee('>99<', false);
+        $this->get(route('guardian.grades', [$this->student, 'academic_year_id' => 2]))
+            ->assertOk()->assertDontSee('>99<', false);
+        $other = Student::create(['username' => 'unrelated', 'password' => 'test-password'])->refresh();
+        $this->get(route('guardian.grades', $other))->assertForbidden();
+    }
+
     public function test_duplicate_name_registration_requires_staff_selected_academic_record(): void
     {
         $rizal = Student::create(['username' => 'juan-rizal', 'password' => 'unused-password'])->refresh();

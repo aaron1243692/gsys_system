@@ -39,7 +39,10 @@ class PortalGradeController extends Controller
         $yearIds = (clone $approved)->distinct()->pluck('academic_year_id');
         if ($student->info?->acady_id) $yearIds->push($student->info->acady_id);
         $years = AcademicYear::whereIn('id', $yearIds->filter()->unique())->orderByDesc('id')->get();
-        $yearId = (int) ($filters['academic_year_id'] ?? ($student->info?->acady_id ?: $years->first()?->id));
+        // Open the latest year with an approved grade by default. Current enrollment
+        // may be in a newer year with no grades yet.
+        $latestApprovedYearId = (clone $approved)->orderByDesc('academic_year_id')->value('academic_year_id');
+        $yearId = (int) ($filters['academic_year_id'] ?? ($latestApprovedYearId ?: $student->info?->acady_id ?: $years->first()?->id));
         abort_if($yearId && ! $years->contains('id', $yearId), 404);
         $grades = (clone $approved)->where('academic_year_id', $yearId)->get();
         $classIds = $grades->pluck('class_id')->filter()->unique();
