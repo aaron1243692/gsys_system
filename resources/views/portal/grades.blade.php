@@ -15,7 +15,7 @@
 @endif
 <section class="gs-section">
     <div class="gs-section-heading"><div><h2>{{ $portal === 'student' ? 'My Grades' : 'Quarterly Grades' }}</h2><p class="gs-muted gs-small">Only approved final grades are intended to appear.</p></div><span class="gs-badge gs-badge-muted">Q1 / Q2 / Q3</span></div>
-    <p class="gs-alert">Approval information is not connected yet. Unavailable grades remain hidden.</p>
+    <p class="gs-alert">Only grades from approved grade sheets are shown. Draft, submitted, and returned grades remain unavailable.</p>
     @include('portal.partials.grade-table')
 </section>
 @endsection

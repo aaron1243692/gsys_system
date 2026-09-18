@@ -59,6 +59,7 @@
                                 <th class="px-4 py-3 font-bold">Grade Level</th>
                                 <th class="px-4 py-3 font-bold">Track</th>
                                 <th class="px-4 py-3 font-bold">Class</th>
+                                <th class="px-4 py-3 font-bold">Portal Account</th>
                                 <th class="w-52 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -76,6 +77,7 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->name ?? '-' }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('view-pre-enlistment-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 transition hover:scale-110 hover:bg-emerald-50">

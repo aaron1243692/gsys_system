@@ -64,10 +64,10 @@ class StudentSeeder extends Seeder
 
             if (Schema::hasTable('guardianchilds') && $guardians->isNotEmpty()) {
                 $guardian = $guardians[(int) floor($index / 2) % $guardians->count()];
-                GuardianChild::updateOrCreate([
-                    'guardian_id' => $guardian->id,
-                    'student_id' => $student->id,
-                ]);
+                if (! GuardianChild::where('guardian_id', $guardian->id)->where('student_id', $student->id)->exists()) {
+                    $link = new GuardianChild(['guardian_id' => $guardian->id, 'student_id' => $student->id]);
+                    $link->forceFill(['status' => 'VERIFIED', 'relationship' => 'Legal Guardian'])->save();
+                }
             }
         }
     }

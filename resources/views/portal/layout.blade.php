@@ -3,12 +3,14 @@
 @include('portal.partials.styles')
 @php
     $identity = auth($portal)->user();
-    $displayName = $identity->name ?: $identity->username;
+    $displayName = $portal === 'student' ? ($identity->student?->info?->name ?? $identity->name ?? $identity->username) : ($identity->name ?: $identity->username);
     $home = route($portal.'.home');
+    $hasAdvisoryClass = $portal === 'teacher' && $identity->advisoryClasses()->exists();
     $navItems = match ($portal) {
         'teacher' => [
             ['teacher.home', 'Dashboard', 'list'],
-            ['teacher.classes', 'My Classes', 'stack-of-books'],
+            ['teacher.subjects', 'My Subjects', 'stack-of-books', ['teacher.subjects', 'teacher.subjects.students']],
+            ...($hasAdvisoryClass ? [['teacher.advisory-class', 'My Advisory Class', 'children']] : []),
             ['teacher.grades.index', 'Grades', 'pencil', ['teacher.grades', 'teacher.grades.index']],
             ['teacher.history', 'Grade History', 'folder'],
             ['teacher.profile', 'Profile', 'user'],
@@ -22,7 +24,6 @@
         default => [
             ['guardian.home', 'Dashboard', 'list'],
             ['guardian.children', 'My Children', 'children'],
-            ['guardian.grades.index', 'Grades', 'book', ['guardian.grades', 'guardian.grades.index']],
             ['guardian.profile', 'Profile', 'user'],
         ],
     };

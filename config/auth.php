@@ -64,7 +64,7 @@ return [
 
     'providers' => [
         'teachers' => ['driver' => 'eloquent', 'model' => App\Models\Teacher::class],
-        'students' => ['driver' => 'eloquent', 'model' => App\Models\Student::class],
+        'students' => ['driver' => 'eloquent', 'model' => App\Models\StudentAccount::class],
         'guardians' => ['driver' => 'eloquent', 'model' => App\Models\Guardian::class],
         'users' => [
             'driver' => 'eloquent',

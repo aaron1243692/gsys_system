@@ -12,6 +12,7 @@ class ClassSubject extends Model
     protected $fillable = [
         'class_id',
         'sub_id',
+        'teacher_id',
     ];
 
     public function schoolClass(): BelongsTo
@@ -22,5 +23,10 @@ class ClassSubject extends Model
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class, 'sub_id');
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
     }
 }

@@ -54,7 +54,11 @@ class ClassScheduleController extends Controller
 
     public function update(Request $request, SchoolClass $schoolClass): RedirectResponse
     {
-        $schoolClass->update($this->validateClass($request, $schoolClass));
+        $data = $this->validateClass($request, $schoolClass);
+        abort_if((int) $schoolClass->acady_id !== (int) $data['acady_id']
+            && $schoolClass->classSubjects()->whereNotNull('teacher_id')->exists(), 409,
+            'Remove or reassign teaching loads before changing the class school year.');
+        $schoolClass->update($data);
 
         return redirect()
             ->route('academic.schedule-load.class-schedule')

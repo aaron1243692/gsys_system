@@ -28,7 +28,8 @@ class PortalAuthController extends Controller
         if (! $guard->validate($credentials)) {
             throw ValidationException::withMessages(['username' => 'Invalid username or password.']);
         }
-        if ($guard->getProvider()->retrieveByCredentials($credentials)->status !== 'ACTIVE') {
+        $account = $guard->getProvider()->retrieveByCredentials($credentials);
+        if ($account->status !== 'ACTIVE' || ($portal === 'student' && ! $account->student()->whereHas('info')->exists())) {
             throw ValidationException::withMessages(['username' => 'Your account is not active. School staff must review and activate it before portal access.']);
         }
         // Switching portals must not carry an administrative or another portal identity.
@@ -38,7 +39,7 @@ class PortalAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         // Reuse the identity just validated; do not ignore a second authentication attempt.
-        $guard->login($guard->getProvider()->retrieveByCredentials($credentials));
+        $guard->login($account);
         $request->session()->regenerate();
 
         return redirect()->route($portal.'.home');

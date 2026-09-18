@@ -8,6 +8,9 @@ use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\{DB, Gate};
+use App\Services\Audit;
 use Illuminate\View\View;
 
 class GuardianController extends Controller
@@ -17,7 +20,11 @@ class GuardianController extends Controller
         $search = trim((string) $request->query('search'));
 
         $guardians = Guardian::query()
-            ->with('children.student.info')
+            ->with(['children' => fn ($query) => $query->where('status', 'VERIFIED')
+                ->with('student.info.gradeLevel', 'student.info.schoolClass', 'student.info.academicYear')])
+            ->withCount([
+                'children as children_count' => fn ($query) => $query->where('status','VERIFIED'),
+            ])
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -31,7 +38,7 @@ class GuardianController extends Controller
 
         return view('configuration.accounts.guardians', [
             'guardians' => $guardians,
-            'students' => Student::query()->with('info')->orderBy('id')->get(),
+            'students' => Student::query()->with('info.gradeLevel', 'info.schoolClass', 'info.academicYear')->orderBy('id')->get(),
             'search' => $search,
         ]);
     }
@@ -103,31 +110,38 @@ class GuardianController extends Controller
 
     public function storeChild(Request $request, Guardian $guardian): RedirectResponse
     {
+        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $validated = $request->validate([
-            'student_id' => [
-                'required',
-                'integer',
-                'exists:students,id',
-                Rule::unique('guardianchilds', 'student_id')->where('guardian_id', $guardian->id),
-            ],
-        ], [
-            'student_id.unique' => 'This student is already assigned to the selected guardian.',
+            'student_id' => ['required', 'integer', 'exists:students,id'],
+            'relationship' => ['required', Rule::in(['Mother', 'Father', 'Legal Guardian', 'Other'])],
+            'confirm' => ['required', 'accepted'],
         ]);
-
-        GuardianChild::create([
-            'guardian_id' => $guardian->id,
-            'student_id' => $validated['student_id'],
-        ]);
+        DB::transaction(function () use ($guardian, $validated, $request) {
+            Guardian::whereKey($guardian->id)->lockForUpdate()->firstOrFail();
+            $existing = GuardianChild::where('guardian_id', $guardian->id)->where('student_id', $validated['student_id'])->first();
+            if ($existing?->status === 'VERIFIED') throw ValidationException::withMessages([
+                'student_id' => 'This student is already linked to this guardian.',
+            ]);
+            $link = $existing ?? new GuardianChild(['guardian_id' => $guardian->id, 'student_id' => $validated['student_id']]);
+            $link->forceFill(['relationship' => $validated['relationship'], 'status' => 'VERIFIED',
+                'verified_by' => $request->user('web')->id, 'verified_at' => now()])->save();
+            Audit::record('web', $request->user('web')->id, 'child.linked', $link,
+                ['reused_existing_link' => $existing !== null]);
+        });
 
         return redirect()
             ->route('configuration.accounts.guardians')
-            ->with('success', 'Child added to guardian successfully.')
-            ->with('open_modal', 'add-child-guardian-' . $guardian->id);
+            ->with('success', 'Child linked successfully.')
+            ->with('open_modal', 'childs-guardian-' . $guardian->id);
     }
 
-    public function destroyChild(GuardianChild $guardianChild): RedirectResponse
+    public function destroyChild(Request $request, GuardianChild $guardianChild): RedirectResponse
     {
-        $guardianChild->delete();
+        Gate::forUser($request->user('web'))->authorize('manage-registrations');
+        DB::transaction(function () use ($guardianChild, $request) {
+            $guardianChild->delete();
+            Audit::record('web', $request->user('web')->id, 'child.removed', $guardianChild);
+        });
 
         return redirect()
             ->route('configuration.accounts.guardians')

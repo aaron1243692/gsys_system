@@ -56,9 +56,11 @@
                                 <th class="w-20 px-4 py-3 font-bold">No</th>
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Student</th>
+                                <th class="px-4 py-3 font-bold">Student No.</th>
                                 <th class="px-4 py-3 font-bold">Grade Level</th>
                                 <th class="px-4 py-3 font-bold">Track</th>
                                 <th class="px-4 py-3 font-bold">Class</th>
+                                <th class="px-4 py-3 font-bold">Portal Account</th>
                                 <th class="w-40 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -70,14 +72,21 @@
                                     <td class="px-4 py-2">
                                         <p class="font-bold text-slate-950">{{ $student->name }}</p>
                                     </td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->student?->student_number ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->name ?? '-' }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('edit-student-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
                                                 Edit
                                             </button>
+                                            @if($student->student?->portalAccount)
+                                                <a href="{{ route('configuration.accounts.registrations.show', ['type'=>'student','id'=>$student->student->portalAccount->id]) }}" class="rounded-[2rem] border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700">View Account</a>
+                                            @else
+                                                <button type="button" onclick="document.getElementById('link-account-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-amber-200 px-3 py-1.5 text-xs font-bold text-amber-700">Link Portal Account</button>
+                                            @endif
                                             <button type="button" onclick="document.getElementById('delete-student-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:scale-110 hover:bg-red-50">
                                                 Delete
                                             </button>
@@ -155,6 +164,8 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-black uppercase text-slate-500">Portal Account</p>@if($student->student?->portalAccount)<p class="mt-2 font-bold text-emerald-700">LINKED · {{ $student->student->portalAccount->status }}</p><p class="text-sm">{{ $student->student->portalAccount->name ?: $student->student->portalAccount->username }}</p><p class="text-sm">Username: {{ $student->student->portalAccount->username }}</p><a class="mt-2 inline-block text-sm font-bold text-blue-700" href="{{ route('configuration.accounts.registrations.show', ['type'=>'student','id'=>$student->student->portalAccount->id]) }}">View Account</a>@else<p class="mt-2 font-bold text-amber-700">NOT LINKED</p><button type="button" onclick="document.getElementById('edit-student-{{ $student->id }}').close();document.getElementById('link-account-{{ $student->id }}').showModal()" class="mt-2 text-sm font-bold text-blue-700">Link Portal Account</button>@endif</div>
+
                                                 <div class="mt-4 flex gap-2">
                                                     <button type="button" onclick="document.getElementById('edit-student-{{ $student->id }}').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
                                                         Cancel
@@ -165,6 +176,16 @@
                                                 </div>
                                             </form>
                                         </dialog>
+
+                                        @unless($student->student?->portalAccount)
+                                        <dialog id="link-account-{{ $student->id }}" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
+                                            <div class="max-h-[85vh] overflow-y-auto p-4"><div class="relative text-center"><h2 class="text-xl font-black">Link Portal Account</h2><button type="button" onclick="document.getElementById('link-account-{{ $student->id }}').close()" class="absolute right-0 top-0 px-3 py-1 text-2xl">&times;</button></div>
+                                                <div class="mt-4 rounded-lg bg-slate-50 p-3"><strong>{{ $student->name }}</strong><p>{{ $student->gradeLevel?->name }} / {{ $student->schoolClass?->name }} / {{ $student->academicYear?->name }}</p><p>Student No: {{ $student->student?->student_number }}</p></div>
+                                                <input type="search" placeholder="Search name or username" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2" oninput="this.closest('dialog').querySelectorAll('[data-account-option]').forEach(row=>row.hidden=!row.dataset.accountOption.includes(this.value.toLowerCase()))">
+                                                <div class="mt-3 space-y-2">@forelse($availableAccounts as $account)<form data-account-option="{{ strtolower(($account->name ?? '').' '.$account->username) }}" method="POST" action="{{ route('configuration.accounts.registrations.students.link',$account) }}" class="flex items-center justify-between gap-3 rounded-lg border p-3">@csrf<input type="hidden" name="student_id" value="{{ $student->student_id }}"><input type="hidden" name="confirm" value="1"><div><strong>{{ $account->name ?: $account->username }}</strong><p class="text-sm">{{ $account->username }} · {{ $account->status }}</p></div><button class="rounded-[2rem] bg-blue-700 px-3 py-1.5 text-sm font-bold text-white">Confirm &amp; Link</button></form>@empty<p class="p-4 text-center">No eligible unlinked portal accounts.</p>@endforelse</div>
+                                            </div>
+                                        </dialog>
+                                        @endunless
 
                                         <dialog id="delete-student-{{ $student->id }}" class="m-auto w-full max-w-sm rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
                                             <form method="POST" action="{{ route('academic.students.destroy', $student) }}" class="p-4">

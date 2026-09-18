@@ -107,6 +107,8 @@
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Name</th>
                                 <th class="px-4 py-3 font-bold">Email</th>
+                                <th class="px-4 py-3 font-bold">Account Status</th>
+                                <th class="px-4 py-3 font-bold">Children</th>
                                 <th class="w-80 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -117,10 +119,12 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $guardian->id }}</td>
                                     <td class="px-4 py-2 font-bold text-slate-950">{{ $guardian->name ?? $guardian->username }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $guardian->email ?? '-' }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700"><span class="gs-badge" data-status="{{ $guardian->status }}">{{ $guardian->status }}</span></td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $guardian->children_count }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('childs-guardian-{{ $guardian->id }}').showModal()" class="rounded-[2rem] border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:scale-110 hover:bg-slate-50">
-                                                Childs
+                                                Children
                                             </button>
                                             <button type="button" onclick="document.getElementById('edit-guardian-{{ $guardian->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
                                                 Edit
@@ -136,7 +140,7 @@
                                         <dialog id="childs-guardian-{{ $guardian->id }}" class="m-auto w-full max-w-2xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
                                             <div class="p-4">
                                                 <div class="relative text-center">
-                                                    <h2 class="text-xl font-black">Childs</h2>
+                                                    <h2 class="text-xl font-black">Children</h2>
                                                     <button type="button" onclick="document.getElementById('childs-guardian-{{ $guardian->id }}').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
                                                         &times;
                                                     </button>
@@ -146,7 +150,7 @@
 
                                                 <div class="mt-4 flex justify-end">
                                                     <button type="button" onclick="document.getElementById('add-child-guardian-{{ $guardian->id }}').showModal()" class="rounded-[2rem] bg-blue-700 px-4 py-2 text-sm font-bold text-white transition hover:scale-105 hover:bg-blue-800">
-                                                        Add
+                                                        Add Child
                                                     </button>
                                                 </div>
 
@@ -154,32 +158,34 @@
                                                     <table class="w-full border-collapse text-left text-sm">
                                                         <thead class="bg-blue-700 text-xs uppercase tracking-wider text-white">
                                                             <tr>
-                                                                <th class="w-20 px-4 py-3 font-bold">No</th>
-                                                                <th class="w-24 px-4 py-3 font-bold">ID</th>
-                                                                <th class="px-4 py-3 font-bold">Name</th>
+                                                                <th class="px-4 py-3 font-bold">Student No.</th>
+                                                                <th class="px-4 py-3 font-bold">Student</th>
+                                                                <th class="px-4 py-3 font-bold">Academic Record</th>
+                                                                <th class="px-4 py-3 font-bold">Relationship</th>
                                                                 <th class="w-32 px-4 py-3 text-right font-bold">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @forelse ($guardian->children as $child)
                                                                 <tr class="border-b border-slate-200 hover:bg-slate-50">
-                                                                    <td class="px-4 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
-                                                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $child->student?->id ?? $child->student_id }}</td>
+                                                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $child->student?->student_number }}</td>
                                                                     <td class="px-4 py-2 font-bold text-slate-950">{{ $child->student?->info?->name ?? $child->student?->username ?? 'Deleted student' }}</td>
+                                                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $child->student?->info?->gradeLevel?->name }} / {{ $child->student?->info?->schoolClass?->name }}<br>SY {{ $child->student?->info?->academicYear?->name }}</td>
+                                                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $child->relationship ?? 'Not recorded' }}</td>
                                                                     <td class="px-4 py-2">
-                                                                        <form method="POST" action="{{ route('configuration.accounts.guardians.childs.destroy', $child) }}" class="flex justify-end">
+                                                                        <form method="POST" action="{{ route('configuration.accounts.guardians.childs.destroy', $child) }}" class="flex justify-end" data-student-name="{{ $child->student?->info?->name ?? $child->student?->username ?? 'this child' }}" onsubmit="return confirm('Remove ' + this.dataset.studentName + ' from this guardian?')">
                                                                             @csrf
                                                                             @method('DELETE')
                                                                             <button type="submit" class="rounded-[2rem] border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:scale-110 hover:bg-red-50">
-                                                                                Delete
+                                                                                Remove
                                                                             </button>
                                                                         </form>
                                                                     </td>
                                                                 </tr>
                                                             @empty
                                                                 <tr>
-                                                                    <td colspan="4" class="px-4 py-8 text-center text-sm font-semibold text-slate-500">
-                                                                        No childs found.
+                                                                    <td colspan="5" class="px-4 py-8 text-center text-sm font-semibold text-slate-500">
+                                                                        No children linked.
                                                                     </td>
                                                                 </tr>
                                                             @endforelse
@@ -222,7 +228,7 @@
                                                             <tr>
                                                                 <th class="w-20 px-4 py-3 font-bold">No</th>
                                                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
-                                                                <th class="px-4 py-3 font-bold">Name</th>
+                                                                <th class="px-4 py-3 font-bold">Academic Student</th>
                                                                 <th class="w-32 px-4 py-3 text-right font-bold">Action</th>
                                                             </tr>
                                                         </thead>
@@ -234,13 +240,15 @@
                                                                 <tr class="border-b border-slate-200 hover:bg-slate-50" data-child-row="add-child-guardian-{{ $guardian->id }}" data-child-text="{{ strtolower($student->id . ' ' . $studentName) }}">
                                                                     <td class="px-4 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
                                                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->id }}</td>
-                                                                    <td class="px-4 py-2 font-bold text-slate-950">{{ $studentName }}</td>
+                                                                    <td class="px-4 py-2 font-bold text-slate-950">{{ $studentName }}<br><small>Student No: {{ $student->student_number }} · {{ $student->info?->gradeLevel?->name }} / {{ $student->info?->schoolClass?->name }} · SY {{ $student->info?->academicYear?->name }}</small></td>
                                                                     <td class="px-4 py-2">
-                                                                        <form method="POST" action="{{ route('configuration.accounts.guardians.childs.store', $guardian) }}" class="flex justify-end">
+                                                                        <form method="POST" action="{{ route('configuration.accounts.guardians.childs.store', $guardian) }}" class="flex justify-end" data-student-name="{{ $studentName }}" data-guardian-name="{{ $guardian->name ?? $guardian->username }}" onsubmit="return confirm('Add ' + this.dataset.studentName + ' to ' + this.dataset.guardianName + ' as ' + this.relationship.value + '?')">
                                                                             @csrf
                                                                             <input type="hidden" name="student_id" value="{{ $student->id }}">
+                                                                            <input type="hidden" name="confirm" value="1">
+                                                                            <select name="relationship" required aria-label="Relationship to {{ $studentName }}" class="rounded border p-1 text-xs"><option value="">Relationship</option>@foreach(['Mother','Father','Legal Guardian','Other'] as $relation)<option value="{{ $relation }}">{{ $relation }}</option>@endforeach</select>
                                                                             <button type="submit" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
-                                                                                Select
+                                                                                Add Child
                                                                             </button>
                                                                         </form>
                                                                     </td>

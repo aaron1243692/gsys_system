@@ -3,7 +3,7 @@
 @section('content')
 @include('portal.partials.styles')
 <div class="gs-portal" style="padding:24px">
-    <div class="gs-page-header"><div><p class="gs-eyebrow">Configuration</p><h1>Grade Encoding Schedule</h1><p>Set Q1 to Q3 encoding windows by school year.</p></div></div>
+    <div class="gs-page-header"><div><p class="gs-eyebrow">Configuration</p><h1>Grade Encoding Schedule</h1><p>Set Q1 to Q3 encoding windows by school year. Enter times in {{ config('app.timezone') }}.</p></div></div>
     @if(session('success'))<p class="gs-alert">{{ session('success') }}</p>@endif
     @if($errors->any())<p class="gs-error">{{ $errors->first() }}</p>@endif
     <form method="POST" action="{{ route('configuration.grade-encoding-schedule.store') }}" class="gs-card gs-section"><div class="gs-card-body">@csrf<div class="gs-grid"><label class="gs-field">School Year<select name="academic_year_id" required>@foreach($years as $year)<option value="{{ $year->id }}">{{ $year->name }}</option>@endforeach</select></label><label class="gs-field">Quarter<select name="quarter" required>@foreach([1,2,3] as $quarter)<option value="{{ $quarter }}">Quarter {{ $quarter }}</option>@endforeach</select></label><label class="gs-field">Opens At<input type="datetime-local" name="opens_at" required></label><label class="gs-field">Closes At<input type="datetime-local" name="closes_at" required></label></div><div class="gs-actions"><button class="gs-btn gs-btn-primary">Save Schedule</button></div></div></form>

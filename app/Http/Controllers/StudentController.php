@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
+use App\Models\StudentAccount;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,15 +15,22 @@ class StudentController extends Controller
     {
         $search = trim((string) $request->query('search'));
 
-        $students = Student::query()
-            ->with('info')
+        $link = $request->query('link');
+        $status = $request->query('status');
+        $students = StudentAccount::query()
+            ->with('student.info.gradeLevel', 'student.info.schoolClass', 'student.info.academicYear')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('username', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhereHas('info', fn ($query) => $query->where('name', 'like', "%{$search}%"));
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhereHas('student', fn ($query) => $query->where('student_number', 'like', "%{$search}%")
+                            ->orWhereHas('info', fn ($info) => $info->where('name', 'like', "%{$search}%")));
                 });
             })
+            ->when($link === 'linked', fn($query) => $query->whereNotNull('student_id'))
+            ->when($link === 'unlinked', fn($query) => $query->whereNull('student_id'))
+            ->when(in_array($status, ['PENDING','ACTIVE','REJECTED','DEACTIVATED'], true), fn($query) => $query->where('status', $status))
             ->orderBy('id')
             ->paginate(10)
             ->withQueryString();
@@ -31,6 +38,8 @@ class StudentController extends Controller
         return view('configuration.accounts.students', [
             'students' => $students,
             'search' => $search,
+            'link' => $link,
+            'status' => $status,
         ]);
     }
 
@@ -38,23 +47,20 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('students', 'username')],
-            'email' => ['nullable', 'email', 'max:100'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('student_accounts', 'username')],
+            'email' => ['nullable', 'email', 'max:100', Rule::unique('student_accounts', 'email')],
             'password' => ['required', 'string', 'min:8', 'max:255'],
         ], [
             'username.unique' => 'This username already exists.',
         ]);
 
         DB::transaction(function () use ($validated) {
-            $student = Student::create([
+            StudentAccount::create([
+                'name' => $validated['name'],
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],
-            ]);
-
-            $student->info()->create([
-                'name' => $validated['name'],
-            ]);
+            ])->forceFill(['status' => 'PENDING'])->save();
         });
 
         return redirect()
@@ -62,28 +68,22 @@ class StudentController extends Controller
             ->with('success', 'Student added successfully.');
     }
 
-    public function update(Request $request, Student $student): RedirectResponse
+    public function update(Request $request, StudentAccount $student): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:150'],
-            'username' => ['required', 'string', 'max:255', Rule::unique('students', 'username')->ignore($student->id)],
-            'email' => ['nullable', 'email', 'max:100'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('student_accounts', 'username')->ignore($student->id)],
+            'email' => ['nullable', 'email', 'max:100', Rule::unique('student_accounts', 'email')->ignore($student->id)],
         ], [
             'username.unique' => 'This username already exists.',
         ]);
 
         DB::transaction(function () use ($student, $validated) {
-            $studentData = [
+            $student->update([
+                'name' => $validated['name'],
                 'username' => $validated['username'],
                 'email' => $validated['email'],
-            ];
-
-            $student->update($studentData);
-
-            $student->info()->updateOrCreate(
-                ['student_id' => $student->id],
-                ['name' => $validated['name']]
-            );
+            ]);
         });
 
         return redirect()
@@ -91,16 +91,16 @@ class StudentController extends Controller
             ->with('success', 'Student updated successfully.');
     }
 
-    public function destroy(Student $student): RedirectResponse
+    public function destroy(StudentAccount $student): RedirectResponse
     {
-        $student->delete();
+        $student->forceFill(['status' => 'DEACTIVATED', 'deactivated_by' => auth()->id(), 'deactivated_at' => now()])->save();
 
         return redirect()
             ->route('configuration.accounts.students')
-            ->with('success', 'Student deleted successfully.');
+            ->with('success', 'Student portal account deactivated successfully.');
     }
 
-    public function resetPassword(Request $request, Student $student): RedirectResponse
+    public function resetPassword(Request $request, StudentAccount $student): RedirectResponse
     {
         $validated = $request->validate([
             'password' => ['required', 'string', 'min:8', 'max:255'],

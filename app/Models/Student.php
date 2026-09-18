@@ -40,4 +40,9 @@ class Student extends Authenticatable
     {
         return $this->hasOne(StudentInfo::class, 'student_id');
     }
+
+    public function portalAccount(): HasOne
+    {
+        return $this->hasOne(StudentAccount::class, 'student_id');
+    }
 }

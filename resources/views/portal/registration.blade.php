@@ -31,16 +31,6 @@
                         <label class="gs-field">School Year <span class="gs-required">Required</span><select name="acady_id" required><option value="">Select</option>@foreach($years as $year)<option value="{{ $year->id }}" @selected(old('acady_id')==$year->id)>{{ $year->name }}</option>@endforeach</select></label>
                     @endif
                 </div>
-                @unless($isStudent)
-                    <h2>Claim Child</h2>
-                    <p class="gs-muted">The student details must match an existing student account. Staff still verifies the relationship before grade access.</p>
-                    <div class="gs-grid">
-                        <label class="gs-field">Student Number <span class="gs-required">Required</span><input name="student_number" value="{{ old('student_number') }}" inputmode="numeric" pattern="\d{11}" maxlength="11" required></label>
-                        <label class="gs-field">Student Name <span class="gs-required">Required</span><input name="student_name" value="{{ old('student_name') }}" required maxlength="150"></label>
-                        <label class="gs-field">Student Birthdate <span class="gs-required">Required</span><input type="date" name="student_birthdate" value="{{ old('student_birthdate') }}" required></label>
-                        <label class="gs-field">Relationship <span class="gs-required">Required</span><input name="relationship" value="{{ old('relationship') }}" required maxlength="100"></label>
-                    </div>
-                @endunless
                 <h2>Account Credentials</h2>
                 <div class="gs-grid">
                     <label class="gs-field">Email <span class="gs-required">Required</span><input type="email" name="email" value="{{ old('email') }}" required maxlength="100"></label>

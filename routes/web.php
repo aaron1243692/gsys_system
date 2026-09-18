@@ -20,11 +20,13 @@ use App\Http\Controllers\SubjectCategoryController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherLoadController;
 use App\Http\Controllers\TrackController;
 use App\Models\AcademicYear;
 use App\Models\GradeLevel;
 use App\Models\SchoolClass;
 use App\Models\StudentInfo;
+use App\Models\StudentAccount;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Route;
 
@@ -89,7 +91,7 @@ Route::middleware('auth')
         Route::get('/registrations', [AccountReviewController::class, 'index'])->name('registrations');
         Route::get('/registrations/{type}/{id}', [AccountReviewController::class, 'show'])->name('registrations.show');
         Route::post('/registrations/{type}/{id}', [AccountReviewController::class, 'update'])->name('registrations.update');
-        Route::post('/guardian-childs/{link}/verify', [AccountReviewController::class, 'verify'])->name('guardians.childs.verify');
+        Route::post('/registrations/students/{account}/link', [AccountReviewController::class, 'linkStudent'])->name('registrations.students.link');
         Route::get('/students', [StudentController::class, 'index'])->name('students');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
@@ -137,24 +139,10 @@ Route::middleware('auth')
         Route::post('/schedule-load/class-schedule/{schoolClass}/schedules', [ClassScheduleController::class, 'storeSchedule'])->name('schedule-load.class-schedule.schedules.store');
         Route::put('/schedule-load/class-schedule/schedules/{classSchedule}', [ClassScheduleController::class, 'updateSchedule'])->name('schedule-load.class-schedule.schedules.update');
         Route::delete('/schedule-load/class-schedule/schedules/{classSchedule}', [ClassScheduleController::class, 'destroySchedule'])->name('schedule-load.class-schedule.schedules.destroy');
-        Route::get('/schedule-load/teacher-load', function () {
-            $search = request('search');
-            $teachers = Teacher::query()
-                ->with([
-                    'subjects' => fn ($query) => $query->orderBy('name'),
-                    'advisoryClasses' => fn ($query) => $query->orderBy('name'),
-                ])
-                ->when($search, function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhereHas('subjects', fn ($subjectQuery) => $subjectQuery->where('name', 'like', "%{$search}%"))
-                        ->orWhereHas('advisoryClasses', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
-                })
-                ->orderBy('name')
-                ->paginate(10)
-                ->withQueryString();
-
-            return view('academic.scheduleload.teacherload', compact('teachers', 'search'));
-        })->name('schedule-load.teacher-load');
+        Route::get('/schedule-load/teacher-load', [TeacherLoadController::class, 'index'])->name('schedule-load.teacher-load');
+        Route::post('/schedule-load/teacher-load', [TeacherLoadController::class, 'store'])->name('schedule-load.teacher-load.store');
+        Route::put('/schedule-load/teacher-load/{classSubject}', [TeacherLoadController::class, 'update'])->name('schedule-load.teacher-load.update');
+        Route::delete('/schedule-load/teacher-load/{classSubject}', [TeacherLoadController::class, 'destroy'])->name('schedule-load.teacher-load.destroy');
         Route::get('/schedule-load/rooms', [RoomController::class, 'index'])->name('schedule-load.rooms');
         Route::post('/schedule-load/rooms', [RoomController::class, 'store'])->name('schedule-load.rooms.store');
         Route::put('/schedule-load/rooms/{room}', [RoomController::class, 'update'])->name('schedule-load.rooms.update');
@@ -163,12 +151,13 @@ Route::middleware('auth')
             $search = trim((string) request('search'));
 
             $students = StudentInfo::query()
-                ->with(['academicYear', 'gradeLevel', 'schoolClass.track'])
+                ->with(['academicYear', 'gradeLevel', 'schoolClass.track', 'student.portalAccount'])
                 ->where('admited', 1)
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
                             ->orWhere('lrn', 'like', "%{$search}%")
+                            ->orWhereHas('student', fn ($studentQuery) => $studentQuery->where('student_number', 'like', "%{$search}%"))
                             ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
                             ->orWhereHas('schoolClass', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
                     });
@@ -182,6 +171,7 @@ Route::middleware('auth')
                 'academicYears' => AcademicYear::query()->orderBy('year_from')->orderBy('name')->get(),
                 'classes' => SchoolClass::query()->orderBy('name')->get(),
                 'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
+                'availableAccounts' => StudentAccount::whereNull('student_id')->orderBy('name')->orderBy('username')->get(),
                 'search' => $search,
             ]);
         })->name('students.index');
@@ -249,12 +239,13 @@ Route::middleware('auth')
             $search = trim((string) request('search'));
 
             $students = StudentInfo::query()
-                ->with(['academicYear', 'gradeLevel', 'schoolClass.track'])
+                ->with(['academicYear', 'gradeLevel', 'schoolClass.track', 'student.portalAccount'])
                 ->where('admited', 0)
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
                             ->orWhere('lrn', 'like', "%{$search}%")
+                            ->orWhereHas('student', fn ($studentQuery) => $studentQuery->where('student_number', 'like', "%{$search}%"))
                             ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
                             ->orWhereHas('schoolClass', fn ($classQuery) => $classQuery->where('name', 'like', "%{$search}%"));
                     });

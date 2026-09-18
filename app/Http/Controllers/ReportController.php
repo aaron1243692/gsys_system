@@ -22,7 +22,7 @@ class ReportController extends Controller
                 $join->on('class_subjects.sub_id', '=', 'subjects.id')
                     ->whereNull('subjects.deleted_at');
             })
-            ->leftJoin('teachers', 'subjects.teacher_id', '=', 'teachers.id')
+            ->leftJoin('teachers', 'class_subjects.teacher_id', '=', 'teachers.id')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('classes.name', 'like', "%{$search}%")

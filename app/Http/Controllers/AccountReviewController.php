@@ -1,22 +1,26 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\{Student, Guardian, GuardianChild};
+use App\Models\{Student, StudentAccount, Guardian};
 use App\Services\Audit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{DB, Gate};
+use Illuminate\Validation\ValidationException;
 class AccountReviewController extends Controller
 {
-    private function model(string $type) { abort_unless(in_array($type,['student','guardian']),404); return $type === 'student' ? new Student : new Guardian; }
+    private function model(string $type) { abort_unless(in_array($type,['student','guardian']),404); return $type === 'student' ? new StudentAccount : new Guardian; }
     public function index(Request $request)
     {
         Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $data=$request->validate(['type'=>['nullable','in:student,guardian'],'status'=>['nullable','in:PENDING,ACTIVE,REJECTED,DEACTIVATED'],'search'=>['nullable','string','max:150'],'date'=>['nullable','date']]);
         $type=$data['type']??'student'; $status=$data['status']??'PENDING';
-        $accounts=$this->model($type)->newQuery()->where('status',$status)
+        $accounts=$this->model($type)->newQuery()
+            ->when($type === 'student', fn($q) => $q->with('student'))
+            ->where('status',$status)
             ->when($data['date']??null,fn($q,$v)=>$q->whereDate('created_at',$v))
             ->when($data['search']??null,function($q,$v) use ($type) { $q->where(function($q) use ($v,$type) {
                 $q->where('username','like',"%$v%")->orWhere('email','like',"%$v%");
-                if($type==='student') $q->orWhere('student_number','like',"%$v%")->orWhereHas('info',fn($q)=>$q->where('name','like',"%$v%"));
+                if($type==='student') $q->orWhere('name','like',"%$v%")
+                    ->orWhereHas('student',fn($q)=>$q->where('student_number','like',"%$v%"));
                 else $q->orWhere('name','like',"%$v%");
             }); })->latest()->paginate(20)->withQueryString();
         return view('configuration.accounts.registrations',compact('accounts','type','status'));
@@ -25,9 +29,24 @@ class AccountReviewController extends Controller
     {
         Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $account=$this->model($type)->findOrFail($id);
-        $links=$type==='guardian' ? $account->children()->with('student.info')->get() : collect();
+        $links=$type==='guardian' ? $account->children()->where('status', 'VERIFIED')->with('student.info')->get() : collect();
+        $records = collect(); $selectedStudent = null;
+        if ($type === 'student') {
+            $search = trim((string) $request->query('record_search', ''));
+            if ($search !== '') {
+                $records = Student::with(['info.gradeLevel', 'info.schoolClass', 'info.academicYear', 'portalAccount'])
+                    ->where(fn ($query) => $query->where('student_number', 'like', "%{$search}%")
+                        ->orWhereHas('info', fn ($info) => $info->where('name', 'like', "%{$search}%")
+                            ->orWhereHas('gradeLevel', fn ($level) => $level->where('name', 'like', "%{$search}%"))
+                            ->orWhereHas('schoolClass', fn ($class) => $class->where('name', 'like', "%{$search}%"))
+                            ->orWhereHas('academicYear', fn ($year) => $year->where('name', 'like', "%{$search}%"))))
+                    ->orderBy('id')->limit(30)->get();
+            }
+            if ($request->filled('record_id')) $selectedStudent = Student::with(['info.gradeLevel','info.schoolClass','info.academicYear','portalAccount'])->findOrFail($request->integer('record_id'));
+            $account->load('student.info.gradeLevel', 'student.info.schoolClass', 'student.info.academicYear');
+        }
         $audit=DB::table('audit_events')->where('target_type',$account->getTable())->where('target_id',$id)->orderByDesc('id')->get();
-        return view('configuration.accounts.registration-review',compact('account','type','links','audit'));
+        return view('configuration.accounts.registration-review',compact('account','type','links','audit','records','selectedStudent'));
     }
     public function update(Request $request,string $type,int $id)
     {
@@ -36,7 +55,11 @@ class AccountReviewController extends Controller
         DB::transaction(function() use($request,$type,$id,$data) {
             $account=$this->model($type)->newQuery()->whereKey($id)->lockForUpdate()->firstOrFail();
             $action=$data['action'];
-            if($action==='activate' && $type==='guardian') abort_unless($account->children()->where('status','VERIFIED')->exists(),422,'Verify at least one child relationship before activation.');
+            if($action==='activate' && $type==='guardian') abort_unless($account->children()->where('status','VERIFIED')->exists(),422,'Add at least one child before activation.');
+            if($action==='activate' && $type==='student') {
+                if (! $account->student_id || ! $account->student()->whereHas('info')->exists())
+                    throw ValidationException::withMessages(['action' => "Select and link the student's academic record before activation."]);
+            }
             $status=match($action){'activate'=>'ACTIVE','reject'=>'REJECTED','deactivate'=>'DEACTIVATED'};
             abort_if($account->status===$status,409,'Account already has this status.');
             $prefix=match($action){'activate'=>'activated','reject'=>'rejected','deactivate'=>'deactivated'};
@@ -45,16 +68,28 @@ class AccountReviewController extends Controller
         });
         return back()->with('success','Account status updated.');
     }
-    public function verify(Request $request,GuardianChild $link)
+    public function linkStudent(Request $request, StudentAccount $account)
     {
         Gate::forUser($request->user('web'))->authorize('manage-registrations');
-        $data=$request->validate(['status'=>['required','in:VERIFIED,REJECTED'],'verification_note'=>['required','string','max:2000']]);
-        DB::transaction(function() use($request,$link,$data) {
-            $link=GuardianChild::whereKey($link->id)->lockForUpdate()->firstOrFail();
-            abort_unless($link->student()->exists() && $link->guardian()->exists(),422,'The linked account is missing.');
-            $link->forceFill($data+['verified_by'=>$request->user('web')->id,'verified_at'=>now()])->save();
-            Audit::record('web',$request->user('web')->id,'child.'.strtolower($data['status']),$link,['note'=>$data['verification_note']]);
+        $data = $request->validate(['student_id' => ['required','integer','exists:students,id'], 'confirm' => ['required','accepted']]);
+        DB::transaction(function () use ($request, $account, $data) {
+            $account = StudentAccount::whereKey($account->id)->lockForUpdate()->firstOrFail();
+            $student = Student::whereKey($data['student_id'])->lockForUpdate()->firstOrFail();
+            $info = $student->info()->first();
+            if (! $info || ! $info->admited || ! $info->class_id || ! $info->grlvl_id || ! $info->acady_id
+                || ! $info->schoolClass()->where('grlvl_id', $info->grlvl_id)->where('acady_id', $info->acady_id)->exists())
+                throw ValidationException::withMessages(['student_id' => 'Complete the academic enrollment, class, grade level, and school year before linking.']);
+            if (StudentAccount::where('student_id', $student->id)->whereKeyNot($account->id)->exists())
+                throw ValidationException::withMessages(['student_id' => 'This academic student already has a portal account.']);
+            if ($account->student_id && (int) $account->student_id !== (int) $student->id)
+                throw ValidationException::withMessages(['student_id' => 'This account is already linked to another academic student.']);
+            $account->student_id = $student->id;
+            $account->status = 'ACTIVE';
+            $account->activated_by = $request->user('web')->id;
+            $account->activated_at = now();
+            $account->save();
+            Audit::record('web', $request->user('web')->id, 'student.linked_activated', $account, ['student_id' => $student->id]);
         });
-        return back()->with('success','Relationship review saved.');
+        return redirect()->route('configuration.accounts.registrations.show', ['type' => 'student', 'id' => $account->id])->with('success', 'Academic student linked and account activated.');
     }
 }

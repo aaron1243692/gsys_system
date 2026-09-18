@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        foreach (['manage-registrations'=>'accounts.review', 'manage-schedules'=>'grades.schedule', 'approve-grades'=>'grades.approve'] as $ability => $permission) {
+        foreach (['manage-registrations'=>'accounts.review', 'manage-schedules'=>'grades.schedule', 'approve-grades'=>'grades.approve', 'manage-loads'=>'academic.load'] as $ability => $permission) {
             \Illuminate\Support\Facades\Gate::define($ability, fn (\App\Models\User $user) => $user->status === 'ACTIVE' && ($user->hasRole('admin') || $user->getAllPermissions()->contains('codename', $permission)));
         }
         \Illuminate\Support\Facades\Gate::define('view-grades', function (\App\Models\User $user): bool {

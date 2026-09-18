@@ -15,7 +15,7 @@ class GradeApprovalController extends Controller
     }
     public function show(Request $request,GradeSheet $sheet) {
         Gate::forUser($request->user('web'))->authorize('approve-grades');
-        return view('report.grades.review',['sheet'=>$sheet->load('grades'),'audit'=>DB::table('audit_events')->where('target_type','grade_sheets')->where('target_id',$sheet->id)->orderByDesc('id')->get()]);
+        return view('report.grades.review',['sheet'=>$sheet->load(['grades','approvedBy','returnedBy']),'audit'=>DB::table('audit_events')->where('target_type','grade_sheets')->where('target_id',$sheet->id)->orderByDesc('id')->get()]);
     }
     public function update(Request $request,GradeSheet $sheet,GradeWorkflow $workflow) {
         Gate::forUser($request->user('web'))->authorize('approve-grades');
@@ -29,6 +29,6 @@ class GradeApprovalController extends Controller
             } else $sheet->fill(['status'=>'RETURNED','returned_by'=>$request->user('web')->id,'returned_at'=>now(),'return_reason'=>$data['reason'],'correction_until'=>$data['correction_until']]);
             $sheet->save(); Audit::record('web',$request->user('web')->id,'sheet.'.strtolower($sheet->status),$sheet,$data);
         });
-        return back()->with('success','Grade sheet review saved.');
+        return back()->with('success',$data['action']==='approve' ? 'Grade sheet approved successfully.' : 'Grade sheet returned for correction.');
     }
 }

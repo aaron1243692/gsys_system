@@ -49,6 +49,10 @@
                             class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         >
                     </form>
+                    <form method="GET" action="{{ route('configuration.accounts.students') }}" class="flex flex-wrap gap-2">
+                        <select name="link" class="rounded-[2rem] border border-slate-300 px-3 py-2 text-sm" onchange="this.form.submit()"><option value="">All links</option><option value="linked" @selected($link==='linked')>Linked</option><option value="unlinked" @selected($link==='unlinked')>Not Linked</option></select>
+                        <select name="status" class="rounded-[2rem] border border-slate-300 px-3 py-2 text-sm" onchange="this.form.submit()"><option value="">All statuses</option>@foreach(['PENDING','ACTIVE','REJECTED','DEACTIVATED'] as $option)<option value="{{ $option }}" @selected($status===$option)>{{ $option }}</option>@endforeach</select>
+                    </form>
 
                     <button
                         type="button"
@@ -100,7 +104,11 @@
                                 <th class="w-20 px-4 py-3 font-bold">No</th>
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Name</th>
+                                <th class="px-4 py-3 font-bold">Username</th>
                                 <th class="px-4 py-3 font-bold">Email</th>
+                                <th class="px-4 py-3 font-bold">Student Number</th>
+                                <th class="px-4 py-3 font-bold">Academic Record</th>
+                                <th class="px-4 py-3 font-bold">Account Status</th>
                                 <th class="w-64 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -109,18 +117,23 @@
                                 <tr class="border-b border-slate-200 hover:bg-slate-50">
                                     <td class="px-4 py-2 font-semibold text-slate-500">{{ $students->firstItem() + $loop->index }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->id }}</td>
-                                    <td class="px-4 py-2 font-bold text-slate-950">{{ $student->info?->name ?? $student->username }}</td>
+                                    <td class="px-4 py-2 font-bold text-slate-950">{{ $student->name ?? $student->username }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->username }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->email ?? '-' }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->student?->student_number }}</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700"><span class="gs-badge">{{ $student->student_id ? 'LINKED' : 'NOT LINKED' }}</span>@if($student->student?->info)<small class="block">{{ $student->student->info->gradeLevel?->name }} / {{ $student->student->info->schoolClass?->name }}</small>@endif</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700"><span class="gs-badge" data-status="{{ $student->status }}">{{ $student->status }}</span></td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('edit-student-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
                                                 Edit
                                             </button>
+                                            <a href="{{ route('configuration.accounts.registrations.show', ['type'=>'student','id'=>$student->id]) }}" class="rounded-[2rem] border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700">{{ $student->student_id ? 'View Link' : 'Link Academic Record' }}</a>
                                             <button type="button" onclick="document.getElementById('reset-student-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-amber-200 px-3 py-1.5 text-xs font-bold text-amber-700 transition hover:scale-110 hover:bg-amber-50">
                                                 Reset PW
                                             </button>
                                             <button type="button" onclick="document.getElementById('delete-student-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:scale-110 hover:bg-red-50">
-                                                Delete
+                                                Deactivate
                                             </button>
                                         </div>
 
@@ -136,13 +149,15 @@
                                                 </div>
 
                                                 <label class="mt-4 block text-sm font-bold text-slate-800" for="student-name-{{ $student->id }}">Name</label>
-                                                <input id="student-name-{{ $student->id }}" type="text" name="name" value="{{ old('name', $student->info?->name ?? $student->username) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                <input id="student-name-{{ $student->id }}" type="text" name="name" value="{{ old('name', $student->name ?? $student->username) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
 
                                                 <label class="mt-4 block text-sm font-bold text-slate-800" for="student-email-{{ $student->id }}">Email</label>
                                                 <input id="student-email-{{ $student->id }}" type="email" name="email" value="{{ old('email', $student->email) }}" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
 
                                                 <label class="mt-4 block text-sm font-bold text-slate-800" for="student-username-{{ $student->id }}">Username</label>
                                                 <input id="student-username-{{ $student->id }}" type="text" name="username" value="{{ old('username', $student->username) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+
+                                                <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-black uppercase text-slate-500">Academic Record</p>@if($student->student?->info)<p class="mt-2 font-bold">{{ $student->student->info->name }}</p><p class="text-sm">Student No: {{ $student->student->student_number }}</p><p class="text-sm">{{ $student->student->info->gradeLevel?->name }} / {{ $student->student->info->schoolClass?->name }} / {{ $student->student->info->academicYear?->name }}</p><p class="mt-2 font-bold text-emerald-700">LINKED</p><a class="mt-2 inline-block text-sm font-bold text-blue-700" href="{{ route('academic.students.index', ['search'=>$student->student->student_number]) }}">View Academic Record</a>@else<p class="mt-2 font-bold text-amber-700">NOT LINKED</p><a class="mt-2 inline-block text-sm font-bold text-blue-700" href="{{ route('configuration.accounts.registrations.show', ['type'=>'student','id'=>$student->id]) }}">Link Academic Record</a>@endif</div>
 
                                                 <div class="mt-4 flex gap-2">
                                                     <button type="button" onclick="document.getElementById('edit-student-{{ $student->id }}').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
@@ -166,7 +181,7 @@
                                                 </div>
 
                                                 <p class="mt-3 text-center text-sm leading-6 text-slate-600">
-                                                    Reset password for <span class="font-bold text-slate-950">{{ $student->info?->name ?? $student->username }}</span>?
+                                                    Reset password for <span class="font-bold text-slate-950">{{ $student->name ?? $student->username }}</span>?
                                                 </p>
 
                                                 <label class="mt-4 block text-sm font-bold text-slate-800" for="student-reset-password-{{ $student->id }}">New Password</label>
@@ -188,14 +203,14 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <div class="relative text-center">
-                                                    <h2 class="text-xl font-black">Delete!</h2>
+                                                    <h2 class="text-xl font-black">Deactivate Account</h2>
                                                     <button type="button" onclick="document.getElementById('delete-student-{{ $student->id }}').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
                                                         &times;
                                                     </button>
                                                 </div>
 
                                                 <p class="mt-3 text-center text-sm leading-6 text-slate-600">
-                                                    Are you sure you want to delete <span class="font-bold text-slate-950">{{ $student->info?->name ?? $student->username }}</span>?
+                                                    Are you sure you want to deactivate <span class="font-bold text-slate-950">{{ $student->name ?? $student->username }}</span>?
                                                 </p>
 
                                                 <div class="mt-4 flex gap-2">
@@ -203,7 +218,7 @@
                                                         Cancel
                                                     </button>
                                                     <button type="submit" class="w-full rounded-[2rem] bg-red-600 px-4 py-2 text-sm font-bold text-white transition hover:scale-105 hover:bg-red-700">
-                                                        Delete
+                                                        Deactivate
                                                     </button>
                                                 </div>
                                             </form>

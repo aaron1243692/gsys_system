@@ -1,0 +1,7 @@
+@extends('portal.layout')
+@section('title', 'Subject Students')
+@section('portal-content')
+@include('portal.partials.page-header', ['section'=>'Teacher / My Subjects','heading'=>$load->subject->name,'description'=>$load->schoolClass->name.' · SY '.($load->schoolClass->academicYear?->name ?? 'Not assigned'),'backUrl'=>route('teacher.subjects'),'backLabel'=>'My Subjects'])
+<div class="gs-card gs-section"><div class="gs-card-body"><dl class="gs-context"><div><dt>Subject Teacher</dt><dd>{{ $load->teacher->name }}</dd></div><div><dt>Class / Section</dt><dd>{{ $load->schoolClass->name }}</dd></div><div><dt>School Year</dt><dd>{{ $load->schoolClass->academicYear?->name ?? '-' }}</dd></div><div><dt>Students</dt><dd>{{ $students->total() }}</dd></div></dl></div></div>
+<section class="gs-section"><div class="gs-section-heading"><h2>Students</h2><a class="gs-btn gs-btn-primary" href="{{ route('teacher.grades', $load) }}">Encode Grades</a></div><div class="gs-card"><div class="gs-table-wrap"><table class="gs-table"><thead><tr><th>Student No.</th><th>Student Name</th></tr></thead><tbody>@forelse($students as $studentInfo)<tr><td>{{ $studentInfo->student?->student_number ?? '-' }}</td><td>{{ $studentInfo->name }}</td></tr>@empty<tr><td colspan="2">No admitted students are enrolled in this class and school year.</td></tr>@endforelse</tbody></table></div></div>@include('portal.partials.pagination', ['paginator'=>$students])</section>
+@endsection

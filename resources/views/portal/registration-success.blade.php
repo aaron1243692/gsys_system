@@ -9,8 +9,7 @@
             <section class="gs-panel gs-success">
                 <h2>Pending staff review</h2>
                 @if($portal === 'student')
-                    <p>Your account was created with this Student Number. Keep it for guardian claims and school records.</p>
-                    <div class="gs-student-number"><span>Student Number</span><strong>{{ $registration['number'] ?? 'Pending' }}</strong></div>
+                    <p>Your account is pending staff review and linking to your academic student record. Your official Student Number will appear after linking.</p>
                 @else
                     <p>Your guardian account and child claim were submitted. Staff must verify the relationship before activation.</p>
                 @endif

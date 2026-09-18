@@ -68,6 +68,10 @@ class SchoolClassController extends Controller
                 ->with('open_modal', 'edit-class-' . $schoolClass->id);
         }
 
+        abort_if((int) $schoolClass->acady_id !== (int) $validated['acady_id']
+            && $schoolClass->classSubjects()->whereNotNull('teacher_id')->exists(), 409,
+            'Remove or reassign teaching loads before changing the class school year.');
+
         $schoolClass->update($validated);
 
         return redirect()

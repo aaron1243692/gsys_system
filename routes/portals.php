@@ -25,13 +25,18 @@ Route::view('/privacy-notice', 'legal.document', ['document' => 'privacy'])->nam
 
 Route::prefix('teacher')->middleware('portal:teacher')->name('teacher.')->group(function () {
     Route::get('/dashboard', [PortalPageController::class, 'teacher'])->name('home');
-    Route::get('/classes', [TeacherGradeController::class, 'index'])->name('classes');
-    Route::view('/grades', 'portal.teacher.grades-index', ['portal' => 'teacher'])->name('grades.index');
+    Route::get('/classes', fn () => redirect()->route('teacher.subjects'))->name('classes.legacy');
+    Route::get('/subjects', [TeacherGradeController::class, 'index'])->name('subjects');
+    Route::get('/subjects/{classSubject}/students', [TeacherGradeController::class, 'students'])->name('subjects.students');
+    Route::get('/advisory-class', [PortalPageController::class, 'advisoryClass'])->name('advisory-class');
+    Route::get('/grades', [TeacherGradeController::class, 'gradeIndex'])->name('grades.index');
     Route::get('/grade-history', [PortalPageController::class, 'history'])->name('history');
     Route::get('/profile', [PortalPageController::class, 'profile'])->name('profile');
     Route::post('/profile', [PortalPageController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/classes/{schoolClass}/subjects/{subject}/grades', [TeacherGradeController::class, 'show'])->name('grades');
-    Route::post('/classes/{schoolClass}/subjects/{subject}/grades', [TeacherGradeController::class, 'store'])->name('grades.store');
+    Route::get('/subjects/{classSubject}/grades', [TeacherGradeController::class, 'show'])->name('grades');
+    Route::post('/subjects/{classSubject}/grades', [TeacherGradeController::class, 'store'])->name('grades.store');
+    Route::get('/subjects/{schoolClass}/{subject}/grades', [TeacherGradeController::class, 'legacyGradeRoute'])->name('grades.legacy');
+    Route::post('/subjects/{schoolClass}/{subject}/grades', [TeacherGradeController::class, 'legacyGradeStore'])->name('grades.legacy.store');
 });
 Route::prefix('student')->middleware('portal:student')->name('student.')->group(function () {
     Route::get('/dashboard', [PortalPageController::class, 'student'])->name('home');
@@ -43,9 +48,8 @@ Route::prefix('student')->middleware('portal:student')->name('student.')->group(
 Route::prefix('guardian')->middleware('portal:guardian')->name('guardian.')->group(function () {
     Route::get('/dashboard', [PortalPageController::class, 'guardian'])->name('home');
     Route::get('/children', [PortalGradeController::class, 'children'])->name('children');
-    Route::post('/children/link', [RegistrationController::class, 'link'])->name('children.link');
-    Route::view('/grades', 'portal.guardian.grades-index', ['portal' => 'guardian'])->name('grades.index');
-    Route::get('/children/{student}/grades', [PortalGradeController::class, 'child'])->name('grades');
+    Route::get('/grades', fn () => redirect()->route('guardian.children'))->name('grades.index');
+    Route::get('/children/{student}', [PortalGradeController::class, 'child'])->name('grades');
     Route::get('/profile', [PortalPageController::class, 'profile'])->name('profile');
     Route::post('/profile', [PortalPageController::class, 'updateProfile'])->name('profile.update');
 });

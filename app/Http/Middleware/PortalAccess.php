@@ -22,6 +22,10 @@ class PortalAccess
         }
 
         abort_unless(Auth::guard($portal)->user()->status === 'ACTIVE', 403, 'This account is not active. Contact authorized school staff.');
+        if ($portal === 'student') {
+            abort_unless(Auth::guard('student')->user()->student()->whereHas('info')->exists(), 403,
+                'Your academic student record must be linked by school staff.');
+        }
         return $next($request);
     }
 }
