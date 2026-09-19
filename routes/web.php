@@ -35,9 +35,7 @@ Route::post('/signin', [SignInController::class, 'store'])->middleware('guest')-
 
 Route::get('/signin', fn () => redirect()->route('signin'))->middleware('guest');
 
-Route::get('/dashboard', function(){
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+Route::get('/dashboard', \App\Http\Controllers\AdminDashboardController::class)->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')
     ->prefix('configuration/curriculum')

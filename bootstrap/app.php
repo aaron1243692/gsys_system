@@ -13,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(fn () => route('signin'));
-        $middleware->alias(['portal' => App\Http\Middleware\PortalAccess::class]);
+        $middleware->alias([
+            'portal' => App\Http\Middleware\PortalAccess::class,
+            'mobile' => App\Http\Middleware\MobileApiAuth::class,
+        ]);
         $middleware->web(append: [App\Http\Middleware\SeparatePortalAccess::class]);
         $middleware->prependToPriorityList(
             \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
@@ -21,5 +24,19 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, \Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) return response()->json([
+                'success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(),
+            ], 422);
+        });
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e, \Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) return response()->json([
+                'success' => false, 'message' => $e->getMessage() ?: \Symfony\Component\HttpFoundation\Response::$statusTexts[$e->getStatusCode()] ?? 'Request failed.',
+            ], $e->getStatusCode());
+        });
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) return response()->json([
+                'success' => false, 'message' => 'GSYS encountered a server error.',
+            ], 500);
+        });
     })->create();

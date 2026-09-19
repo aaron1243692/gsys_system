@@ -52,7 +52,7 @@ class WebSystemStructureAuditTest extends TestCase
             }
         }
 
-        $this->assertSame(170, $references, 'Update the audited route-reference count when intentionally changing the UI.');
+        $this->assertSame(184, $references, 'Update the audited route-reference count when intentionally changing the UI.');
         $this->assertSame(110, $forms, 'Update the audited form count when intentionally changing the UI.');
         $this->assertSame([], $issues, implode("\n", $issues));
     }

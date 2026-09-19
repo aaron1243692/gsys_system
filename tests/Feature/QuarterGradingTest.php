@@ -28,6 +28,7 @@ class QuarterGradingTest extends TestCase
             Schema::create($name, function (Blueprint $t) use ($name) {
                 $t->id(); $t->string('username')->unique(); $t->string('name')->nullable();
                 $t->string('email')->nullable(); $t->string('password');
+                if ($name === 'guardians') { $t->string('contact')->nullable(); $t->string('address')->nullable(); }
                 $t->string('status', 20)->default('ACTIVE')->index();
                 foreach (['activated', 'rejected', 'deactivated'] as $action) {
                     $t->unsignedBigInteger($action.'_by')->nullable();
@@ -90,6 +91,11 @@ class QuarterGradingTest extends TestCase
         });
         Schema::create('agreement_records', function (Blueprint $t) {
             $t->id(); $t->string('account_type'); $t->integer('account_id'); $t->string('document_type'); $t->string('document_version'); $t->dateTime('accepted_at');
+        });
+        Schema::create('mobile_api_tokens', function (Blueprint $t) {
+            $t->id(); $t->string('account_type'); $t->unsignedBigInteger('account_id');
+            $t->char('token_hash', 64)->unique(); $t->dateTime('last_used_at')->nullable();
+            $t->dateTime('expires_at')->nullable(); $t->timestamps();
         });
         Schema::create('grades', function (Blueprint $t) {
             $t->increments('id'); $t->integer('class_list_id'); $t->integer('subject_id');
@@ -628,6 +634,44 @@ class QuarterGradingTest extends TestCase
         $this->get(route('guardian.grades', $other))->assertForbidden();
     }
 
+    public function test_mobile_api_uses_revocable_tokens_shared_records_and_role_isolation(): void
+    {
+        $this->submitAndApprove(1, '99');
+        $guardian = Guardian::create(['username'=>'mobile-parent','name'=>'Mobile Parent','email'=>'mobile-parent@example.test','password'=>'test-password'])->refresh();
+        $link = GuardianChild::create(['guardian_id'=>$guardian->id,'student_id'=>$this->student->id]);
+        $link->forceFill(['status'=>'VERIFIED','relationship'=>'Mother'])->save();
+        $other = Student::create(['username'=>'mobile-unlinked','password'=>'test-password'])->refresh();
+
+        $studentLogin = $this->postJson('/api/student/login',['username'=>'student','password'=>'test-password'])
+            ->assertOk()->assertJsonPath('data.role','student')->assertJsonStructure(['data'=>['token','token_type','user']]);
+        $studentToken = $studentLogin->json('data.token');
+        $this->withToken($studentToken)->getJson('/api/me')->assertOk()->assertJsonPath('data.role','student');
+        $this->withToken($studentToken)->getJson('/api/student/dashboard')->assertOk()->assertJsonPath('data.student.id',$this->student->id);
+        $this->withToken($studentToken)->getJson('/api/student/grades')->assertOk()
+            ->assertJsonPath('data.classes.0.subjects.0.grades.q1',99);
+        $this->withToken($studentToken)->getJson('/api/guardian/children')->assertForbidden();
+
+        $guardianLogin = $this->postJson('/api/guardian/login',['username'=>'mobile-parent','password'=>'test-password'])->assertOk();
+        $guardianToken = $guardianLogin->json('data.token');
+        $this->withToken($guardianToken)->getJson('/api/guardian/children')->assertOk()
+            ->assertJsonPath('data.0.id',$this->student->id)->assertJsonPath('data.0.relationship','Mother');
+        $this->withToken($guardianToken)->getJson('/api/guardian/children/'.$this->student->id.'/grades')->assertOk()
+            ->assertJsonPath('data.classes.0.subjects.0.grades.q1',99);
+        $this->withToken($guardianToken)->getJson('/api/guardian/children/'.$other->id.'/grades')->assertForbidden();
+        $this->withToken($guardianToken)->getJson('/api/student/profile')->assertForbidden();
+        $this->withHeader('Authorization','')->getJson('/api/student/dashboard')->assertUnauthorized();
+        $this->withToken($guardianToken)->putJson('/api/guardian/profile',['name'=>'Updated Parent','email'=>'updated-parent@example.test','contact'=>'123','address'=>'New Address','current_password'=>'test-password'])
+            ->assertOk()->assertJsonPath('data.name','Updated Parent');
+        $this->withToken($studentToken)->postJson('/api/logout')->assertOk();
+        $this->withToken($studentToken)->getJson('/api/me')->assertUnauthorized();
+
+        $this->withHeader('Authorization','')->postJson('/api/guardian/register',['username'=>'new-mobile-parent','email'=>'new-mobile-parent@example.test','password'=>'test-password','password_confirmation'=>'test-password','name'=>'New Parent','terms'=>true,'privacy'=>true])
+            ->assertCreated()->assertJsonPath('data.status','PENDING');
+        $this->postJson('/api/guardian/login',['username'=>'new-mobile-parent','password'=>'test-password'])->assertForbidden();
+        $this->postJson('/api/student/login',[])->assertUnprocessable()->assertJsonPath('success',false)
+            ->assertJsonStructure(['errors'=>['username','password']]);
+    }
+
     public function test_duplicate_name_registration_requires_staff_selected_academic_record(): void
     {
         $rizal = Student::create(['username' => 'juan-rizal', 'password' => 'unused-password'])->refresh();
@@ -725,6 +769,24 @@ class QuarterGradingTest extends TestCase
         $this->assertDatabaseHas('student_accounts', ['id' => $pending->id, 'student_id' => $unlinkedStudent->id, 'status' => 'ACTIVE']);
         $this->get(route('academic.students.index', ['search' => $unlinkedStudent->student_number]))
             ->assertOk()->assertSee('ACTIVE')->assertSee('View Account');
+    }
+
+    public function test_admin_dashboard_uses_real_year_scoped_metrics_and_permissions(): void
+    {
+        $this->submitAndApprove(1, '99');
+        $admin=User::create(['username'=>'dashboard-admin','email'=>'dashboard-admin@example.test','password'=>'test-password'])->refresh();
+        $admin->assignRole(Role::create(['name'=>'admin','guard_name'=>'web']));
+        $guardian=Guardian::create(['username'=>'dashboard-parent','password'=>'test-password'])->refresh();
+        $link=GuardianChild::create(['guardian_id'=>$guardian->id,'student_id'=>$this->student->id]);
+        $link->forceFill(['status'=>'VERIFIED','relationship'=>'Father'])->save();
+
+        $this->forgetIdentities();
+        $this->actingAs($admin,'web')->get(route('dashboard'))
+            ->assertOk()->assertSee('Welcome, dashboard-admin')->assertSee('2025-2026')
+            ->assertSee('Grade Workflow')->assertSee('Approved')->assertSee('Grade Encoding')
+            ->assertSee('Teacher Load')->assertSee('Guardian Links')->assertSee('Recent Grade Activity')
+            ->assertSee('Quick Actions')->assertSee('Grade Approval')->assertSee('Encoding Schedule');
+        $this->get(route('dashboard',['school_year_id'=>999999]))->assertSessionHasErrors('school_year_id');
     }
 
     public function test_guardian_can_view_linked_child_but_not_unlinked_or_revoked_child(): void

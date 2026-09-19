@@ -1,59 +1,27 @@
 <?php
-
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
-use App\Models\Guardian;
-use App\Models\StudentAccount;
+use App\Models\{Guardian,MobileApiToken,StudentAccount};
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\{JsonResponse,Request};
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-
 class AuthController extends Controller
 {
-    public function studentLogin(Request $request): JsonResponse
+    public function studentLogin(Request $r): JsonResponse { return $this->login($r,StudentAccount::class,'student'); }
+    public function guardianLogin(Request $r): JsonResponse { return $this->login($r,Guardian::class,'guardian'); }
+    public function me(Request $r): JsonResponse { $a=$r->attributes->get('mobile_user'); return $this->ok(['role'=>$r->attributes->get('mobile_role'),'user'=>$this->identity($a)]); }
+    public function logout(Request $r): JsonResponse { $r->attributes->get('mobile_token')->delete(); return $this->ok(null,'Logged out.'); }
+    /** @param class-string<Model> $model */
+    private function login(Request $r,string $model,string $role): JsonResponse
     {
-        return $this->login($request, StudentAccount::class, 'student');
+        $v=$r->validate(['username'=>['required','string'],'password'=>['required','string']]);
+        $a=$model::where('username',$v['username'])->first();
+        if(!$a||!Hash::check($v['password'],$a->password)) return response()->json(['success'=>false,'message'=>'Invalid username or password.'],401);
+        if($a->status!=='ACTIVE'||($role==='student'&&!$a->student()->whereHas('info')->exists())) return response()->json(['success'=>false,'message'=>'Your account is not active. School staff must review and activate it before portal access.'],403);
+        $plain=bin2hex(random_bytes(32));
+        MobileApiToken::create(['account_type'=>$role,'account_id'=>$a->id,'token_hash'=>hash('sha256',$plain),'expires_at'=>now()->addDays(30)]);
+        return $this->ok(['token'=>$plain,'token_type'=>'Bearer','role'=>$role,'user'=>$this->identity($a)],'Login successful.');
     }
-
-    public function guardianLogin(Request $request): JsonResponse
-    {
-        return $this->login($request, Guardian::class, 'guardian');
-    }
-
-    /**
-     * @param class-string<Model> $model
-     */
-    private function login(Request $request, string $model, string $role): JsonResponse
-    {
-        $credentials = $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
-
-        $account = $model::query()
-            ->where('username', $credentials['username'])
-            ->first();
-
-        if (! $account || ! Hash::check($credentials['password'], $account->password)) {
-            throw ValidationException::withMessages([
-                'username' => ['Invalid username or password.'],
-            ]);
-        }
-        if ($account->status !== 'ACTIVE' || ($role === 'student' && ! $account->student()->whereHas('info')->exists())) {
-            throw ValidationException::withMessages(['username' => ['Your account is pending staff review or academic record linking.']]);
-        }
-
-        return response()->json([
-            'message' => 'Login successful.',
-            'user' => [
-                'id' => $account->id,
-                'student_id' => $role === 'student' ? $account->student_id : null,
-                'username' => $account->username,
-                'role' => $role,
-            ],
-        ]);
-    }
+    private function identity(Model $a): array { return ['id'=>$a->id,'username'=>$a->username,'name'=>$a->name??null,'email'=>$a->email]; }
+    private function ok(mixed $data,?string $message=null): JsonResponse { return response()->json(array_filter(['success'=>true,'message'=>$message,'data'=>$data],fn($v)=>$v!==null)); }
 }

@@ -191,6 +191,19 @@
         </div>
 
         @auth
+            @isset($notifications)
+            <details class="group relative ml-auto shrink-0">
+                <summary class="relative flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-slate-200 bg-white text-lg text-slate-700 shadow-sm transition hover:bg-slate-50" aria-label="Notifications">
+                    &#128276;
+                    @if(count($notifications))<span class="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-black leading-5 text-white">{{ count($notifications) }}</span>@endif
+                </summary>
+                <div class="absolute right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl shadow-slate-300/60">
+                    <p class="px-2 py-1 text-xs font-black uppercase tracking-wider text-slate-500">Notifications</p>
+                    <div class="mt-1 max-h-80 space-y-1 overflow-y-auto">@forelse($notifications as $notice)<div class="rounded-xl bg-slate-50 p-3"><p class="text-sm font-semibold">{{ $notice['text'] }}</p>@if($notice['route'])<a href="{{ route($notice['route']) }}" class="mt-1 inline-flex text-xs font-black text-blue-700">{{ $notice['label'] }} →</a>@endif</div>@empty<p class="p-3 text-sm text-slate-500">You're all caught up.</p>@endforelse</div>
+                    <a href="{{ route('dashboard') }}#notifications" class="mt-2 block rounded-xl bg-blue-50 px-3 py-2 text-center text-sm font-bold text-blue-800">View Dashboard</a>
+                </div>
+            </details>
+            @endisset
             <details class="group relative shrink-0">
                 <summary class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 py-1.5 pl-2 pr-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-blue-50">
                     <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-700 to-indigo-700 text-xs font-bold uppercase text-white">

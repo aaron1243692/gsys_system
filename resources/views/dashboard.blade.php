@@ -1,45 +1,44 @@
 @extends('layouts.app')
-
-@section('title', 'Dashboard')
-
+@section('title','Dashboard')
 @section('content')
-    @if (session('success'))
-        <div id="dashboard-message-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-5 backdrop-blur-sm">
-            <div class="w-full max-w-sm rounded-xl border border-white/70 bg-white px-6 py-2 text-slate-950 shadow-2xl">
-                <div class="relative text-center">
-                    <button type="button" onclick="document.getElementById('dashboard-message-modal').remove()" class="absolute right-0 top-0 inline-flex h-9 w-9 items-center justify-center rounded-full text-2xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-950" aria-label="Close message">
-                        &times;
-                    </button>
+@php
+    $statusColors=['DRAFT'=>'bg-slate-100 text-slate-700','SUBMITTED'=>'bg-blue-100 text-blue-800','APPROVED'=>'bg-emerald-100 text-emerald-800','RETURNED'=>'bg-amber-100 text-amber-800'];
+    $summaryLinks=['students'=>'academic.students.index','teachers'=>'configuration.accounts.teachers','guardians'=>'configuration.accounts.guardians','classes'=>'configuration.curriculum.class','subjects'=>'configuration.curriculum.subjects'];
+@endphp
+<section class="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6">
+    <header class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-end sm:justify-between">
+        <div><p class="text-xs font-black uppercase tracking-[.2em] text-blue-700">Dashboard</p><h1 class="mt-1 text-2xl font-black text-slate-950">Welcome, {{ auth()->user()->username }}</h1><p class="mt-1 text-sm text-slate-600">School Year {{ $year->name }} · Q{{ $quarter }}</p></div>
+        <form method="GET" action="{{ route('dashboard') }}" class="flex items-end gap-2"><label class="text-xs font-bold uppercase tracking-wider text-slate-500">School Year<select name="school_year_id" onchange="this.form.submit()" class="mt-1 block rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800">@foreach($years as $option)<option value="{{ $option->id }}" @selected($option->id===$year->id)>{{ $option->name }}</option>@endforeach</select></label><noscript><button class="rounded-xl bg-blue-700 px-3 py-2 text-sm font-bold text-white">Apply</button></noscript></form>
+    </header>
 
-                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 ring-8 ring-emerald-50/60">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-xl font-black text-white">
-                            ✓
-                        </span>
-                    </div>
+    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        @foreach($summary as $key=>$value)<article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-xs font-black uppercase tracking-wider text-slate-500">{{ $key }}</p><p class="mt-2 text-3xl font-black text-slate-950">{{ number_format($value) }}</p><p class="mt-1 text-xs text-slate-500">{{ in_array($key,['classes','subjects']) ? $year->name.' academic data' : 'Global system total' }}</p><a href="{{ route($summaryLinks[$key]) }}" class="mt-4 inline-flex text-sm font-bold text-blue-700 hover:text-blue-900">View {{ ucfirst($key) }} →</a></article>@endforeach
+    </div>
 
-                    <h3 class="mt-1 text-2xl font-black tracking-tight">Signed in</h3>
-                </div>
+    <div class="grid gap-6 xl:grid-cols-3">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2"><div class="flex items-center justify-between"><div><h2 class="text-lg font-black text-slate-950">Grade Workflow</h2><p class="text-sm text-slate-500">{{ $year->name }} grade sheets</p></div>@if($permissions['approve'])<a href="{{ route('report.grades.approval') }}" class="rounded-xl bg-blue-700 px-4 py-2 text-sm font-bold text-white">Review Grades</a>@endif</div><div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">@foreach(['DRAFT','SUBMITTED','APPROVED','RETURNED'] as $status)<div class="rounded-xl p-4 {{ $statusColors[$status] }}"><p class="text-xs font-black tracking-wider">{{ $status }}</p><p class="mt-1 text-2xl font-black">{{ $sheetCounts[$status]??0 }}</p></div>@endforeach</div></article>
+        <article id="notifications" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div class="flex items-center justify-between"><h2 class="text-lg font-black text-slate-950">Notifications</h2><span class="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-black text-blue-800">{{ count($notifications) }}</span></div><div class="mt-4 space-y-3">@forelse($notifications as $notice)<div class="rounded-xl border p-3 {{ $notice['priority']==='warning'?'border-amber-200 bg-amber-50':($notice['priority']==='attention'?'border-blue-200 bg-blue-50':'border-slate-200 bg-slate-50') }}"><p class="text-xs font-black uppercase tracking-wider text-slate-500">{{ $notice['priority'] }}</p><p class="mt-1 text-sm font-semibold text-slate-800">{{ $notice['text'] }}</p>@if($notice['route'])<a href="{{ route($notice['route']) }}" class="mt-2 inline-flex text-xs font-black text-blue-700">{{ $notice['label'] }} →</a>@endif</div>@empty<p class="rounded-xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">You're all caught up.</p>@endforelse</div></article>
+    </div>
 
-                <p class="mx-auto mt-1 max-w-sm text-center text-sm leading-6 text-slate-600">
-                    {{ session('success') }}
-                </p>
+    <div class="grid gap-6 lg:grid-cols-2">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black text-slate-950">Grade Encoding</h2><p class="text-sm text-slate-500">Server time: {{ now()->format('M j, Y g:i A') }}</p><div class="mt-4 grid gap-3 sm:grid-cols-3">@foreach([1,2,3] as $q)@php($schedule=$schedules->get($q))<div class="rounded-xl border border-slate-200 p-4"><div class="flex items-center justify-between"><strong>Q{{ $q }}</strong><span class="rounded-full px-2 py-1 text-xs font-black {{ ($schedule?->status)==='OPEN'?'bg-emerald-100 text-emerald-800':(($schedule?->status)==='UPCOMING'?'bg-amber-100 text-amber-800':'bg-slate-100 text-slate-600') }}">{{ $schedule?->status??'NOT CONFIGURED' }}</span></div>@if($schedule)<p class="mt-2 text-xs text-slate-500">{{ $schedule->opens_at->format('M j, g:i A') }} – {{ $schedule->closes_at->format('M j, g:i A') }}</p>@if($schedule->status==='OPEN')<p class="mt-1 text-xs font-bold text-emerald-700">Closes {{ $schedule->closes_at->diffForHumans() }}</p>@endif @endif</div>@endforeach</div>@if($permissions['schedules'])<a href="{{ route('configuration.grade-encoding-schedule') }}" class="mt-4 inline-flex text-sm font-bold text-blue-700">View Schedule →</a>@endif</article>
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black text-slate-950">Q{{ $quarter }} Grade Progress</h2><div class="mt-4 grid grid-cols-2 gap-3">@foreach(['APPROVED','SUBMITTED','DRAFT','RETURNED'] as $status)<div class="rounded-xl bg-slate-50 p-3"><p class="text-xs font-bold text-slate-500">{{ ucfirst(strtolower($status)) }}</p><p class="text-xl font-black text-slate-900">{{ $quarterCounts[$status]??0 }}</p></div>@endforeach<div class="col-span-2 rounded-xl bg-blue-50 p-3"><p class="text-xs font-bold text-blue-700">Not Started</p><p class="text-xl font-black text-blue-950">{{ $progress['not_started'] }}</p><p class="text-xs text-blue-700">of {{ $progress['expected'] }} expected class-subject sheets</p></div></div></article>
+    </div>
 
-                <button type="button" onclick="document.getElementById('dashboard-message-modal').remove()" class="mt-4 w-full rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700">
-                    Continue
-                </button>
-            </div>
-        </div>
-    @endif
+    <div class="grid gap-6 lg:grid-cols-2">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Teacher Load</h2><dl class="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-slate-500">Assigned Subject Loads</dt><dd class="text-xl font-black">{{ $loads['assigned'] }}</dd></div><div><dt class="text-slate-500">Unassigned Subject Loads</dt><dd class="text-xl font-black">{{ $loads['unassigned'] }}</dd></div><div><dt class="text-slate-500">Teachers With Loads</dt><dd class="text-xl font-black">{{ $loads['teachers_with'] }}</dd></div><div><dt class="text-slate-500">Teachers Without Loads</dt><dd class="text-xl font-black">{{ $loads['teachers_without'] }}</dd></div></dl>@if($permissions['loads'])<a href="{{ route('academic.schedule-load.teacher-load') }}" class="mt-4 inline-flex text-sm font-bold text-blue-700">Manage Teacher Loads →</a>@endif</article>
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Academic Record Issues</h2><dl class="mt-4 grid grid-cols-2 gap-3 text-sm">@foreach($issues as $key=>$value)<div><dt class="text-slate-500">{{ ucwords(str_replace('_',' ',$key)) }}</dt><dd class="text-xl font-black">{{ $value }}</dd></div>@endforeach</dl><p class="mt-4 text-sm font-semibold {{ $issue_total?'text-amber-700':'text-emerald-700' }}">{{ $issue_total ? "$issue_total issues require review." : 'No academic placement issues detected.' }}</p><a href="{{ route('academic.students.index') }}" class="mt-3 inline-flex text-sm font-bold text-blue-700">Review Students →</a></article>
+    </div>
 
-    <section class="mx-auto w-full max-w-6xl px-5 py-10">
-        <div class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-wider text-sky-700">Dashboard</p>
-            <h1 class="mt-2 text-3xl font-black text-slate-950">
-                Welcome, {{ auth()->user()->username }}
-            </h1>
-            <p class="mt-2 text-slate-600">
-                You are signed in with the users table account.
-            </p>
-        </div>
-    </section>
+    <div class="grid gap-6 lg:grid-cols-2">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Account Status</h2><div class="mt-4 space-y-4">@foreach($accounts as $type=>$statuses)<div><p class="text-sm font-black capitalize">{{ $type }}</p><div class="mt-2 flex flex-wrap gap-2">@forelse($statuses as $status=>$count)<span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{{ $status }}: {{ $count }}</span>@empty<span class="text-sm text-slate-500">No accounts.</span>@endforelse</div></div>@endforeach</div></article>
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Guardian Links</h2><dl class="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt class="text-slate-500">Guardians</dt><dd class="text-xl font-black">{{ $guardianLinks['guardians'] }}</dd></div><div><dt class="text-slate-500">Linked Guardians</dt><dd class="text-xl font-black">{{ $guardianLinks['linked'] }}</dd></div><div><dt class="text-slate-500">Without Children</dt><dd class="text-xl font-black">{{ $guardianLinks['without'] }}</dd></div><div><dt class="text-slate-500">Verified Relationships</dt><dd class="text-xl font-black">{{ $guardianLinks['relationships'] }}</dd></div></dl><a href="{{ route('configuration.accounts.guardians') }}" class="mt-4 inline-flex text-sm font-bold text-blue-700">View Guardians →</a></article>
+    </div>
+
+    <article class="rounded-2xl border border-slate-200 bg-white shadow-sm"><div class="flex items-center justify-between p-5"><div><h2 class="text-lg font-black">Waiting for Approval</h2><p class="text-sm text-slate-500">Newest submitted sheets for {{ $year->name }}</p></div>@if($permissions['approve'])<a href="{{ route('report.grades.approval',['status'=>'SUBMITTED','academic_year_id'=>$year->id]) }}" class="text-sm font-bold text-blue-700">View All →</a>@endif</div><div class="overflow-x-auto"><table class="w-full min-w-[680px] text-left text-sm"><thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500"><tr><th class="px-5 py-3">Teacher</th><th>Subject</th><th>Class</th><th>Quarter</th><th>Submitted</th><th>Action</th></tr></thead><tbody>@forelse($submitted as $sheet)<tr class="border-t"><td class="px-5 py-3 font-semibold">{{ $sheet->teacher_name??'—' }}</td><td>{{ $sheet->subject_name??'—' }}</td><td>{{ $sheet->class_name??'—' }}</td><td>Q{{ $sheet->quarter }}</td><td>{{ $sheet->submitted_at?->format('M j, g:i A')??'—' }}</td><td>@if($permissions['approve'])<a href="{{ route('report.grades.approval.show',$sheet) }}" class="font-bold text-blue-700">Review</a>@else—@endif</td></tr>@empty<tr><td colspan="6" class="px-5 py-8 text-center text-slate-500">No grade sheets are waiting for approval.</td></tr>@endforelse</tbody></table></div></article>
+
+    @if($unassignedRows->isNotEmpty())<article class="rounded-2xl border border-slate-200 bg-white shadow-sm"><div class="p-5"><h2 class="text-lg font-black">Needs Teacher</h2><p class="text-sm text-slate-500">Current class-subject loads without a teacher</p></div><div class="overflow-x-auto"><table class="w-full min-w-[560px] text-left text-sm"><thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="px-5 py-3">Subject</th><th>Class</th><th>School Year</th><th>Action</th></tr></thead><tbody>@foreach($unassignedRows as $load)<tr class="border-t"><td class="px-5 py-3 font-semibold">{{ $load->subject?->name??'—' }}</td><td>{{ $load->schoolClass?->name??'—' }}</td><td>{{ $load->schoolClass?->academicYear?->name??'—' }}</td><td>@if($permissions['loads'])<a href="{{ route('academic.schedule-load.teacher-load') }}" class="font-bold text-blue-700">Assign</a>@else—@endif</td></tr>@endforeach</tbody></table></div></article>@endif
+
+    <div class="grid gap-6 lg:grid-cols-2"><article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Recent Grade Activity</h2><div class="mt-4 divide-y">@forelse($recentActivity as $event)<div class="py-3"><p class="text-sm font-bold text-slate-900">{{ $event['actor'] }}</p><p class="text-sm text-slate-600">{{ $event['action'] }}</p><p class="text-xs text-slate-400">{{ $event['at']->diffForHumans() }}</p></div>@empty<p class="py-6 text-sm text-slate-500">No recent grade workflow activity.</p>@endforelse</div></article><article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-lg font-black">Quick Actions</h2><div class="mt-4 grid gap-3 sm:grid-cols-2">@if($permissions['accounts'])<a href="{{ route('configuration.accounts.students') }}" class="rounded-xl bg-blue-50 p-4 font-bold text-blue-800">Add Student</a><a href="{{ route('configuration.accounts.teachers') }}" class="rounded-xl bg-blue-50 p-4 font-bold text-blue-800">Add Teacher</a>@endif @if($permissions['loads'])<a href="{{ route('academic.schedule-load.teacher-load') }}" class="rounded-xl bg-indigo-50 p-4 font-bold text-indigo-800">Manage Teacher Loads</a>@endif @if($permissions['approve'])<a href="{{ route('report.grades.approval') }}" class="rounded-xl bg-emerald-50 p-4 font-bold text-emerald-800">Grade Approval</a>@endif @if($permissions['schedules'])<a href="{{ route('configuration.grade-encoding-schedule') }}" class="rounded-xl bg-amber-50 p-4 font-bold text-amber-800">Encoding Schedule</a>@endif</div></article></div>
+</section>
 @endsection
