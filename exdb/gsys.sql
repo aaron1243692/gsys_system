@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2026 at 01:56 AM
+-- Generation Time: Sep 20, 2026 at 11:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.5.9
 
@@ -61,6 +61,14 @@ CREATE TABLE `agreement_records` (
   `accepted_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `agreement_records`
+--
+
+INSERT INTO `agreement_records` (`id`, `account_type`, `account_id`, `document_type`, `document_version`, `accepted_at`) VALUES
+(1, 'student', 62, 'terms', '2026-09-15.1', '2026-09-19 23:16:09'),
+(2, 'student', 62, 'privacy', '2026-09-15.1', '2026-09-19 23:16:09');
+
 -- --------------------------------------------------------
 
 --
@@ -93,7 +101,13 @@ INSERT INTO `audit_events` (`id`, `actor_type`, `actor_id`, `action`, `target_ty
 (9, 'teacher', 1, 'sheet.draft_saved', 'grade_sheets', 2, '[]', '2026-09-18 14:03:46'),
 (10, 'teacher', 1, 'sheet.submitted', 'grade_sheets', 2, '[]', '2026-09-18 14:03:46'),
 (11, 'web', 1, 'sheet.approved', 'grade_sheets', 2, '{\"action\":\"approve\"}', '2026-09-18 14:43:26'),
-(12, 'web', 1, 'child.linked', 'guardianchilds', 1, '{\"reused_existing_link\":true}', '2026-09-19 00:27:08');
+(12, 'web', 1, 'child.linked', 'guardianchilds', 1, '{\"reused_existing_link\":true}', '2026-09-19 00:27:08'),
+(13, 'web', 1, 'child.linked', 'guardianchilds', 63, '{\"reused_existing_link\":false}', '2026-09-19 08:17:01'),
+(14, 'web', 1, 'child.linked', 'guardianchilds', 2, '{\"reused_existing_link\":true}', '2026-09-19 22:36:19'),
+(15, 'teacher', 1, 'sheet.draft_saved', 'grade_sheets', 3, '[]', '2026-09-19 22:39:42'),
+(16, 'teacher', 1, 'sheet.draft_saved', 'grade_sheets', 3, '[]', '2026-09-19 22:39:49'),
+(17, 'teacher', 1, 'sheet.submitted', 'grade_sheets', 3, '[]', '2026-09-19 22:39:49'),
+(18, 'student', 62, 'registration.created', 'student_accounts', 62, '[]', '2026-09-19 23:16:09');
 
 -- --------------------------------------------------------
 
@@ -138,8 +152,9 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba', 'i:2;', 1789774280),
-('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1789774280;', 1789774280);
+('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba', 'i:3;', 1789888533),
+('laravel_cache_5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1789888533;', 1789888533),
+('laravel_cache_spatie.permission.cache', 'a:3:{s:5:\"alias\";a:6:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:8:\"codename\";s:1:\"d\";s:9:\"parent_id\";s:1:\"e\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:3:{i:0;a:5:{s:1:\"a\";i:1;s:1:\"b\";s:6:\"sadasd\";s:1:\"c\";s:3:\"asd\";s:1:\"d\";N;s:1:\"e\";s:3:\"web\";}i:1;a:6:{s:1:\"a\";i:2;s:1:\"b\";s:4:\"view\";s:1:\"c\";s:8:\"asd.view\";s:1:\"d\";i:1;s:1:\"e\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:2;a:6:{s:1:\"a\";i:3;s:1:\"b\";s:6:\"delete\";s:1:\"c\";s:10:\"asd.delete\";s:1:\"d\";i:1;s:1:\"e\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:12;}}}s:5:\"roles\";a:2:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"e\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:12;s:1:\"b\";s:5:\"staff\";s:1:\"e\";s:3:\"web\";}}}', 1789974842);
 
 -- --------------------------------------------------------
 
@@ -177,9 +192,9 @@ CREATE TABLE `class` (
 INSERT INTO `class` (`id`, `grlvl_id`, `track_id`, `acady_id`, `adviser_id`, `name`, `created_at`, `updated_at`) VALUES
 (2, 5, 1, 4, 1, 'grade 7a', '2026-06-01 22:37:53', '2026-09-17 05:36:18'),
 (3, 5, NULL, 4, NULL, 'grade 7b', '2026-06-02 12:23:57', '2026-09-17 05:36:10'),
-(5, 18, 1, 6, 2, 'Grade 11 STEM A', '2026-07-01 07:48:48', '2026-07-01 07:48:48'),
-(6, 18, 1, 6, 3, 'Grade 11 STEM B', '2026-07-01 07:48:48', '2026-07-01 07:48:48'),
-(7, 18, 2, 6, 4, 'Grade 11 ABM A', '2026-07-01 07:48:48', '2026-07-01 07:48:48'),
+(5, 18, 1, 6, 2, 'Grade 8 STEM A', '2026-07-01 07:48:48', '2026-09-19 14:31:36'),
+(6, 18, 1, 6, 3, 'Grade 4 STEM B', '2026-07-01 07:48:48', '2026-09-19 14:31:45'),
+(7, 18, 2, 6, 4, 'Grade 1 ABM A', '2026-07-01 07:48:48', '2026-09-19 14:31:53'),
 (8, 19, 1, 6, 5, 'Grade 12 STEM A', '2026-07-01 07:48:48', '2026-07-01 07:48:48'),
 (9, 19, 1, 6, 6, 'Grade 12 STEM B', '2026-07-01 07:48:48', '2026-07-01 07:48:48'),
 (10, 19, 2, 6, 7, 'Grade 12 ABM A', '2026-07-01 07:48:48', '2026-07-01 07:48:48');
@@ -268,8 +283,8 @@ CREATE TABLE `classsub` (
 --
 
 INSERT INTO `classsub` (`id`, `class_id`, `sub_id`, `created_at`, `updated_at`, `teacher_id`) VALUES
-(2, 2, 1, '2026-06-01 23:33:31', '2026-06-01 23:33:31', NULL),
-(3, 5, 4, '2026-07-01 07:48:48', '2026-07-01 07:48:48', NULL),
+(2, 2, 1, '2026-06-01 23:33:31', '2026-09-19 14:32:24', 1),
+(3, 5, 4, '2026-07-01 07:48:48', '2026-09-19 14:32:35', 7),
 (4, 5, 5, '2026-07-01 07:48:48', '2026-07-01 07:48:48', NULL),
 (5, 5, 6, '2026-07-01 07:48:48', '2026-07-01 07:48:48', NULL),
 (6, 5, 7, '2026-07-01 07:48:48', '2026-07-01 07:48:48', NULL),
@@ -499,7 +514,14 @@ INSERT INTO `grades` (`id`, `class_list_id`, `subject_id`, `first_quarter`, `sec
 (19, NULL, 12, NULL, NULL, NULL, NULL, NULL, '2026-09-18 06:03:46', '2026-09-18 06:03:46', 15, 8, 6, 19, 1, 1, 1, 1, 98.78, 'Katrina Bautista', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', 'jaycee', 2),
 (20, NULL, 12, NULL, NULL, NULL, NULL, NULL, '2026-09-18 06:03:46', '2026-09-18 06:03:46', 55, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Katrina Navarro', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', 'jaycee', 2),
 (21, NULL, 12, NULL, NULL, NULL, NULL, NULL, '2026-09-18 06:03:46', '2026-09-18 06:03:46', 23, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Maria Flores', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', 'jaycee', 2),
-(22, NULL, 12, NULL, NULL, NULL, NULL, NULL, '2026-09-18 06:03:46', '2026-09-18 06:03:46', 31, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Nicole Cruz', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', 'jaycee', 2);
+(22, NULL, 12, NULL, NULL, NULL, NULL, NULL, '2026-09-18 06:03:46', '2026-09-18 06:03:46', 31, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Nicole Cruz', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', 'jaycee', 2),
+(23, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 47, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Angelica Dela Cruz', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(24, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 7, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Angelica Lopez', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(25, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 39, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Jasmine Aquino', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(26, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 15, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Katrina Bautista', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(27, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 55, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Katrina Navarro', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(28, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:42', 23, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Maria Flores', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3),
+(29, NULL, 13, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:49', '2026-09-19 14:39:49', 31, 8, 6, 19, 1, 1, 1, 1, 99.00, 'Nicole Cruz', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', 'dexter', 3);
 
 -- --------------------------------------------------------
 
@@ -568,7 +590,8 @@ CREATE TABLE `grade_sheets` (
 
 INSERT INTO `grade_sheets` (`id`, `teacher_id`, `class_id`, `subject_id`, `academic_year_id`, `grade_level_id`, `quarter`, `status`, `teacher_name`, `class_name`, `subject_name`, `academic_year_name`, `grade_level_name`, `roster`, `submitted_by`, `submitted_at`, `returned_by`, `returned_at`, `approved_by`, `approved_at`, `return_reason`, `correction_until`, `created_at`, `updated_at`) VALUES
 (1, 1, 9, 4, 6, 19, 1, 'DRAFT', 'jaycee', 'Grade 12 STEM B', 'Oral Communication', '2025-2026', 'Grade 12', '[32,24,16,56,8,48,40]', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-09-14 21:26:33', '2026-09-14 21:26:33'),
-(2, 1, 8, 12, 6, 19, 1, 'APPROVED', 'jaycee', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', '[7,15,23,31,39,47,55]', 1, '2026-09-18 14:03:46', NULL, NULL, 1, '2026-09-18 14:43:26', NULL, NULL, '2026-09-18 05:14:47', '2026-09-18 06:43:26');
+(2, 1, 8, 12, 6, 19, 1, 'APPROVED', 'jaycee', 'Grade 12 STEM A', 'Empowerment Technologies', '2025-2026', 'Grade 12', '[7,15,23,31,39,47,55]', 1, '2026-09-18 14:03:46', NULL, NULL, 1, '2026-09-18 14:43:26', NULL, NULL, '2026-09-18 05:14:47', '2026-09-18 06:43:26'),
+(3, 1, 8, 13, 6, 19, 1, 'SUBMITTED', 'dexter', 'Grade 12 STEM A', 'Entrepreneurship', '2025-2026', 'Grade 12', '[7,15,23,31,39,47,55]', 1, '2026-09-19 22:39:49', NULL, NULL, NULL, NULL, NULL, NULL, '2026-09-19 14:39:42', '2026-09-19 14:39:49');
 
 -- --------------------------------------------------------
 
@@ -622,7 +645,7 @@ CREATE TABLE `guardianchilds` (
 
 INSERT INTO `guardianchilds` (`id`, `guardian_id`, `student_id`, `created_at`, `updated_at`, `status`, `relationship`, `claimed_student_name`, `claimed_birthdate`, `verified_by`, `verified_at`, `verification_note`) VALUES
 (1, 1, 1, '2026-06-01 23:36:36', '2026-09-18 16:27:08', 'VERIFIED', 'Legal Guardian', NULL, NULL, 1, '2026-09-19 00:27:08', NULL),
-(2, 1, 2, '2026-07-01 07:49:44', '2026-07-01 07:49:44', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 2, '2026-07-01 07:49:44', '2026-09-19 14:36:19', 'VERIFIED', 'Father', NULL, NULL, 1, '2026-09-19 22:36:19', NULL),
 (3, 1, 3, '2026-07-01 07:49:44', '2026-07-01 07:49:44', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 2, 4, '2026-07-01 07:49:44', '2026-07-01 07:49:44', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
 (5, 2, 5, '2026-07-01 07:49:44', '2026-07-01 07:49:44', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -682,7 +705,8 @@ INSERT INTO `guardianchilds` (`id`, `guardian_id`, `student_id`, `created_at`, `
 (59, 29, 59, '2026-07-01 07:49:58', '2026-07-01 07:49:58', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
 (60, 30, 60, '2026-07-01 07:49:59', '2026-07-01 07:49:59', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
 (61, 30, 61, '2026-07-01 07:49:59', '2026-07-01 07:49:59', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
-(62, 1, 47, '2026-09-18 06:57:41', '2026-09-18 06:57:41', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL);
+(62, 1, 47, '2026-09-18 06:57:41', '2026-09-18 06:57:41', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL),
+(63, 1, 7, '2026-09-19 00:17:01', '2026-09-19 00:17:01', 'VERIFIED', 'Mother', NULL, NULL, 1, '2026-09-19 08:17:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -819,7 +843,25 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2026_09_11_000001_extend_grades_for_quarter_recording', 9),
 (19, '2026_09_15_000001_add_web_workflow', 10),
 (20, '2026_09_18_000001_assign_teacher_to_class_subject', 11),
-(21, '2026_09_18_000002_create_student_accounts', 12);
+(21, '2026_09_18_000002_create_student_accounts', 12),
+(22, '2026_09_19_000001_create_mobile_api_tokens_table', 13);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mobile_api_tokens`
+--
+
+CREATE TABLE `mobile_api_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `account_type` varchar(20) NOT NULL,
+  `account_id` bigint(20) UNSIGNED NOT NULL,
+  `token_hash` char(64) NOT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1002,14 +1044,15 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('3qmLbU51XKBSZ2wjnrMXnR74FKgdV3ED7KDrjswU', NULL, '127.0.0.1', 'curl/8.21.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiU09wcWo4MVd6TzhrTlpzaThCRE1vckdocWVFY1hkdjRLYkgxbUhyYSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTk6Imh0dHA6Ly8xMjcuMC4wLjEvZ3N5cy9nc3lzX3N5c3RlbS9wdWJsaWMvZ3VhcmRpYW4vZGFzaGJvYXJkIjtzOjU6InJvdXRlIjtzOjEzOiJndWFyZGlhbi5ob21lIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789774271),
-('bTtenChEXqQzribpBOa9Sm6qW9U0Fct3kAhQnOYJ', NULL, '127.0.0.1', 'curl/8.21.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS2pMOFhqWk95RUV6QXhWRXNxRld2enU4ck9BYm9aNFE4QlFyRlNpNCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo3MzoiaHR0cDovLzEyNy4wLjAuMS9nc3lzL2dzeXNfc3lzdGVtL3B1YmxpYy9jb25maWd1cmF0aW9uL2FjY291bnRzL2d1YXJkaWFucyI7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjczOiJodHRwOi8vMTI3LjAuMC4xL2dzeXMvZ3N5c19zeXN0ZW0vcHVibGljL2NvbmZpZ3VyYXRpb24vYWNjb3VudHMvZ3VhcmRpYW5zIjtzOjU6InJvdXRlIjtzOjMyOiJjb25maWd1cmF0aW9uLmFjY291bnRzLmd1YXJkaWFucyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1789774274),
-('IruqvCbCTLwiE3Tw3dPcnNNvgjARin0KsCxncNcr', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZDBYQVhtQjVzaXNjVVVFU2pWTUJCVUFVS3FSQlpKWlg4dXVmMHFVbyI7czo1NDoibG9naW5fc3R1ZGVudF81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789774227),
-('JjIfCAh4onf6thvpBg9UUvXLTmn1arVS2dLRUWiT', NULL, '127.0.0.1', 'curl/8.21.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiMXQ4cmhkWVJWbGNnU3V2cUdsUzRUOGthcEwxQjVyczE2OVIxcHRtbyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjA6Imh0dHA6Ly8xMjcuMC4wLjEvZ3N5cy9nc3lzX3N5c3RlbS9wdWJsaWMvZ3VhcmRpYW4vY2hpbGRyZW4vMSI7czo1OiJyb3V0ZSI7czoxNToiZ3VhcmRpYW4uZ3JhZGVzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789774272),
-('N0reg4O0FEt2luSYgn5BKBhitSCu70vA0CvB0fq7', NULL, '127.0.0.1', 'curl/8.21.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZUt5SlUzRzN1MzFPNmwzZmIzaDBTOFJEM3dHOFVjbnJRa2M3VzVDVCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTg6Imh0dHA6Ly8xMjcuMC4wLjEvZ3N5cy9nc3lzX3N5c3RlbS9wdWJsaWMvZ3VhcmRpYW4vY2hpbGRyZW4iO3M6NToicm91dGUiO3M6MTc6Imd1YXJkaWFuLmNoaWxkcmVuIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789774272),
-('rjLyMqeY4Ds4KzqFx2diW9DBbbNMhgDZHp4xfrc9', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZ3RmWDBuZ2lCblk1WkxZYlVxTjQzNmlhaUliRDl1VTFNajNEQ3JVbCI7czo1NDoibG9naW5fc3R1ZGVudF81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789774220),
-('TZVpoHb2qELz3KK0yTPgwFbOsT1odYisTaMfgVtS', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoick1QUDFyTGJSSHJEWnJYRnAyRFlBMGNNdWJFMmVMMHFtTXpYaXVUTSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wb3J0YWwvc3R1ZGVudC9sb2dpbiI7czo1OiJyb3V0ZSI7czoxMjoicG9ydGFsLmxvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789775773),
-('zzYKSprBxQpav0XqjNaErmY64txq73WWmwNdEQBJ', NULL, '127.0.0.1', 'curl/8.21.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiR3BuUFdOcHk3UHJJUUlCdHdlNG41dmpYeVVVSFpFdlVFblM2WDBvdSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTc6Imh0dHA6Ly8xMjcuMC4wLjEvZ3N5cy9nc3lzX3N5c3RlbS9wdWJsaWMvZ3VhcmRpYW4vcHJvZmlsZSI7czo1OiJyb3V0ZSI7czoxNjoiZ3VhcmRpYW4ucHJvZmlsZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1789774273);
+('4arOGDDujCvsIebdxmxDWiXUOlsQWjIIrYxgSlvL', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVkpuVTdsRjI3eXlCY0htSkNmWmZNeVZDc0V4MEtYQmtMQzRkWEZYViI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMCI7czo1OiJyb3V0ZSI7czo2OiJzaWduaW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1789888432),
+('cixESy16B93I86bXQCsQr4pLORE6zwjX3wrkzU39', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiUTZwOGhqYlFtcWF2WjVlQXJIRDdIWURCRWxyU1JYNDRqVU9CTHVCQSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9wb3J0YWwvc3R1ZGVudC9yZWdpc3RlciI7czo1OiJyb3V0ZSI7czoxNToicG9ydGFsLnJlZ2lzdGVyIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789888475),
+('GjWs6Db796x9E436Nh6NKsLfkj7pTmhwi6HCXDcF', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibWtHZW5xSlAxYVNxUnRwbGFDV21haVhuR0JIeGcyUm8wbVpOdUVsaiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9wb3J0YWwvZ3VhcmRpYW4vbG9naW4iO3M6NToicm91dGUiO3M6MTI6InBvcnRhbC5sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1789888475),
+('JE2A7iCOqahaWX3cbdQZ5Q5ZRkTOffHP4XWnQjVy', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRHloeTRWS1NKdkwwb3JrRWJmY1lKYXAzZWxGVGY4RDFVOXBPaHpHOSI7czo1NDoibG9naW5fdGVhY2hlcl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjM7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC90ZWFjaGVyL3Byb2ZpbGUiO3M6NToicm91dGUiO3M6MTU6InRlYWNoZXIucHJvZmlsZSI7fX0=', 1789888474),
+('mwLXh0LpzyNdY6fFeqntobXxuvZb76SMUvRbz6Z5', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoia2ZiQW90bUgxYmIySm9oYjJpblFDT1c5TFduWEFqcUl2eElhcjRDVSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9wb3J0YWwvc3R1ZGVudC9sb2dpbiI7czo1OiJyb3V0ZSI7czoxMjoicG9ydGFsLmxvZ2luIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1789888475),
+('p5hDZ3ubjVACXa6EFiteKrlqvlPoUuRTpJEBnl2i', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYktmOXlrc3RRV2pPYm1rYmxlenZsbU5BU1NQMmh6ekJrcHBnaWRiQSI7czo1NToibG9naW5fZ3VhcmRpYW5fNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM4OiJodHRwOi8vMTI3LjAuMC4xOjgwMTAvZ3VhcmRpYW4vcHJvZmlsZSI7czo1OiJyb3V0ZSI7czoxNjoiZ3VhcmRpYW4ucHJvZmlsZSI7fX0=', 1789888475),
+('vyQRmvzz5OopHaFN2hpyQxckVNG3GXRbAMUZ8rzB', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiNkpESmJIaUZudlZleloydlJzTzA5WHZ4NGVMQzZmcThqa3EzOFRCaSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9wb3J0YWwvZ3VhcmRpYW4vcmVnaXN0ZXIiO3M6NToicm91dGUiO3M6MTU6InBvcnRhbC5yZWdpc3RlciI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1789888475),
+('XW4QTR8HkjyqdKozpbPyZyojHl2HyxzekgP0nZEG', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOUJTN1g3YThIU21jYnNzZFB0TWQwamFIZ1hjbHN1dnFDVmpHWGEwNCI7czo1NDoibG9naW5fc3R1ZGVudF81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9zdHVkZW50L3Byb2ZpbGUiO3M6NToicm91dGUiO3M6MTU6InN0dWRlbnQucHJvZmlsZSI7fX0=', 1789888475),
+('YnCpXbXKdKP54AvCVqUSZgZs1OwQDDk2oQOhli8g', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWXVrYzhONDRRY1VtODMyN2pCUkI2aGFtalM4aUdDWmZaVkthajRrOCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAxMC9jb25maWd1cmF0aW9uL3NldHRpbmcvcm9sZXMiO3M6NToicm91dGUiO3M6Mjc6ImNvbmZpZ3VyYXRpb24uc2V0dGluZy5yb2xlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1789888447);
 
 -- --------------------------------------------------------
 
@@ -1099,7 +1142,8 @@ INSERT INTO `stinfo` (`id`, `student_id`, `lrn`, `admited`, `name`, `gender`, `b
 (58, 58, 110000000056, 1, 'Paolo Castro', 'Male', '2006-07-04', 5, 2, 6, '09180000056', 'Barangay 7, Cauayan City, Isabela', '2026-07-01 07:49:58', '2026-09-10 23:03:53'),
 (59, 59, 110000000057, 1, 'Jasmine Villanueva', 'Female', '2008-06-20', 5, 3, 6, '09180000057', 'Barangay 8, Cauayan City, Isabela', '2026-07-01 07:49:58', '2026-09-10 23:03:47'),
 (60, 60, 110000000058, 1, 'Rafael Bautista', 'Male', '2007-06-08', 18, 5, 6, '09180000058', 'Barangay 9, Cauayan City, Isabela', '2026-07-01 07:49:59', '2026-09-10 23:03:56'),
-(61, 61, 110000000059, 1, 'Bianca Cruz', 'Female', '2006-05-26', 18, 6, 6, '09180000059', 'Barangay 10, Cauayan City, Isabela', '2026-07-01 07:49:59', '2026-09-10 23:03:41');
+(61, 61, 110000000059, 1, 'Bianca Cruz', 'Female', '2006-05-26', 18, 6, 6, '09180000059', 'Barangay 10, Cauayan City, Isabela', '2026-07-01 07:49:59', '2026-09-10 23:03:41'),
+(62, 62, NULL, 0, 'Mobile Registration Verification', 'Female', '2010-01-02', 18, NULL, 7, NULL, NULL, '2026-09-19 15:16:08', '2026-09-19 15:16:08');
 
 -- --------------------------------------------------------
 
@@ -1190,7 +1234,8 @@ INSERT INTO `students` (`id`, `username`, `email`, `password`, `created_at`, `up
 (58, 'student057', 'student057@student.gsys.edu.ph', '$2y$12$PiyN2URpoGtD3UP8yRhBZe.UtsU9abosf2zVJje8i/HDYjA5DVn/2', '2026-07-01 07:49:58', '2026-07-01 07:52:34', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '19458177835'),
 (59, 'student058', 'student058@student.gsys.edu.ph', '$2y$12$s1E5AUzezeJNOLhkZiay0u84H9Y/1wTfoCa5L85jysaggIWgAkwn6', '2026-07-01 07:49:58', '2026-07-01 07:52:34', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '11079282269'),
 (60, 'student059', 'student059@student.gsys.edu.ph', '$2y$12$cGwBcLe0tQ.l7N.3hXO7HOT7jeDtBZTLqHQJnB1puNi526TXactRq', '2026-07-01 07:49:59', '2026-07-01 07:52:35', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '49951095522'),
-(61, 'student060', 'student060@student.gsys.edu.ph', '$2y$12$lFpgiKr98lfcIDXpb7C22uiPB1gj7bXTFdXGhZyVydNjUOfUys8im', '2026-07-01 07:49:59', '2026-07-01 07:52:35', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '47107217319');
+(61, 'student060', 'student060@student.gsys.edu.ph', '$2y$12$lFpgiKr98lfcIDXpb7C22uiPB1gj7bXTFdXGhZyVydNjUOfUys8im', '2026-07-01 07:49:59', '2026-07-01 07:52:35', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '47107217319'),
+(62, 'mobile_verify_20260919_2315', 'mobile.verify.20260919.2315@example.test', '$2y$12$cHwo4Bc6LCy2IKtLNvLIJuCPjx1vh0Wk2Tw0Qi1ZCMpkykblGnmh6', '2026-09-19 15:16:08', '2026-09-19 15:16:08', 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '36654510764');
 
 -- --------------------------------------------------------
 
@@ -1234,7 +1279,7 @@ INSERT INTO `student_accounts` (`id`, `student_id`, `username`, `email`, `passwo
 (4, 4, 'student003', 'student003@student.gsys.edu.ph', '$2y$12$56GC.Q/v5N612AEnN5oCp.c40oVt0BbjE/y2jalc5KFsB5zc/8pSW', 'Jose Reyes', '2008-06-05', 'Male', '09180000002', 'Barangay 3, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:44', '2026-07-01 07:52:16'),
 (5, 5, 'student004', 'student004@student.gsys.edu.ph', '$2y$12$ud7ycdTqgTlPFW87JZG/B.DbBMG.cSek4uG/fAoJkEjEwHiEfkYX.', 'Ana Garcia', '2010-05-23', 'Female', '09180000003', 'Barangay 4, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:44', '2026-07-01 07:52:16'),
 (6, 6, 'student005', 'student005@student.gsys.edu.ph', '$2y$12$uS0hGNXp5zXmPDcfkW1qB.6pcELEemvJHASgqcBke.1sFrv0AJkJi', 'Carlo Mendoza', '2009-05-10', 'Male', '09180000004', 'Barangay 5, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:45', '2026-07-01 07:52:16'),
-(7, 7, 'student006', 'student006@student.gsys.edu.ph', '$2y$12$U2Bcq12A/pN7ijKQAqp.TuRVHnd.2hzd0RBxni5XmUU9rNuZELcIa', 'Angelica Lopez', '2008-04-27', 'Female', '09180000005', 'Barangay 6, Cauayan City, Isabela', 19, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:45', '2026-07-01 07:52:17'),
+(7, 7, 'student006', 'student006@student.gsys.edu.ph', '$2y$12$IjEOwwy/xpQ.A8k5qEpomunsbLtHTGZsQMgfXfqAWZMWwRTaDzclW', 'Angelica Lopez', '2008-04-27', 'Female', '09180000005', 'Barangay 6, Cauayan City, Isabela', 19, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:45', '2026-09-19 00:16:29'),
 (8, 8, 'student007', 'student007@student.gsys.edu.ph', '$2y$12$VohkWZb71U6/UN/cfynVMO4KpKeuS9aqiCQMd9s0qVP4aBTiw/DOi', 'Miguel Flores', '2010-04-14', 'Male', '09180000006', 'Barangay 7, Cauayan City, Isabela', 19, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:45', '2026-07-01 07:52:17'),
 (9, 9, 'student008', 'student008@student.gsys.edu.ph', '$2y$12$51LLmlgAuFAj.TGh.pFQOuv5ukuR5jr0BC.g73tgks4v67DOI2mDW', 'Sofia Aquino', '2009-04-01', 'Female', '09180000007', 'Barangay 8, Cauayan City, Isabela', 19, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:45', '2026-07-01 07:52:17'),
 (10, 10, 'student009', 'student009@student.gsys.edu.ph', '$2y$12$fXf25iWfX9M3a6B61GVlyOryLw8Ul9n5Km1fnYVzp8Zx9ckEJ8i.K', 'Gabriel Navarro', '2008-03-19', 'Male', '09180000008', 'Barangay 9, Cauayan City, Isabela', 5, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:46', '2026-07-01 07:52:17'),
@@ -1288,7 +1333,8 @@ INSERT INTO `student_accounts` (`id`, `student_id`, `username`, `email`, `passwo
 (58, 58, 'student057', 'student057@student.gsys.edu.ph', '$2y$12$PiyN2URpoGtD3UP8yRhBZe.UtsU9abosf2zVJje8i/HDYjA5DVn/2', 'Paolo Castro', '2006-07-04', 'Male', '09180000056', 'Barangay 7, Cauayan City, Isabela', 5, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:58', '2026-07-01 07:52:34'),
 (59, 59, 'student058', 'student058@student.gsys.edu.ph', '$2y$12$s1E5AUzezeJNOLhkZiay0u84H9Y/1wTfoCa5L85jysaggIWgAkwn6', 'Jasmine Villanueva', '2008-06-20', 'Female', '09180000057', 'Barangay 8, Cauayan City, Isabela', 5, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:58', '2026-07-01 07:52:34'),
 (60, 60, 'student059', 'student059@student.gsys.edu.ph', '$2y$12$cGwBcLe0tQ.l7N.3hXO7HOT7jeDtBZTLqHQJnB1puNi526TXactRq', 'Rafael Bautista', '2007-06-08', 'Male', '09180000058', 'Barangay 9, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:59', '2026-07-01 07:52:35'),
-(61, 61, 'student060', 'student060@student.gsys.edu.ph', '$2y$12$lFpgiKr98lfcIDXpb7C22uiPB1gj7bXTFdXGhZyVydNjUOfUys8im', 'Bianca Cruz', '2006-05-26', 'Female', '09180000059', 'Barangay 10, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:59', '2026-07-01 07:52:35');
+(61, 61, 'student060', 'student060@student.gsys.edu.ph', '$2y$12$lFpgiKr98lfcIDXpb7C22uiPB1gj7bXTFdXGhZyVydNjUOfUys8im', 'Bianca Cruz', '2006-05-26', 'Female', '09180000059', 'Barangay 10, Cauayan City, Isabela', 18, 6, 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-07-01 07:49:59', '2026-07-01 07:52:35'),
+(62, 62, 'mobile_verify_20260919_2315', 'mobile.verify.20260919.2315@example.test', '$2y$12$3I9f3LWiVPighrZAbutou.IaqVo0.WXlSK5dTVy75e05cHbXTdUEW', 'Mobile Registration Verification', '2010-01-02', 'Female', NULL, NULL, 18, 7, 'PENDING', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-09-19 15:16:09', '2026-09-19 15:16:09');
 
 -- --------------------------------------------------------
 
@@ -1308,11 +1354,8 @@ CREATE TABLE `subcat` (
 --
 
 INSERT INTO `subcat` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'subcatsugad', '2026-06-01 22:37:16', '2026-06-01 22:37:16'),
-(2, 'fdgdfgfg', '2026-06-01 22:37:21', '2026-06-01 22:37:21'),
-(3, 'Core Subject', '2026-07-01 07:48:17', '2026-07-01 07:48:17'),
-(4, 'Applied Subject', '2026-07-01 07:48:17', '2026-07-01 07:48:17'),
-(5, 'Specialized Subject', '2026-07-01 07:48:17', '2026-07-01 07:48:17');
+(1, 'labolatory', '2026-06-01 22:37:16', '2026-09-19 14:27:56'),
+(2, 'lecture', '2026-06-01 22:37:21', '2026-09-19 14:28:06');
 
 -- --------------------------------------------------------
 
@@ -1410,8 +1453,8 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `name`, `username`, `email`, `password`, `created_at`, `updated_at`, `status`, `activated_by`, `activated_at`, `rejected_by`, `rejected_at`, `deactivated_by`, `deactivated_at`, `rejection_reason`) VALUES
-(1, 'jaycee', 'teacher', 'jaycee@gmail.com', '$2y$12$Eu.rP4E0cSojOFAirPDU8e5povUeGY7ZnqIrOhPoKS2jovvlmGdnC', '2026-06-02 01:20:29', '2026-09-10 23:14:14', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 'roever', 'asdsd', 'rov@gmail.com', '$2y$12$9Lojq549cyAbAlf5F89aSOky.sadMBekMJAOCW/1BTPNJxDYEIQJK', '2026-06-02 12:13:46', '2026-06-02 12:13:46', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1, 'dexter', 'teacher', 'jaycee@gmail.com', '$2y$12$Eu.rP4E0cSojOFAirPDU8e5povUeGY7ZnqIrOhPoKS2jovvlmGdnC', '2026-06-02 01:20:29', '2026-09-19 00:18:22', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'gerald', 'asdsd', 'rov@gmail.com', '$2y$12$9Lojq549cyAbAlf5F89aSOky.sadMBekMJAOCW/1BTPNJxDYEIQJK', '2026-06-02 12:13:46', '2026-09-19 00:18:33', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 'Maria Santos', 'maria.santos', 'maria.santos@gsys.edu.ph', '$2y$12$yMCJtg2DGoUqxfsSV3fCl.PCZpI/7Q.Cgj9ldxkBmyUFi5hU7kOvm', '2026-07-01 07:48:14', '2026-07-01 07:52:03', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 'Jose Reyes', 'jose.reyes', 'jose.reyes@gsys.edu.ph', '$2y$12$izvqrYSNy.SKmh1/XyeWPO/NyEdt7AvCY/2YV7QICJ1d.2bXYbJdS', '2026-07-01 07:48:15', '2026-07-01 07:52:04', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (5, 'Ana Cruz', 'ana.cruz', 'ana.cruz@gsys.edu.ph', '$2y$12$MFByA2ZYRIbX2n76oDd39Ojm2p/X3kBvTO5VmBxSfwdoBAi4/7iQi', '2026-07-01 07:48:15', '2026-07-01 07:52:04', 'ACTIVE', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -1714,6 +1757,15 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`) USING BTREE;
 
 --
+-- Indexes for table `mobile_api_tokens`
+--
+ALTER TABLE `mobile_api_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `mobile_api_tokens_token_hash_unique` (`token_hash`),
+  ADD KEY `mobile_api_tokens_account_type_account_id_index` (`account_type`,`account_id`),
+  ADD KEY `mobile_api_tokens_expires_at_index` (`expires_at`);
+
+--
 -- Indexes for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
@@ -1869,13 +1921,13 @@ ALTER TABLE `acady`
 -- AUTO_INCREMENT for table `agreement_records`
 --
 ALTER TABLE `agreement_records`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `audit_events`
 --
 ALTER TABLE `audit_events`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `batch`
@@ -1929,7 +1981,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `grade_encoding_schedules`
@@ -1941,7 +1993,7 @@ ALTER TABLE `grade_encoding_schedules`
 -- AUTO_INCREMENT for table `grade_sheets`
 --
 ALTER TABLE `grade_sheets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `grlvl`
@@ -1953,7 +2005,7 @@ ALTER TABLE `grlvl`
 -- AUTO_INCREMENT for table `guardianchilds`
 --
 ALTER TABLE `guardianchilds`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `guardians`
@@ -1971,7 +2023,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `mobile_api_tokens`
+--
+ALTER TABLE `mobile_api_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `pending_grades`
@@ -2001,19 +2059,19 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `stinfo`
 --
 ALTER TABLE `stinfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `student_accounts`
 --
 ALTER TABLE `student_accounts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `subcat`
