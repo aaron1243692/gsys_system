@@ -120,6 +120,13 @@
             <h2 id="signin-title">Sign in to continue</h2>
             <p class="gs-login-description">Use your assigned school account to access the grading system.</p>
         </div>
+        @if(session('success') && session('registration.portal') === strtolower($loginPortal))
+            <div class="gs-login-alert" role="status" style="border-color:#86efac;background:#f0fdf4;color:#166534">
+                <strong>Registration Submitted</strong>
+                <p>{{ session('success') }}</p>
+                @if(session('registration.number'))<p>Student Number: <strong>{{ session('registration.number') }}</strong></p>@endif
+            </div>
+        @endif
         @if(session('error') || $errors->any())
             <div class="gs-login-alert" role="alert">
                 <strong>Unable to sign in</strong>

@@ -9,6 +9,11 @@ class StudentInfo extends Model
 {
     protected $table = 'stinfo';
 
+    public function scopePendingRegistration($query)
+    {
+        return $query->where('admited', 0);
+    }
+
     protected $fillable = [
         'student_id',
         'lrn',

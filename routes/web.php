@@ -220,11 +220,19 @@ Route::middleware('auth')
                 'address' => ['nullable', 'string', 'max:255'],
             ]);
 
-            $studentInfo->update(array_merge($validated, ['admited' => 1]));
+            \Illuminate\Support\Facades\DB::transaction(function () use ($studentInfo, $validated) {
+                $studentInfo->update(array_merge($validated, ['admited' => 1]));
+                $student = $studentInfo->student()->lockForUpdate()->firstOrFail();
+                $student->forceFill(['status' => 'ACTIVE', 'activated_by' => auth()->id(), 'activated_at' => now()])->save();
+                if ($account = $student->portalAccount()->lockForUpdate()->first()) {
+                    $account->forceFill(['status' => 'ACTIVE', 'activated_by' => auth()->id(), 'activated_at' => now()])->save();
+                    \App\Services\Audit::record('web', auth()->id(), 'student.pre_registration_approved', $account, ['student_id' => $student->id]);
+                }
+            });
 
             return redirect()
                 ->route('academic.students.pre-enlistment')
-                ->with('success', 'Student admitted successfully.');
+                ->with('success', 'Student admitted and portal account activated successfully.');
         })->name('students.admit');
         Route::delete('/students/pre-enlistment/{studentInfo}', function (StudentInfo $studentInfo) {
             $studentInfo->delete();
@@ -238,7 +246,7 @@ Route::middleware('auth')
 
             $students = StudentInfo::query()
                 ->with(['academicYear', 'gradeLevel', 'schoolClass.track', 'student.portalAccount'])
-                ->where('admited', 0)
+                ->pendingRegistration()
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")

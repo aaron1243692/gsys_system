@@ -17,6 +17,7 @@ class AuthController extends Controller
         $v=$r->validate(['username'=>['required','string'],'password'=>['required','string']]);
         $a=$model::where('username',$v['username'])->first();
         if(!$a||!Hash::check($v['password'],$a->password)) return response()->json(['success'=>false,'message'=>'Invalid username or password.'],401);
+        if($a->status==='PENDING') return response()->json(['success'=>false,'message'=>'Your account is waiting for activation by the school.'],403);
         if($a->status!=='ACTIVE'||($role==='student'&&!$a->student()->whereHas('info')->exists())) return response()->json(['success'=>false,'message'=>'Your account is not active. School staff must review and activate it before portal access.'],403);
         $plain=bin2hex(random_bytes(32));
         MobileApiToken::create(['account_type'=>$role,'account_id'=>$a->id,'token_hash'=>hash('sha256',$plain),'expires_at'=>now()->addDays(30)]);

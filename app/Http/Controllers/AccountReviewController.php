@@ -55,15 +55,19 @@ class AccountReviewController extends Controller
         DB::transaction(function() use($request,$type,$id,$data) {
             $account=$this->model($type)->newQuery()->whereKey($id)->lockForUpdate()->firstOrFail();
             $action=$data['action'];
-            if($action==='activate' && $type==='guardian') abort_unless($account->children()->where('status','VERIFIED')->exists(),422,'Add at least one child before activation.');
             if($action==='activate' && $type==='student') {
-                if (! $account->student_id || ! $account->student()->whereHas('info')->exists())
-                    throw ValidationException::withMessages(['action' => "Select and link the student's academic record before activation."]);
+                $info = $account->student?->info;
+                if (! $info || ! $info->admited || ! $info->class_id || ! $info->grlvl_id || ! $info->acady_id
+                    || ! $info->schoolClass()->where('grlvl_id', $info->grlvl_id)->where('acady_id', $info->acady_id)->exists())
+                    throw ValidationException::withMessages(['action' => "Approve the student's pre-registration and complete the academic placement before activation."]);
             }
             $status=match($action){'activate'=>'ACTIVE','reject'=>'REJECTED','deactivate'=>'DEACTIVATED'};
             abort_if($account->status===$status,409,'Account already has this status.');
             $prefix=match($action){'activate'=>'activated','reject'=>'rejected','deactivate'=>'deactivated'};
             $account->forceFill(['status'=>$status,$prefix.'_by'=>$request->user('web')->id,$prefix.'_at'=>now()] + ($action==='reject'?['rejection_reason'=>$data['reason']]:[]))->save();
+            if ($type === 'student' && $account->student) {
+                $account->student->forceFill(['status' => $status, $prefix.'_by' => $request->user('web')->id, $prefix.'_at' => now()])->save();
+            }
             Audit::record('web',$request->user('web')->id,'account.'.$prefix,$account,['reason'=>$data['reason']??null]);
         });
         return back()->with('success','Account status updated.');
@@ -88,6 +92,7 @@ class AccountReviewController extends Controller
             $account->activated_by = $request->user('web')->id;
             $account->activated_at = now();
             $account->save();
+            $student->forceFill(['status' => 'ACTIVE', 'activated_by' => $request->user('web')->id, 'activated_at' => now()])->save();
             Audit::record('web', $request->user('web')->id, 'student.linked_activated', $account, ['student_id' => $student->id]);
         });
         return redirect()->route('configuration.accounts.registrations.show', ['type' => 'student', 'id' => $account->id])->with('success', 'Academic student linked and account activated.');

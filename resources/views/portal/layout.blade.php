@@ -33,7 +33,7 @@
     <div class="gs-overlay" data-portal-overlay></div>
     <aside id="portal-sidebar" class="gs-sidebar" aria-label="{{ ucfirst($portal) }} navigation">
         <button class="gs-sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&times;</button>
-        <a class="gs-brand" href="{{ $home }}"><span class="gs-avatar">G</span><span><strong>GSYS</strong><small>School System</small></span></a>
+        <a class="gs-brand" href="{{ $home }}"><span class="gs-brand-logo"><img src="{{ asset('images/ccnhs-logo.png') }}" alt="CCNHS Logo"></span><span><strong>GSYS</strong><small>School System</small></span></a>
         <div>
             <p class="gs-nav-label">{{ ucfirst($portal) }} workspace</p>
             <nav class="gs-nav">

@@ -29,8 +29,8 @@
     class="scrollbar-none fixed inset-y-0 left-0 z-50 flex h-screen max-h-screen w-72 -translate-x-full flex-col overflow-x-hidden overflow-y-auto bg-gradient-to-b from-blue-950 via-indigo-950 to-slate-950 px-4 py-5 text-white shadow-2xl shadow-blue-950/30 transition-transform duration-200 lg:translate-x-0"
 >
     <a href="/dashboard" class="flex items-center gap-3 rounded-2xl bg-white/10 p-3 text-decoration-none ring-1 ring-white/10">
-        <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white text-base font-black text-blue-950 shadow-lg">
-            G
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-lg">
+            <img src="{{ asset('images/ccnhs-logo.png') }}" alt="CCNHS Logo" class="h-11 w-11 object-contain">
         </span>
         <span>
             <span class="block text-lg font-black leading-tight text-white">GSYS</span>
@@ -183,8 +183,8 @@
             </button>
 
             <a href="/dashboard" class="flex items-center gap-3 text-decoration-none">
-                <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-700 to-indigo-700 text-sm font-bold text-white shadow-sm">
-                    G
+                <span class="inline-flex h-10 w-10 items-center justify-center">
+                    <img src="{{ asset('images/ccnhs-logo.png') }}" alt="CCNHS Logo" class="h-10 w-10 object-contain">
                 </span>
                 <span class="text-lg font-black text-slate-950">GSYS</span>
             </a>

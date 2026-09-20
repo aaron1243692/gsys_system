@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'portal' => App\Http\Middleware\PortalAccess::class,
             'mobile' => App\Http\Middleware\MobileApiAuth::class,
         ]);
-        $middleware->web(append: [App\Http\Middleware\SeparatePortalAccess::class]);
+        $middleware->web(append: [App\Http\Middleware\SeparatePortalAccess::class, App\Http\Middleware\StaffAccess::class]);
         $middleware->prependToPriorityList(
             \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
             App\Http\Middleware\SeparatePortalAccess::class,

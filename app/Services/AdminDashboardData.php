@@ -57,7 +57,13 @@ class AdminDashboardData
     }
     private function notifications(int $submitted,int $unassigned,int $issues,$schedules,array $permissions):array
     {
-        $items=[];if($submitted)$items[]=['priority'=>'attention','text'=>"$submitted grade sheet".($submitted===1?' is':'s are').' waiting for approval.','route'=>$permissions['approve']?'report.grades.approval':null,'label'=>'Review'];
+        $items=[];
+        $pending = StudentInfo::pendingRegistration()->count();
+        if ($pending && Gate::allows('manage-registrations')) $items[] = [
+            'priority' => 'attention', 'text' => "$pending Student registration".($pending === 1 ? ' is' : 's are').' waiting for activation.',
+            'route' => 'academic.students.pre-enlistment', 'label' => 'Review Registrations',
+        ];
+        if($submitted)$items[]=['priority'=>'attention','text'=>"$submitted grade sheet".($submitted===1?' is':'s are').' waiting for approval.','route'=>$permissions['approve']?'report.grades.approval':null,'label'=>'Review'];
         if($unassigned)$items[]=['priority'=>'attention','text'=>"$unassigned subject load".($unassigned===1?' needs':'s need').' an assigned teacher.','route'=>$permissions['loads']?'academic.schedule-load.teacher-load':null,'label'=>'Manage'];
         if($issues)$items[]=['priority'=>'attention','text'=>"$issues academic placement issue".($issues===1?' requires':'s require').' review.','route'=>'academic.students.index','label'=>'Review'];
         foreach($schedules as $s){if($s->status==='OPEN'&&now()->diffInHours($s->closes_at,false)<=72)$items[]=['priority'=>'warning','text'=>'Q'.$s->quarter.' encoding closes '.$s->closes_at->format('M j, Y g:i A').'.','route'=>$permissions['schedules']?'configuration.grade-encoding-schedule':null,'label'=>'Schedule'];elseif($s->status==='UPCOMING')$items[]=['priority'=>'information','text'=>'Q'.$s->quarter.' encoding opens '.$s->opens_at->format('M j, Y g:i A').'.','route'=>$permissions['schedules']?'configuration.grade-encoding-schedule':null,'label'=>'Schedule'];}

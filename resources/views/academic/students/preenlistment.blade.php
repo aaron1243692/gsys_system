@@ -70,6 +70,9 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->id }}</td>
                                     <td class="px-4 py-2">
                                         <p class="font-bold text-slate-950">{{ $student->name }}</p>
+                                        @if ($student->student?->student_number)
+                                            <p class="text-xs font-semibold text-slate-500">Student No: {{ $student->student->student_number }}</p>
+                                        @endif
                                         @if ($student->lrn)
                                             <p class="text-xs font-semibold text-slate-500">LRN: {{ $student->lrn }}</p>
                                         @endif
@@ -77,7 +80,7 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->name ?? '-' }}</td>
-                                    <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
+                                    <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}<p class="text-xs text-slate-500">{{ $student->student->portalAccount->username }} · {{ $student->student->portalAccount->email }}</p><p class="text-xs text-slate-500">Registered {{ $student->student->portalAccount->created_at?->format('M d, Y') }}</p>@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('view-pre-enlistment-{{ $student->id }}').showModal()" class="rounded-[2rem] border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 transition hover:scale-110 hover:bg-emerald-50">

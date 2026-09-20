@@ -124,6 +124,125 @@ class QuarterGradingTest extends TestCase
         $this->studentAccount->forceFill(['status' => 'ACTIVE'])->save();
     }
 
+    public function test_registration_returns_to_login_and_both_channels_complete_approval(): void
+    {
+        foreach (['web', 'api'] as $channel) {
+            \Illuminate\Support\Facades\Cache::flush();
+            $this->forgetIdentities();
+            $data = $this->registrationReturnPayload('return-'.$channel);
+            if ($channel === 'web') {
+                $this->post(route('portal.register.store', ['portal' => 'student']), $data)
+                    ->assertRedirect(route('portal.login', ['portal' => 'student']))
+                    ->assertSessionHas('success');
+            } else {
+                $this->postJson('/api/student/register', $data)->assertCreated()
+                    ->assertJsonPath('data.status', 'PENDING')
+                    ->assertJsonStructure(['data' => ['id', 'student_number']]);
+            }
+            $account = StudentAccount::where('username', $data['username'])->firstOrFail();
+            $number = $account->student->student_number;
+            $this->assertMatchesRegularExpression('/^\d{11}$/', $number);
+            $this->assertSame('PENDING', $account->status);
+            $this->assertSame('PENDING', $account->student->status);
+            $this->assertGuest('student');
+            if ($channel === 'web') {
+                $this->get(route('portal.login', ['portal' => 'student']))->assertOk()
+                    ->assertSee('Registration Submitted')->assertSee($number)
+                    ->assertSee('waiting for approval')->assertDontSee($data['password']);
+            }
+            $this->post(route('portal.login.store', ['portal' => 'student']), $data)
+                ->assertRedirect()
+                ->assertSessionHasErrors(['username' => 'Your account is waiting for activation by the school.']);
+            $this->postJson('/api/student/login', $data)->assertForbidden()
+                ->assertJsonPath('message', 'Your account is waiting for activation by the school.');
+            $admin = User::firstOrCreate(['username' => 'return-admin'], [
+                'email' => 'return-admin@example.test', 'password' => 'test-password',
+            ]);
+            $admin->forceFill(['status' => 'ACTIVE'])->save();
+            $admin->assignRole(Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']));
+            $this->forgetIdentities();
+            $this->actingAs($admin, 'web')->get(route('academic.students.pre-enlistment'))
+                ->assertOk()->assertSee($number)->assertSee($data['name']);
+            $this->post(route('academic.students.admit', $account->student->info), [
+                'name' => $data['name'], 'birthdate' => $data['birthdate'], 'gender' => 'Female',
+                'acady_id' => 1, 'grlvl_id' => 1, 'class_id' => $this->schoolClass->id,
+            ])->assertRedirect();
+            $this->assertSame('ACTIVE', $account->refresh()->status);
+            $this->assertSame($number, $account->student->student_number);
+            $this->forgetIdentities();
+            $this->postJson('/api/student/login', $data)->assertOk()
+                ->assertJsonPath('data.user.id', $account->id);
+            $this->post(route('portal.login.store', ['portal' => 'student']), $data)
+                ->assertRedirect(route('student.home'));
+            $this->assertAuthenticatedAs($account, 'student');
+        }
+    }
+
+    public function test_registration_validation_retains_form_without_partial_records(): void
+    {
+        $data = $this->registrationReturnPayload('invalid-return');
+        $data['email'] = 'invalid';
+        $form = route('portal.register', ['portal' => 'student']);
+        $this->from($form)->post(route('portal.register.store', ['portal' => 'student']), $data)
+            ->assertRedirect($form)->assertSessionHasErrors('email')
+            ->assertSessionHasInput('username', $data['username'])
+            ->assertSessionMissing('_old_input.password')->assertSessionMissing('_old_input.password_confirmation')
+            ->assertSessionMissing('success');
+        $this->get($form)->assertOk()->assertSee($data['username'])->assertSee('gs-error', false);
+        $this->postJson('/api/student/register', $data)->assertUnprocessable()->assertJsonValidationErrors('email');
+        $this->assertDatabaseMissing('students', ['username' => $data['username']]);
+        $this->assertDatabaseMissing('student_accounts', ['username' => $data['username']]);
+        $this->assertDatabaseMissing('stinfo', ['name' => $data['name']]);
+    }
+
+    public function test_registration_database_failure_rolls_back_and_stays_on_form(): void
+    {
+        // Fail after account and academic inserts, to exercise the actual transaction.
+        DB::statement("CREATE TRIGGER registration_failure BEFORE INSERT ON agreement_records BEGIN SELECT RAISE(ABORT, 'Test registration failure'); END");
+        $data = $this->registrationReturnPayload('rollback-return');
+        $form = route('portal.register', ['portal' => 'student']);
+        $this->post(route('portal.register.store', ['portal' => 'student']), $data)
+            ->assertRedirect($form)
+            ->assertSessionHasErrors(['registration' => 'Registration could not be completed. Please try again.'])
+            ->assertSessionHasInput('username', $data['username'])
+            ->assertSessionMissing('_old_input.password')->assertSessionMissing('_old_input.password_confirmation')
+            ->assertSessionMissing('success');
+        $this->postJson('/api/student/register', $data)->assertStatus(500)->assertJsonPath('success', false);
+        $this->assertDatabaseMissing('students', ['username' => $data['username']]);
+        $this->assertDatabaseMissing('student_accounts', ['username' => $data['username']]);
+        $this->assertDatabaseMissing('stinfo', ['name' => $data['name']]);
+        $this->assertDatabaseCount('agreement_records', 0);
+    }
+
+    public function test_guardian_registration_returns_to_login_pending_without_children(): void
+    {
+        $data = $this->registrationReturnPayload('guardian-return');
+        $this->post(route('portal.register.store', ['portal' => 'guardian']), $data)
+            ->assertRedirect(route('portal.login', ['portal' => 'guardian']));
+        $this->get(route('portal.login', ['portal' => 'guardian']))->assertOk()
+            ->assertSee('Registration Submitted')->assertSee('GUARDIAN PORTAL')->assertDontSee('Student Number:');
+        $this->withSession(['registration' => ['portal' => 'guardian', 'number' => null]])
+            ->get(route('portal.registration.success', ['portal' => 'guardian']))
+            ->assertOk()->assertSee('linked separately by authorized school staff')->assertDontSee('child claim');
+        $guardian = Guardian::where('username', $data['username'])->firstOrFail();
+        $this->assertSame('PENDING', $guardian->status);
+        $this->assertGuest('guardian');
+        $this->post(route('portal.login.store', ['portal' => 'guardian']), $data)
+            ->assertSessionHasErrors(['username' => 'Your account is waiting for activation by the school.']);
+        $this->postJson('/api/guardian/login', $data)->assertForbidden();
+        $this->postJson('/api/guardian/register', $this->registrationReturnPayload('guardian-api-return'))
+            ->assertCreated()->assertJsonPath('data.status', 'PENDING');
+        $this->assertDatabaseCount('guardianchilds', 0);
+    }
+
+    private function registrationReturnPayload(string $username): array
+    {
+        return ['name' => 'Registration '.$username, 'username' => $username,
+            'email' => $username.'@example.test', 'password' => 'test-password',
+            'password_confirmation' => 'test-password', 'birthdate' => '2010-01-02',
+            'gender' => 'Female', 'grlvl_id' => 1, 'acady_id' => 1, 'terms' => 1, 'privacy' => 1];
+    }
+
     private function enroll(Student $student, string $name): void
     {
         StudentInfo::create(['student_id' => $student->id, 'name' => $name, 'class_id' => $this->schoolClass->id,
@@ -670,6 +789,16 @@ class QuarterGradingTest extends TestCase
         $this->postJson('/api/guardian/login',['username'=>'new-mobile-parent','password'=>'test-password'])->assertForbidden();
         $this->postJson('/api/student/login',[])->assertUnprocessable()->assertJsonPath('success',false)
             ->assertJsonStructure(['errors'=>['username','password']]);
+        $studentRegistration = $this->postJson('/api/student/register',[
+            'username'=>'new-mobile-student','email'=>'new-mobile-student@example.test',
+            'password'=>'test-password','password_confirmation'=>'test-password','name'=>'New Mobile Student',
+            'birthdate'=>'2010-01-02','gender'=>'Female','grlvl_id'=>1,'acady_id'=>1,
+            'terms'=>true,'privacy'=>true,
+        ])->assertCreated()->assertJsonPath('data.status','PENDING');
+        $studentNumber = $studentRegistration->json('data.student_number');
+        $this->assertMatchesRegularExpression('/^\d{11}$/', $studentNumber);
+        $mobileAccount = StudentAccount::where('username','new-mobile-student')->firstOrFail();
+        $this->assertDatabaseHas('stinfo',['student_id'=>$mobileAccount->student_id,'name'=>'New Mobile Student','admited'=>0]);
     }
 
     public function test_duplicate_name_registration_requires_staff_selected_academic_record(): void
@@ -692,9 +821,11 @@ class QuarterGradingTest extends TestCase
             'terms' => 1, 'privacy' => 1,
         ])->assertRedirect();
         $account = StudentAccount::where('username', 'juan-portal')->firstOrFail();
-        $this->assertNull($account->student_id);
+        $this->assertNotNull($account->student_id);
         $this->assertSame('PENDING', $account->status);
-        $this->assertDatabaseCount('students', 3);
+        $this->assertDatabaseCount('students', 4);
+        $this->assertDatabaseHas('stinfo', ['student_id' => $account->student_id, 'name' => 'Juan Dela Cruz', 'admited' => 0]);
+        $this->assertMatchesRegularExpression('/^\d{11}$/', $account->student->student_number);
         $this->post(route('portal.login.store', ['portal' => 'student']), [
             'username' => 'juan-portal', 'password' => 'test-password',
         ])->assertSessionHasErrors('username');
@@ -704,14 +835,18 @@ class QuarterGradingTest extends TestCase
         $this->forgetIdentities();
         $this->actingAs($admin, 'web')->get(route('configuration.accounts.registrations.show', [
             'type' => 'student', 'id' => $account->id, 'record_search' => 'Juan Dela Cruz',
-        ]))->assertOk()->assertSee('Rizal')->assertSee('Mabini');
+        ]))->assertOk()->assertSee($account->student->student_number)->assertSee('Juan Dela Cruz');
         $this->post(route('configuration.accounts.registrations.update', ['student', $account->id]), [
             'action' => 'activate',
         ])->assertSessionHasErrors('action');
-        $this->post(route('configuration.accounts.registrations.students.link', $account), [
-            'student_id' => $rizal->id, 'confirm' => 1,
+        $this->get(route('academic.students.pre-enlistment'))->assertOk()->assertSee($account->student->student_number)->assertSee('Juan Dela Cruz');
+        $this->post(route('academic.students.admit', $account->student->info), [
+            'name' => 'Juan Dela Cruz', 'birthdate' => '2008-02-01', 'gender' => 'Male',
+            'grlvl_id' => 1, 'acady_id' => 1, 'class_id' => $this->schoolClass->id,
         ])->assertRedirect();
-        $this->assertDatabaseHas('student_accounts', ['id' => $account->id, 'student_id' => $rizal->id, 'status' => 'ACTIVE']);
+        $this->assertDatabaseHas('student_accounts', ['id' => $account->id, 'student_id' => $account->student_id, 'status' => 'ACTIVE']);
+        $existingRizal = $rizal;
+        $rizal = $account->student->refresh();
         $secondAccount = StudentAccount::create(['username' => 'duplicate', 'password' => 'test-password', 'name' => 'Juan Dela Cruz']);
         $this->post(route('configuration.accounts.registrations.students.link', $secondAccount), [
             'student_id' => $rizal->id, 'confirm' => 1,
@@ -727,7 +862,7 @@ class QuarterGradingTest extends TestCase
         $this->forgetIdentities();
         $this->actingAs($this->teacher, 'teacher')->get($this->url())->assertOk()->assertSee('Juan Dela Cruz');
         $this->post($this->url(), ['quarter' => 1, 'academic_year_id' => 1, 'complete' => 1, 'action' => 'submit',
-            'rows' => [['student_id' => $this->student->id, 'grade' => 75], ['student_id' => $rizal->id, 'grade' => 92]],
+            'rows' => [['student_id' => $this->student->id, 'grade' => 75], ['student_id' => $existingRizal->id, 'grade' => 80], ['student_id' => $rizal->id, 'grade' => 92]],
         ])->assertRedirect();
         GradeSheet::query()->update(['status' => 'APPROVED', 'approved_at' => now(), 'approved_by' => 1]);
         $this->forgetIdentities();

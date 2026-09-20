@@ -9,9 +9,12 @@
             <section class="gs-panel gs-success">
                 <h2>Pending staff review</h2>
                 @if($portal === 'student')
-                    <p>Your account is pending staff review and linking to your academic student record. Your official Student Number will appear after linking.</p>
+                    <p>Your account is pending staff review and activation.</p>
+                    @if($registration['number'] ?? null)
+                        <p>Student Number: <strong>{{ $registration['number'] }}</strong></p>
+                    @endif
                 @else
-                    <p>Your guardian account and child claim were submitted. Staff must verify the relationship before activation.</p>
+                    <p>Your guardian account is pending staff review and activation. Children are linked separately by authorized school staff.</p>
                 @endif
                 <p class="gs-notice">Pending accounts cannot sign in until school staff activates them.</p>
                 <a class="gs-btn gs-btn-primary" href="{{ route('portal.login', ['portal' => $portal]) }}">Return to Sign In</a>

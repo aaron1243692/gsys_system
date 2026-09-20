@@ -29,6 +29,9 @@ class PortalAuthController extends Controller
             throw ValidationException::withMessages(['username' => 'Invalid username or password.']);
         }
         $account = $guard->getProvider()->retrieveByCredentials($credentials);
+        if ($account->status === 'PENDING') {
+            throw ValidationException::withMessages(['username' => 'Your account is waiting for activation by the school.']);
+        }
         if ($account->status !== 'ACTIVE' || ($portal === 'student' && ! $account->student()->whereHas('info')->exists())) {
             throw ValidationException::withMessages(['username' => 'Your account is not active. School staff must review and activate it before portal access.']);
         }

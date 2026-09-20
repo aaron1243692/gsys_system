@@ -1,0 +1,2946 @@
+[
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(150)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "year_from",
+    "COLUMN_TYPE": "year(4)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "year_to",
+    "COLUMN_TYPE": "year(4)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "acady",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "account_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "account_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "document_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "document_version",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "agreement_records",
+    "COLUMN_NAME": "accepted_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "actor_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "actor_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "action",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "target_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "target_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "details",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "audit_events",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "year",
+    "COLUMN_TYPE": "year(4)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "curriculum_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "track_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "batch",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "cache",
+    "COLUMN_NAME": "key",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "cache",
+    "COLUMN_NAME": "value",
+    "COLUMN_TYPE": "mediumtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "cache",
+    "COLUMN_NAME": "expiration",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "cache_locks",
+    "COLUMN_NAME": "key",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "cache_locks",
+    "COLUMN_NAME": "owner",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "cache_locks",
+    "COLUMN_NAME": "expiration",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "grlvl_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "track_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "acady_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "adviser_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "day",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "room_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "time_from",
+    "COLUMN_TYPE": "time",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "time_to",
+    "COLUMN_TYPE": "time",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsched",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "sub_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "classsub",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "class_list",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "class_list",
+    "COLUMN_NAME": "student_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class_list",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class_list",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "class_list",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "track_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "batch_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(10) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "curriculum_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "grade_level",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "year_level",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "semester",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "units",
+    "COLUMN_TYPE": "decimal(4,1)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "0.0",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "sort_order",
+    "COLUMN_TYPE": "smallint(5) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "1",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "prerequisites",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "curriculum_subjects",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "uuid",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "connection",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "queue",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "payload",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "exception",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "failed_jobs",
+    "COLUMN_NAME": "failed_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "class_list_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "first_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "second_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "third_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "final_grade",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "remarks",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "student_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "academic_year_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "grade_level_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "created_by",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "updated_by",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "quarter",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "grade",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "student_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "class_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "subject_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "academic_year_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "grade_level_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "teacher_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grades",
+    "COLUMN_NAME": "grade_sheet_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "academic_year_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "quarter",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "opens_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "closes_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "created_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "updated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_encoding_schedules",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "academic_year_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "grade_level_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "quarter",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'DRAFT'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "teacher_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "class_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "subject_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "academic_year_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "grade_level_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "roster",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "submitted_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "submitted_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "returned_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "returned_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "approved_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "approved_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "return_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "correction_until",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grade_sheets",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grlvl",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "grlvl",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "grlvl",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "grlvl",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "guardian_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "student_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'PENDING'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "relationship",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "claimed_student_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "claimed_birthdate",
+    "COLUMN_TYPE": "date",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "verified_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "verified_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardianchilds",
+    "COLUMN_NAME": "verification_note",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "username",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "password",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "contact",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "address",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'ACTIVE'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "activated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "activated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "rejected_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "rejected_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "deactivated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "deactivated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "guardians",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "queue",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "payload",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "attempts",
+    "COLUMN_TYPE": "tinyint(3) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "reserved_at",
+    "COLUMN_TYPE": "int(10) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "available_at",
+    "COLUMN_TYPE": "int(10) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "jobs",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "int(10) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "total_jobs",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "pending_jobs",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "failed_jobs",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "failed_job_ids",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "options",
+    "COLUMN_TYPE": "mediumtext",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "cancelled_at",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "job_batches",
+    "COLUMN_NAME": "finished_at",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "migrations",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(10) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "migrations",
+    "COLUMN_NAME": "migration",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "migrations",
+    "COLUMN_NAME": "batch",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "account_type",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "account_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "token_hash",
+    "COLUMN_TYPE": "char(64)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "last_used_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "expires_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "mobile_api_tokens",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "model_has_permissions",
+    "COLUMN_NAME": "permission_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "model_has_permissions",
+    "COLUMN_NAME": "model_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "model_has_permissions",
+    "COLUMN_NAME": "model_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "model_has_roles",
+    "COLUMN_NAME": "role_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "model_has_roles",
+    "COLUMN_NAME": "model_type",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "model_has_roles",
+    "COLUMN_NAME": "model_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "password_reset_tokens",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "password_reset_tokens",
+    "COLUMN_NAME": "token",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "password_reset_tokens",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "class_list_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "first_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "second_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "third_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "fourth_quarter",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "final_grade",
+    "COLUMN_TYPE": "decimal(5,2)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "remarks",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "enum('pending','approved','rejected')",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "'pending'",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "submitted_by",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "approved_by",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "submitted_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "approved_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "pending_grades",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "codename",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "parent_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "guard_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "permissions",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "roles",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "roles",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "roles",
+    "COLUMN_NAME": "guard_name",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "roles",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "roles",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "role_has_permissions",
+    "COLUMN_NAME": "permission_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "role_has_permissions",
+    "COLUMN_NAME": "role_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "rooms",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "rooms",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "rooms",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "rooms",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "user_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "ip_address",
+    "COLUMN_TYPE": "varchar(45)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "user_agent",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "payload",
+    "COLUMN_TYPE": "longtext",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "sessions",
+    "COLUMN_NAME": "last_activity",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "student_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "lrn",
+    "COLUMN_TYPE": "bigint(20)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "admited",
+    "COLUMN_TYPE": "tinyint(1)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "0",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(150)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "gender",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "birthdate",
+    "COLUMN_TYPE": "date",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "grlvl_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "acady_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "contact",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "address",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "stinfo",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "username",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "password",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'ACTIVE'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "activated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "activated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "rejected_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "rejected_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "deactivated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "deactivated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "students",
+    "COLUMN_NAME": "student_number",
+    "COLUMN_TYPE": "char(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "student_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "username",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "password",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(150)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "birthdate",
+    "COLUMN_TYPE": "date",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "gender",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "contact",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "address",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "requested_grlvl_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "requested_acady_id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'PENDING'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "activated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "activated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "rejected_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "rejected_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "deactivated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "deactivated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "student_accounts",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subcat",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "subcat",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subcat",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subcat",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "subcat_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "code",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "subject",
+    "COLUMN_NAME": "deleted_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teacherclass",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "teacherclass",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teacherclass",
+    "COLUMN_NAME": "class_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teacherclass",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teacherclass",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(150)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "username",
+    "COLUMN_TYPE": "varchar(50)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "password",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'ACTIVE'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "activated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "activated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "rejected_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "rejected_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "deactivated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "deactivated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachers",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachersub",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "teachersub",
+    "COLUMN_NAME": "teacher_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachersub",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachersub",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "teachersub",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "track",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "track",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "track",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "track",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "track_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "grlvl_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "subject_id",
+    "COLUMN_TYPE": "int(11)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "tracksub",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "current_timestamp()",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "PRI"
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "username",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "email",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": "UNI"
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "email_verified_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "password",
+    "COLUMN_TYPE": "varchar(255)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": null,
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "remember_token",
+    "COLUMN_TYPE": "varchar(100)",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "created_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "updated_at",
+    "COLUMN_TYPE": "timestamp",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "varchar(20)",
+    "IS_NULLABLE": "NO",
+    "COLUMN_DEFAULT": "'ACTIVE'",
+    "COLUMN_KEY": "MUL"
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "activated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "activated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "rejected_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "rejected_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "deactivated_by",
+    "COLUMN_TYPE": "bigint(20) unsigned",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "deactivated_at",
+    "COLUMN_TYPE": "datetime",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  },
+  {
+    "TABLE_NAME": "users",
+    "COLUMN_NAME": "rejection_reason",
+    "COLUMN_TYPE": "text",
+    "IS_NULLABLE": "YES",
+    "COLUMN_DEFAULT": "NULL",
+    "COLUMN_KEY": ""
+  }
+]
