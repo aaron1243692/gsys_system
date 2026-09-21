@@ -3,14 +3,13 @@ namespace App\Http\Controllers;
 use App\Models\{Student, StudentAccount, Guardian};
 use App\Services\Audit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{DB, Gate};
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 class AccountReviewController extends Controller
 {
     private function model(string $type) { abort_unless(in_array($type,['student','guardian']),404); return $type === 'student' ? new StudentAccount : new Guardian; }
     public function index(Request $request)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $data=$request->validate(['type'=>['nullable','in:student,guardian'],'status'=>['nullable','in:PENDING,ACTIVE,REJECTED,DEACTIVATED'],'search'=>['nullable','string','max:150'],'date'=>['nullable','date']]);
         $type=$data['type']??'student'; $status=$data['status']??'PENDING';
         $accounts=$this->model($type)->newQuery()
@@ -27,7 +26,6 @@ class AccountReviewController extends Controller
     }
     public function show(Request $request,string $type,int $id)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $account=$this->model($type)->findOrFail($id);
         $links=$type==='guardian' ? $account->children()->where('status', 'VERIFIED')->with('student.info')->get() : collect();
         $records = collect(); $selectedStudent = null;
@@ -50,8 +48,8 @@ class AccountReviewController extends Controller
     }
     public function update(Request $request,string $type,int $id)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $data=$request->validate(['action'=>['required','in:activate,reject,deactivate'],'reason'=>['required_if:action,reject','nullable','string','max:2000']]);
+        abort_unless($request->user('web')->can('registrations.'.$data['action']), 403);
         DB::transaction(function() use($request,$type,$id,$data) {
             $account=$this->model($type)->newQuery()->whereKey($id)->lockForUpdate()->firstOrFail();
             $action=$data['action'];
@@ -74,7 +72,6 @@ class AccountReviewController extends Controller
     }
     public function linkStudent(Request $request, StudentAccount $account)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $data = $request->validate(['student_id' => ['required','integer','exists:students,id'], 'confirm' => ['required','accepted']]);
         DB::transaction(function () use ($request, $account, $data) {
             $account = StudentAccount::whereKey($account->id)->lockForUpdate()->firstOrFail();

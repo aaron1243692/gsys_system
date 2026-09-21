@@ -4,7 +4,8 @@
 
 Reuses users, teachers, students, stinfo, guardians, guardianchilds, subject,
 subcat, grlvl, acady, class, classsub, curriculum, curriculum_subjects, batch,
-track, tracksub, and grades. No departments table exists. class_list is empty;
+and grades. The obsolete Track module and its schema were removed on 2026-09-21.
+No departments table exists. class_list is empty;
 stinfo is the maintained current enrollment. teachersub/teacherclass are legacy
 seeded mappings, with stale references. The maintained authoritative assignment
 is subject.teacher_id plus classsub; classsched describes timing, not ownership.

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Curriculum;
-use App\Models\Track;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,10 +15,8 @@ class CurriculumController extends Controller
         $search = trim((string) $request->query('search'));
 
         $curriculums = Curriculum::query()
-            ->with('track')
             ->when($search !== '', function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhereHas('track', fn ($query) => $query->where('name', 'like', "%{$search}%"));
+                $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('id')
             ->paginate(10)
@@ -27,7 +24,6 @@ class CurriculumController extends Controller
 
         return view('configuration.curiculum.curriculum', [
             'curriculums' => $curriculums,
-            'tracks' => Track::query()->orderBy('name')->get(),
             'search' => $search,
         ]);
     }
@@ -68,7 +64,6 @@ class CurriculumController extends Controller
                 'max:100',
                 Rule::unique('curriculum', 'name')->ignore($curriculum?->id),
             ],
-            'track_id' => ['nullable', 'integer', 'exists:track,id'],
         ], [
             'name.unique' => 'This curriculum already exists.',
         ]);

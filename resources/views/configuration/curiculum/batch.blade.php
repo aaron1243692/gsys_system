@@ -117,7 +117,6 @@
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Year</th>
                                 <th class="px-4 py-3 font-bold">Curriculum</th>
-                                <th class="px-4 py-3 font-bold">Track / Strand</th>
                                 <th class="w-48 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -128,7 +127,6 @@
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $batch->id }}</td>
                                     <td class="px-4 py-2 font-bold text-slate-950">{{ $batch->year }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $batch->curriculum?->name ?? 'No curriculum' }}</td>
-                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $batch->curriculum?->track?->name ?? 'No track' }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('edit-batch-{{ $batch->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
@@ -207,7 +205,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
+                                    <td colspan="5" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
                                         No batches found.
                                     </td>
                                 </tr>
@@ -267,17 +265,15 @@
                             <th class="w-16 px-3 py-3 font-bold">No</th>
                             <th class="w-20 px-3 py-3 font-bold">ID</th>
                             <th class="px-3 py-3 font-bold">Name</th>
-                            <th class="px-3 py-3 font-bold">Track / Strand</th>
                             <th class="w-24 px-3 py-3 text-right font-bold">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($curriculums as $curriculum)
-                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-curriculum-row data-search-text="{{ strtolower($curriculum->id . ' ' . $curriculum->name . ' ' . ($curriculum->track?->name ?? '')) }}">
+                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-curriculum-row data-search-text="{{ strtolower($curriculum->id . ' ' . $curriculum->name) }}">
                                 <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
                                 <td class="px-3 py-2 font-semibold text-slate-700">{{ $curriculum->id }}</td>
                                 <td class="px-3 py-2 font-bold text-slate-950">{{ $curriculum->name }}</td>
-                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $curriculum->track?->name ?? 'No track' }}</td>
                                 <td class="px-3 py-2 text-right">
                                     <button type="button" data-select-curriculum data-curriculum-id="{{ $curriculum->id }}" data-curriculum-name="{{ $curriculum->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
                                         Select
@@ -286,13 +282,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
+                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
                                     No curriculums found.
                                 </td>
                             </tr>
                         @endforelse
                         <tr id="curriculum-picker-no-results" class="hidden">
-                            <td colspan="5" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
+                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
                                 No matching curriculums found.
                             </td>
                         </tr>

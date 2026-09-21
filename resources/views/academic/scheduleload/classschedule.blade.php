@@ -83,17 +83,6 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-slate-800" for="new-class-track-name">Track</label>
-                                <div class="mt-1.5 flex gap-2">
-                                    <input id="new-class-track" type="hidden" name="track_id" value="{{ old('track_id') }}">
-                                    <input id="new-class-track-name" type="text" value="{{ $tracks->firstWhere('id', old('track_id'))?->name }}" placeholder="Select track" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                    <button type="button" data-schedule-picker data-picker-type="track" data-target-id="new-class-track" data-target-name="new-class-track-name" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select track">
-                                        <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
                                 <label class="block text-sm font-bold text-slate-800" for="new-class-acady-name">Academic Year</label>
                                 <div class="mt-1.5 flex gap-2">
                                     <input id="new-class-acady" type="hidden" name="acady_id" value="{{ old('acady_id') }}">
@@ -391,17 +380,6 @@
                                                     </div>
 
                                                     <div>
-                                                        <label class="block text-sm font-bold text-slate-800" for="class-track-name-{{ $class->id }}">Track</label>
-                                                        <div class="mt-1.5 flex gap-2">
-                                                            <input id="class-track-{{ $class->id }}" type="hidden" name="track_id" value="{{ old('track_id', $class->track_id) }}">
-                                                            <input id="class-track-name-{{ $class->id }}" type="text" value="{{ $tracks->firstWhere('id', old('track_id', $class->track_id))?->name }}" placeholder="Select track" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                                            <button type="button" data-schedule-picker data-picker-type="track" data-target-id="class-track-{{ $class->id }}" data-target-name="class-track-name-{{ $class->id }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select track">
-                                                                <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
                                                         <label class="block text-sm font-bold text-slate-800" for="class-acady-name-{{ $class->id }}">Academic Year</label>
                                                         <div class="mt-1.5 flex gap-2">
                                                             <input id="class-acady-{{ $class->id }}" type="hidden" name="acady_id" value="{{ old('acady_id', $class->acady_id) }}">
@@ -546,53 +524,6 @@
                         @endforelse
                         <tr id="grade-level-picker-no-results" class="hidden">
                             <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No matching grade levels found.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </dialog>
-
-    <dialog id="track-picker-modal" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
-        <div class="p-4">
-            <div class="relative text-center">
-                <h2 class="text-xl font-black">Tracks</h2>
-                <button type="button" onclick="document.getElementById('track-picker-modal').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
-                    &times;
-                </button>
-            </div>
-
-            <input id="track-picker-search" type="search" placeholder="Search track" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
-            <div class="scrollbar-none mt-4 max-h-[60vh] overflow-y-auto rounded-lg border border-slate-200">
-                <table class="w-full border-collapse text-left text-sm">
-                    <thead class="sticky top-0 bg-blue-700 text-xs uppercase tracking-wider text-white">
-                        <tr>
-                            <th class="w-16 px-3 py-3 font-bold">No</th>
-                            <th class="w-20 px-3 py-3 font-bold">ID</th>
-                            <th class="px-3 py-3 font-bold">Name</th>
-                            <th class="w-24 px-3 py-3 text-right font-bold">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($tracks as $track)
-                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-picker-row="track" data-search-text="{{ strtolower($track->id . ' ' . $track->name) }}">
-                                <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
-                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $track->id }}</td>
-                                <td class="px-3 py-2 font-bold text-slate-950">{{ $track->name }}</td>
-                                <td class="px-3 py-2 text-right">
-                                    <button type="button" data-select-schedule-option="track" data-option-id="{{ $track->id }}" data-option-name="{{ $track->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
-                                        Select
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No tracks found.</td>
-                            </tr>
-                        @endforelse
-                        <tr id="track-picker-no-results" class="hidden">
-                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">No matching tracks found.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -800,12 +731,6 @@
                     search: document.getElementById('grade-level-picker-search'),
                     rows: Array.from(document.querySelectorAll('[data-picker-row="grade-level"]')),
                     noResults: document.getElementById('grade-level-picker-no-results'),
-                },
-                track: {
-                    modal: document.getElementById('track-picker-modal'),
-                    search: document.getElementById('track-picker-search'),
-                    rows: Array.from(document.querySelectorAll('[data-picker-row="track"]')),
-                    noResults: document.getElementById('track-picker-no-results'),
                 },
                 'academic-year': {
                     modal: document.getElementById('academic-year-picker-modal'),

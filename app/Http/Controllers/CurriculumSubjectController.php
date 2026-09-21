@@ -23,7 +23,6 @@ class CurriculumSubjectController extends Controller
             ->first();
 
         $curriculums = Curriculum::query()
-            ->with('track')
             ->orderBy('name')
             ->get();
 

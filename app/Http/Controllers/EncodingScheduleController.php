@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\{DB,Gate};
 class EncodingScheduleController extends Controller
 {
     public function index(Request $request) {
-        Gate::forUser($request->user('web'))->authorize('manage-schedules');
         return view('grading.schedule',['years'=>AcademicYear::orderByDesc('id')->get(),'schedules'=>GradeEncodingSchedule::with('academicYear')->orderByDesc('academic_year_id')->orderBy('quarter')->get()]);
     }
     public function store(Request $request) {
-        Gate::forUser($request->user('web'))->authorize('manage-schedules');
         $data=$request->validate(['academic_year_id'=>['required','integer','exists:acady,id'],'quarter'=>['required','integer','in:1,2,3'],'opens_at'=>['required','date'],'closes_at'=>['required','date','after:opens_at']]);
         DB::transaction(function() use($request,$data) {
             AcademicYear::whereKey($data['academic_year_id'])->lockForUpdate()->firstOrFail();

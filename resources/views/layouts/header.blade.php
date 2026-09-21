@@ -74,10 +74,6 @@
                 <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.subjects')) }}">
                 <span>Subjects</span>
             </a>
-            <a href="{{ route('configuration.curriculum.tracks') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.tracks')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.tracks') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.tracks')) }}">
-                <span>Track</span>
-            </a>
         </div>
 
         <button type="button" data-sidebar-group-toggle class="{{ $groupButtonClass($isAcademicGroup) }}" aria-expanded="{{ $isAcademicGroup ? 'true' : 'false' }}" aria-controls="sidebar-academic-menu">

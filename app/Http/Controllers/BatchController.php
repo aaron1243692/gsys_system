@@ -17,7 +17,7 @@ class BatchController extends Controller
         $curriculumId = $request->query('curriculum_id');
 
         $batches = Batch::query()
-            ->with('curriculum.track')
+            ->with('curriculum')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('year', 'like', "%{$search}%")
                     ->orWhereHas('curriculum', fn ($query) => $query->where('name', 'like', "%{$search}%"));
@@ -29,7 +29,7 @@ class BatchController extends Controller
 
         return view('configuration.curiculum.batch', [
             'batches' => $batches,
-            'curriculums' => Curriculum::query()->with('track')->orderBy('name')->get(),
+            'curriculums' => Curriculum::query()->orderBy('name')->get(),
             'search' => $search,
             'curriculumId' => $curriculumId,
         ]);

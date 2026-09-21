@@ -11,7 +11,6 @@ class TeacherLoadController extends Controller
 {
     public function index(Request $request)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-loads');
         $search = trim((string) $request->query('search'));
         $loads = ClassSubject::with(['teacher', 'subject', 'schoolClass.academicYear', 'schoolClass.gradeLevel', 'schoolClass.classSchedules.room'])
             ->whereNotNull('teacher_id')->whereHas('teacher')->whereHas('subject')->whereHas('schoolClass')
@@ -33,7 +32,6 @@ class TeacherLoadController extends Controller
 
     public function store(Request $request)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-loads');
         $data = $request->validate([
             'teacher_id' => ['required', 'integer', 'exists:teachers,id'],
             'class_id' => ['required', 'integer', 'exists:class,id'],
@@ -52,7 +50,6 @@ class TeacherLoadController extends Controller
 
     public function update(Request $request, ClassSubject $classSubject)
     {
-        Gate::forUser($request->user('web'))->authorize('manage-loads');
         $data = $request->validate(['teacher_id' => ['required', 'integer', 'exists:teachers,id']]);
         if (! $classSubject->schoolClass?->acady_id) {
             throw ValidationException::withMessages(['teacher_id' => 'The class needs a school year before assigning a teacher.']);
@@ -63,7 +60,6 @@ class TeacherLoadController extends Controller
 
     public function destroy(ClassSubject $classSubject)
     {
-        Gate::forUser(request()->user('web'))->authorize('manage-loads');
         $classSubject->update(['teacher_id' => null]);
         return back()->with('success', 'Teaching load removed.');
     }

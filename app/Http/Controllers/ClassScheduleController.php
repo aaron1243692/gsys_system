@@ -9,7 +9,6 @@ use App\Models\Room;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\Track;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -22,7 +21,7 @@ class ClassScheduleController extends Controller
         $search = trim((string) $request->query('search'));
 
         $classes = SchoolClass::query()
-            ->with(['adviser', 'gradeLevel', 'track', 'academicYear', 'classSchedules.subject', 'classSchedules.room'])
+            ->with(['adviser', 'gradeLevel', 'academicYear', 'classSchedules.subject', 'classSchedules.room'])
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhereHas('adviser', fn ($teacherQuery) => $teacherQuery->where('name', 'like', "%{$search}%"));
@@ -35,7 +34,6 @@ class ClassScheduleController extends Controller
             'classes' => $classes,
             'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
             'academicYears' => AcademicYear::query()->orderBy('year_from')->orderBy('name')->get(),
-            'tracks' => Track::query()->orderBy('name')->get(),
             'teachers' => Teacher::query()->orderBy('name')->get(),
             'subjects' => Subject::query()->orderBy('name')->get(),
             'rooms' => Room::query()->orderBy('name')->get(),
@@ -112,7 +110,6 @@ class ClassScheduleController extends Controller
     {
         return $request->validate([
             'grlvl_id' => ['required', 'integer', 'exists:grlvl,id'],
-            'track_id' => ['nullable', 'integer', 'exists:track,id'],
             'acady_id' => ['required', 'integer', 'exists:acady,id'],
             'adviser_id' => [
                 'nullable',

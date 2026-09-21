@@ -110,7 +110,6 @@ class GuardianController extends Controller
 
     public function storeChild(Request $request, Guardian $guardian): RedirectResponse
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         $validated = $request->validate([
             'student_id' => ['required', 'integer', 'exists:students,id'],
             'relationship' => ['required', Rule::in(['Mother', 'Father', 'Legal Guardian', 'Other'])],
@@ -137,7 +136,6 @@ class GuardianController extends Controller
 
     public function destroyChild(Request $request, GuardianChild $guardianChild): RedirectResponse
     {
-        Gate::forUser($request->user('web'))->authorize('manage-registrations');
         DB::transaction(function () use ($guardianChild, $request) {
             $guardianChild->delete();
             Audit::record('web', $request->user('web')->id, 'child.removed', $guardianChild);

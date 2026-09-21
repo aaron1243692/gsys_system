@@ -12,7 +12,6 @@ class Curriculum extends Model
 
     protected $fillable = [
         'name',
-        'track_id',
         'batch_id',
     ];
 
@@ -21,10 +20,6 @@ class Curriculum extends Model
         return $this->belongsTo(Batch::class, 'batch_id');
     }
 
-    public function track(): BelongsTo
-    {
-        return $this->belongsTo(Track::class, 'track_id');
-    }
 
     public function curriculumSubjects(): HasMany
     {

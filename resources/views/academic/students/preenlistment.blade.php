@@ -57,7 +57,6 @@
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Student</th>
                                 <th class="px-4 py-3 font-bold">Grade Level</th>
-                                <th class="px-4 py-3 font-bold">Track</th>
                                 <th class="px-4 py-3 font-bold">Class</th>
                                 <th class="px-4 py-3 font-bold">Portal Account</th>
                                 <th class="w-52 px-4 py-3 text-right font-bold">Action</th>
@@ -78,7 +77,6 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
-                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}<p class="text-xs text-slate-500">{{ $student->student->portalAccount->username }} · {{ $student->student->portalAccount->email }}</p><p class="text-xs text-slate-500">Registered {{ $student->student->portalAccount->created_at?->format('M d, Y') }}</p>@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
                                     <td class="px-4 py-2">
@@ -292,7 +290,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
+                                    <td colspan="6" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
                                         No pre-enlistment records found.
                                     </td>
                                 </tr>

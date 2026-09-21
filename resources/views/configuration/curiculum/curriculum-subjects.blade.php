@@ -43,7 +43,7 @@
                         <select id="curriculum-id" name="curriculum_id" onchange="this.form.submit()" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
                             @foreach ($curriculums as $curriculum)
                                 <option value="{{ $curriculum->id }}" @selected($selectedCurriculum?->id === $curriculum->id)>
-                                    {{ $curriculum->name }}{{ $curriculum->track ? ' - '.$curriculum->track->name : '' }}
+                                    {{ $curriculum->name }}
                                 </option>
                             @endforeach
                         </select>

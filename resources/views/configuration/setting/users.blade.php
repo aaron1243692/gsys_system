@@ -76,15 +76,15 @@
                         <label class="mt-4 block text-sm font-bold text-slate-800" for="new-user-email">Email</label>
                         <input id="new-user-email" type="email" name="email" value="{{ old('email') }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
 
-                        <label class="mt-4 block text-sm font-bold text-slate-800" for="new-user-role">Role</label>
-                        <select id="new-user-role" name="role_id" data-searchable-select data-placeholder="Search role" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                            <option value="">No role</option>
+                        @can('users.assign_role')<label class="mt-4 block text-sm font-bold text-slate-800" for="new-user-role">Role</label>
+                        <select id="new-user-role" name="role_id" required data-searchable-select data-placeholder="Select role" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                            <option value="">Select role</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}" @selected((int) old('role_id') === $role->id)>
                                     {{ $role->name }}
                                 </option>
                             @endforeach
-                        </select>
+                        </select>@endcan
 
                         <div class="mt-4 flex gap-2">
                             <button type="button" onclick="document.getElementById('add-user-modal').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
@@ -149,15 +149,15 @@
                                                     $selectedRoleId = (int) old('role_id', $user->roles->first()?->id);
                                                 @endphp
 
-                                                <label class="mt-4 block text-sm font-bold text-slate-800" for="user-role-{{ $user->id }}">Role</label>
-                                                <select id="user-role-{{ $user->id }}" name="role_id" data-searchable-select data-placeholder="Search role" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                                    <option value="">No role</option>
+                                                @can('users.assign_role')<label class="mt-4 block text-sm font-bold text-slate-800" for="user-role-{{ $user->id }}">Role</label>
+                                                <select id="user-role-{{ $user->id }}" name="role_id" required data-searchable-select data-placeholder="Select role" class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+                                                    <option value="">Select role</option>
                                                     @foreach ($roles as $role)
                                                         <option value="{{ $role->id }}" @selected($selectedRoleId === $role->id)>
                                                             {{ $role->name }}
                                                         </option>
                                                     @endforeach
-                                                </select>
+                                                </select>@endcan
 
                                                 <div class="mt-4 flex gap-2">
                                                     <button type="button" onclick="document.getElementById('edit-user-{{ $user->id }}').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
@@ -314,7 +314,7 @@
                 };
 
                 searchInput.addEventListener('focus', () => {
-                    searchInput.select();
+                    searchInput.value = '';
                     renderOptions();
                 });
                 searchInput.addEventListener('input', renderOptions);

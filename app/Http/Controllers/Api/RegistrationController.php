@@ -12,7 +12,7 @@ class RegistrationController extends Controller
     private function store(Request $r,string $role):JsonResponse
     {
         $service=app(RegistrationService::class);
-        $account=$service->register($role,$r->validate($service->rules($role)));
+        $account=$service->register($role,$r->validate($service->rules($role), $service->messages()));
         return response()->json(['success'=>true,'message'=>'Registration submitted successfully. Your account is waiting for approval.','data'=>array_filter(['id'=>$account->id,'student_number'=>$account->student?->student_number,'status'=>$account->status])],201);
     }
 }

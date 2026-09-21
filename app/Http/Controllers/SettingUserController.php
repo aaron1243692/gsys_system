@@ -29,7 +29,7 @@ class SettingUserController extends Controller
 
         return view('configuration.setting.users', [
             'users' => $users,
-            'roles' => Role::query()->orderBy('name')->get(),
+            'roles' => Role::query()->where('guard_name', 'web')->orderBy('name')->get(),
             'search' => $search,
         ]);
     }
@@ -39,7 +39,7 @@ class SettingUserController extends Controller
         $validated = $request->validate([
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
-            'role_id' => ['nullable', 'integer', 'exists:roles,id'],
+            'role_id' => ['required', 'integer', Rule::exists('roles', 'id')->where('guard_name', 'web')],
         ], [
             'email.unique' => 'This email already exists.',
         ]);
@@ -47,6 +47,8 @@ class SettingUserController extends Controller
         $role = ! empty($validated['role_id'])
             ? Role::query()->find($validated['role_id'])
             : null;
+
+        abort_if($role && ! $request->user()->can('users.assign_role'), 403);
 
         unset($validated['role_id']);
         $validated['password'] = 'password';
@@ -64,7 +66,7 @@ class SettingUserController extends Controller
         $validated = $request->validate([
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-            'role_id' => ['nullable', 'integer', 'exists:roles,id'],
+            'role_id' => ['required', 'integer', Rule::exists('roles', 'id')->where('guard_name', 'web')],
         ], [
             'email.unique' => 'This email already exists.',
         ]);
@@ -72,6 +74,12 @@ class SettingUserController extends Controller
         $role = ! empty($validated['role_id'])
             ? Role::query()->find($validated['role_id'])
             : null;
+
+        $currentRoleId = $user->roles()->value('roles.id');
+        abort_if((int) $currentRoleId !== (int) ($role?->id) && ! $request->user()->can('users.assign_role'), 403);
+
+        abort_if($user->is($request->user()) && $user->hasRole('admin') && $role?->name !== 'admin', 403,
+            'You cannot remove your own administrator access.');
 
         unset($validated['role_id']);
 
@@ -100,6 +108,9 @@ class SettingUserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
+        abort_if($user->is(request()->user()), 403, 'You cannot delete your own account.');
+        abort_if($user->hasRole('admin') && User::role('admin')->count() <= 1, 403,
+            'The final administrator account cannot be deleted.');
         $user->delete();
 
         return redirect()

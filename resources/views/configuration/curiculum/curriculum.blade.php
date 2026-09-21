@@ -72,19 +72,6 @@
                         <label class="mt-4 block text-sm font-bold text-slate-800" for="new-curriculum-name">Name</label>
                         <input id="new-curriculum-name" type="text" name="name" value="{{ old('name') }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
 
-                        @php
-                            $newSelectedTrack = $tracks->firstWhere('id', (int) old('track_id'));
-                        @endphp
-
-                        <label class="mt-4 block text-sm font-bold text-slate-800" for="new-curriculum-track-name">Track / Strand</label>
-                        <div class="mt-1.5 flex gap-2">
-                            <input id="new-curriculum-track-id" type="hidden" name="track_id" value="{{ old('track_id') }}">
-                            <input id="new-curriculum-track-name" type="text" value="{{ $newSelectedTrack?->name }}" placeholder="Select track / strand" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                            <button type="button" data-track-picker data-target-id="new-curriculum-track-id" data-target-name="new-curriculum-track-name" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select track or strand">
-                                <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
-                            </button>
-                        </div>
-
                         <div class="mt-4 flex gap-2">
                             <button type="button" onclick="document.getElementById('add-curriculum-modal').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
                                 Cancel
@@ -103,7 +90,6 @@
                                 <th class="w-20 px-4 py-3 font-bold">No</th>
                                 <th class="w-24 px-4 py-3 font-bold">ID</th>
                                 <th class="px-4 py-3 font-bold">Name</th>
-                                <th class="px-4 py-3 font-bold">Track / Strand</th>
                                 <th class="w-48 px-4 py-3 text-right font-bold">Action</th>
                             </tr>
                         </thead>
@@ -113,7 +99,6 @@
                                     <td class="px-4 py-2 font-semibold text-slate-500">{{ $curriculums->firstItem() + $loop->index }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $curriculum->id }}</td>
                                     <td class="px-4 py-2 font-bold text-slate-950">{{ $curriculum->name }}</td>
-                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $curriculum->track?->name ?? 'No track' }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
                                             <button type="button" onclick="document.getElementById('edit-curriculum-{{ $curriculum->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
@@ -137,20 +122,6 @@
 
                                                 <label class="mt-4 block text-sm font-bold text-slate-800" for="curriculum-name-{{ $curriculum->id }}">Name</label>
                                                 <input id="curriculum-name-{{ $curriculum->id }}" type="text" name="name" value="{{ old('name', $curriculum->name) }}" required class="mt-1.5 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
-                                                @php
-                                                    $selectedTrackId = old('track_id', $curriculum->track_id);
-                                                    $selectedTrack = $tracks->firstWhere('id', (int) $selectedTrackId);
-                                                @endphp
-
-                                                <label class="mt-4 block text-sm font-bold text-slate-800" for="curriculum-track-name-{{ $curriculum->id }}">Track / Strand</label>
-                                                <div class="mt-1.5 flex gap-2">
-                                                    <input id="curriculum-track-id-{{ $curriculum->id }}" type="hidden" name="track_id" value="{{ $selectedTrackId }}">
-                                                    <input id="curriculum-track-name-{{ $curriculum->id }}" type="text" value="{{ $selectedTrack?->name }}" placeholder="Select track / strand" readonly class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-                                                    <button type="button" data-track-picker data-target-id="curriculum-track-id-{{ $curriculum->id }}" data-target-name="curriculum-track-name-{{ $curriculum->id }}" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white transition hover:scale-105 hover:bg-blue-50" aria-label="Select track or strand">
-                                                        <img src="{{ asset('icons/magnifying-glass.png') }}" alt="" class="h-5 w-5">
-                                                    </button>
-                                                </div>
 
                                                 <div class="mt-4 flex gap-2">
                                                     <button type="button" onclick="document.getElementById('edit-curriculum-{{ $curriculum->id }}').close()" class="w-full rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700 transition hover:scale-105 hover:bg-slate-50">
@@ -192,7 +163,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
+                                    <td colspan="4" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
                                         No curriculums found.
                                     </td>
                                 </tr>
@@ -234,109 +205,4 @@
         </section>
     </main>
 
-    <dialog id="track-picker-modal" class="m-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
-        <div class="p-4">
-            <div class="relative text-center">
-                <h2 class="text-xl font-black">Tracks / Strands</h2>
-                <button type="button" onclick="document.getElementById('track-picker-modal').close()" class="absolute right-0 top-0 border-0 outline-none ring-0 rounded-full px-3 py-1 text-2xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-0">
-                    &times;
-                </button>
-            </div>
-
-            <input id="track-picker-search" type="search" placeholder="Search track / strand" class="mt-4 w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
-            <div class="mt-4 max-h-[60vh] overflow-y-auto rounded-lg border border-slate-200">
-                <table class="w-full border-collapse text-left text-sm">
-                    <thead class="sticky top-0 bg-blue-700 text-xs uppercase tracking-wider text-white">
-                        <tr>
-                            <th class="w-16 px-3 py-3 font-bold">No</th>
-                            <th class="w-20 px-3 py-3 font-bold">ID</th>
-                            <th class="px-3 py-3 font-bold">Name</th>
-                            <th class="w-24 px-3 py-3 text-right font-bold">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($tracks as $track)
-                            <tr class="border-b border-slate-200 hover:bg-slate-50" data-track-row data-search-text="{{ strtolower($track->id . ' ' . $track->name) }}">
-                                <td class="px-3 py-2 font-semibold text-slate-500">{{ $loop->iteration }}</td>
-                                <td class="px-3 py-2 font-semibold text-slate-700">{{ $track->id }}</td>
-                                <td class="px-3 py-2 font-bold text-slate-950">{{ $track->name }}</td>
-                                <td class="px-3 py-2 text-right">
-                                    <button type="button" data-select-track data-track-id="{{ $track->id }}" data-track-name="{{ $track->name }}" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
-                                        Select
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
-                                    No tracks found.
-                                </td>
-                            </tr>
-                        @endforelse
-                        <tr id="track-picker-no-results" class="hidden">
-                            <td colspan="4" class="px-3 py-8 text-center text-sm font-semibold text-slate-500">
-                                No matching tracks found.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </dialog>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let activeTrackIdInput = null;
-            let activeTrackNameInput = null;
-            const trackPickerModal = document.getElementById('track-picker-modal');
-            const trackPickerSearch = document.getElementById('track-picker-search');
-            const trackRows = Array.from(document.querySelectorAll('[data-track-row]'));
-            const trackNoResults = document.getElementById('track-picker-no-results');
-
-            document.querySelectorAll('dialog').forEach((dialog) => {
-                dialog.addEventListener('click', (event) => {
-                    if (event.target === dialog) {
-                        dialog.close();
-                    }
-                });
-            });
-
-            document.querySelectorAll('[data-track-picker]').forEach((button) => {
-                button.addEventListener('click', () => {
-                    activeTrackIdInput = document.getElementById(button.dataset.targetId);
-                    activeTrackNameInput = document.getElementById(button.dataset.targetName);
-                    trackPickerSearch.value = '';
-                    trackRows.forEach((row) => row.classList.remove('hidden'));
-                    trackNoResults.classList.add('hidden');
-                    trackPickerModal.showModal();
-                    trackPickerSearch.focus();
-                });
-            });
-
-            trackPickerSearch.addEventListener('input', () => {
-                const query = trackPickerSearch.value.trim().toLowerCase();
-                let visibleCount = 0;
-
-                trackRows.forEach((row) => {
-                    const isMatch = row.dataset.searchText.includes(query);
-                    row.classList.toggle('hidden', ! isMatch);
-                    visibleCount += isMatch ? 1 : 0;
-                });
-
-                trackNoResults.classList.toggle('hidden', visibleCount > 0);
-            });
-
-            document.querySelectorAll('[data-select-track]').forEach((button) => {
-                button.addEventListener('click', () => {
-                    if (activeTrackIdInput && activeTrackNameInput) {
-                        activeTrackIdInput.value = button.dataset.trackId;
-                        activeTrackNameInput.value = button.dataset.trackName;
-                    }
-
-                    trackPickerModal.close();
-                });
-            });
-        });
-    </script>
 @endsection

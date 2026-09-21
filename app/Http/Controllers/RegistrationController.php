@@ -10,19 +10,23 @@ class RegistrationController extends Controller
 
     public function store(Request $request, string $portal, RegistrationService $service)
     {
-        $data = $request->validate($service->rules($portal));
+        $data = $request->validate($service->rules($portal), $service->messages());
         try {
             $account = $service->register($portal, $data);
         } catch (\Throwable $exception) {
             report($exception);
             return redirect()->route('portal.register', ['portal' => $portal])
-                ->withInput($request->only(array_diff(array_keys($service->rules($portal)), ['password'])))
+                ->withInput($request->only(array_diff(array_keys($service->rules($portal)), ['password', 'password_confirmation'])))
                 ->withErrors(['registration' => 'Registration could not be completed. Please try again.']);
         }
 
+        $registration = ['portal' => $portal, 'number' => $account->student?->student_number];
+        if ($portal === 'student') {
+            return redirect()->route('portal.registration.success', ['portal' => $portal])->with('registration', $registration);
+        }
         return redirect()->route('portal.login', ['portal' => $portal])
-            ->with('success', 'Registration submitted successfully. Your account is waiting for approval by the school. You can sign in after your account has been activated.')
-            ->with('registration', ['portal' => $portal, 'number' => $account->student?->student_number]);
+            ->with('success', 'Registration submitted successfully. Your account is waiting for approval by the school.')
+            ->with('registration', $registration);
     }
 
     public function success(Request $request, string $portal)

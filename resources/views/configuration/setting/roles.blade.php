@@ -40,7 +40,7 @@
                 <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <form method="GET" action="{{ route('configuration.setting.roles') }}" class="flex w-full gap-2 md:max-w-md">
 
-                        @can('asd.view')<input
+                        <input
                             type="search"
                             name="search"
                             value="{{ $search }}"
@@ -48,19 +48,20 @@
                             onchange="this.form.submit()"
                             onsearch="this.form.submit()"
                             class="w-full rounded-[2rem] border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        >@endcan
+                        >
                     </form>
 
-                    <button
+                    @can('roles.create')<button
                         type="button"
                         onclick="document.getElementById('add-role-modal').showModal()"
                         class="rounded-[2rem] bg-blue-700 px-4 py-2 text-sm font-bold text-white transition hover:scale-105 hover:bg-blue-800 md:ml-auto"
                         style="border-radius: 2rem;"
                     >
                         Add
-                    </button>
+                    </button>@endcan
                 </div>
 
+                @can('roles.create')
                 <dialog id="add-role-modal" class="m-auto w-full max-w-sm rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl backdrop:bg-slate-950/50">
                     <form method="POST" action="{{ route('configuration.setting.roles.store') }}" class="p-4">
                         @csrf
@@ -84,6 +85,7 @@
                         </div>
                     </form>
                 </dialog>
+                @endcan
 
                 <div class="flex flex-1 items-start overflow-x-auto rounded-lg border border-slate-200 min-h-0">
                     <table class="w-full border-collapse text-left text-sm">
@@ -103,15 +105,15 @@
                                     <td class="px-4 py-2 font-bold text-slate-950">{{ $role->name }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-end gap-2">
-                                            <button type="button" onclick="document.getElementById('permissions-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:scale-110 hover:bg-slate-50">
+                                            @can('permissions.assign')<button type="button" onclick="document.getElementById('permissions-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:scale-110 hover:bg-slate-50">
                                                 Permissions
-                                            </button>
-                                            <button type="button" onclick="document.getElementById('edit-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
+                                            </button>@endcan
+                                            @can('roles.update')<button type="button" onclick="document.getElementById('edit-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-blue-200 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:scale-110 hover:bg-blue-50">
                                                 Edit
-                                            </button>
-                                            <button type="button" onclick="document.getElementById('delete-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:scale-110 hover:bg-red-50">
+                                            </button>@endcan
+                                            @can('roles.delete')<button type="button" onclick="document.getElementById('delete-role-{{ $role->id }}').showModal()" class="rounded-[2rem] border border-red-200 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:scale-110 hover:bg-red-50">
                                                 Delete
-                                            </button>
+                                            </button>@endcan
                                         </div>
 
                                         <dialog id="permissions-role-{{ $role->id }}" class="m-auto w-full max-w-4xl max-h-[calc(100vh-2rem)] rounded-xl border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl overflow-hidden backdrop:bg-slate-950/50">
@@ -134,7 +136,12 @@
                                                 @endphp
 
                                                 <div class="grid min-h-0 gap-3 overflow-y-auto pr-1 md:grid-cols-2">
+                                                    @php $lastPermissionCategory = null; @endphp
                                                     @forelse ($permissionGroups as $parentPermission)
+                                                        @if($lastPermissionCategory !== $parentPermission->category)
+                                                            <h3 class="md:col-span-2 mt-2 border-b border-blue-200 pb-2 text-xs font-black uppercase tracking-widest text-blue-800">{{ $parentPermission->category }}</h3>
+                                                            @php $lastPermissionCategory = $parentPermission->category; @endphp
+                                                        @endif
                                                         @php
                                                             $childPermissionIds = $parentPermission->children->pluck('id')->all();
                                                             $hasCheckedChild = count(array_intersect($childPermissionIds, $assignedPermissionIds)) > 0;
@@ -179,6 +186,8 @@
                                                 </div>
 
                                                 <div class="flex w-full shrink-0 justify-center gap-2 border-t border-slate-200 pt-3">
+                                                    <button type="button" data-permission-toggle="all" class="rounded-[2rem] border border-blue-200 px-4 py-2 text-sm font-bold text-blue-700">Select All</button>
+                                                    <button type="button" data-permission-toggle="none" class="rounded-[2rem] border border-slate-200 px-4 py-2 text-sm font-bold text-slate-700">Clear All</button>
                                                     <button type="button" onclick="document.getElementById('permissions-role-{{ $role->id }}').close()" class="rounded-[2rem] bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:scale-105 hover:bg-slate-800">
                                                         Cancel
                                                     </button>
@@ -319,6 +328,13 @@
                     child.addEventListener('change', () => {
                         parent.checked = children.some((item) => item.checked);
                     });
+                });
+            });
+
+            document.querySelectorAll('[data-permission-toggle]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const checked = button.dataset.permissionToggle === 'all';
+                    button.closest('form').querySelectorAll('[data-parent-permission], [data-child-permission]').forEach((box) => box.checked = checked);
                 });
             });
         });

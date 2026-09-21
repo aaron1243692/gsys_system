@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\Gate::before(function (\App\Models\User $user): ?bool {
+            return $user->status === 'ACTIVE' && $user->hasRole('admin') ? true : null;
+        });
         \Illuminate\Support\Facades\View::composer('layouts.header', function ($view) {
             if (\Illuminate\Support\Facades\Auth::guard('web')->check() && ! array_key_exists('notifications', $view->getData())) {
                 $view->with('notifications', app(\App\Services\AdminDashboardData::class)->headerNotifications());

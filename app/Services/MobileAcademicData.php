@@ -9,7 +9,7 @@ class MobileAcademicData
 {
     public function studentSummary(Student $student): array
     {
-        $student->loadMissing('info.gradeLevel', 'info.academicYear', 'info.schoolClass');
+        $student->loadMissing('info.gradeLevel', 'info.academicYear', 'info.schoolClass.adviser');
         $info = $student->info;
         return [
             'id' => $student->id,
@@ -21,6 +21,7 @@ class MobileAcademicData
             'school_year' => $info?->academicYear ? ['id' => $info->academicYear->id, 'name' => $info->academicYear->name] : null,
             'grade_level' => $info?->gradeLevel?->name,
             'class' => $info?->schoolClass?->name,
+            'class_adviser' => $info?->schoolClass?->adviser?->name,
         ];
     }
 
@@ -96,7 +97,12 @@ class MobileAcademicData
                 'grade_level' => $class->gradeLevel?->name,
                 'school_year' => $class->academicYear?->name,
                 'adviser' => $class->adviser?->name,
-                'subjects' => $rows->values()->all(),
+                // A subject's quarter grades are always a JSON object. Casting here
+                // prevents PHP's empty array from changing the API type from {} to [].
+                'subjects' => $rows->values()->map(function ($row) {
+                    $row['grades'] = (object) $row['grades'];
+                    return $row;
+                })->all(),
             ];
         })->values()->all();
     }

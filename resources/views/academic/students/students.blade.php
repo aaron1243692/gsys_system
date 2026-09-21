@@ -58,7 +58,6 @@
                                 <th class="px-4 py-3 font-bold">Student</th>
                                 <th class="px-4 py-3 font-bold">Student No.</th>
                                 <th class="px-4 py-3 font-bold">Grade Level</th>
-                                <th class="px-4 py-3 font-bold">Track</th>
                                 <th class="px-4 py-3 font-bold">Class</th>
                                 <th class="px-4 py-3 font-bold">Portal Account</th>
                                 <th class="w-40 px-4 py-3 text-right font-bold">Action</th>
@@ -74,7 +73,6 @@
                                     </td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->student?->student_number ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->gradeLevel?->name ?? '-' }}</td>
-                                    <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->track?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">{{ $student->schoolClass?->name ?? '-' }}</td>
                                     <td class="px-4 py-2 font-semibold text-slate-700">@if($student->student?->portalAccount)<span class="font-bold text-emerald-700">LINKED</span> · {{ $student->student->portalAccount->status }}@else<span class="font-bold text-amber-700">NOT LINKED</span>@endif</td>
                                     <td class="px-4 py-2">
@@ -216,7 +214,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
+                                    <td colspan="6" class="px-4 py-10 text-center text-sm font-semibold text-slate-500">
                                         No academic students found.
                                     </td>
                                 </tr>

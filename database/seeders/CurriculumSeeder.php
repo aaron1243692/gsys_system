@@ -11,8 +11,6 @@ use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\SubjectCategory;
 use App\Models\Teacher;
-use App\Models\Track;
-use App\Models\TrackSubject;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -26,15 +24,13 @@ class CurriculumSeeder extends Seeder
     {
         $gradeLevels = $this->seedGradeLevels();
         $academicYears = $this->seedAcademicYears();
-        $tracks = $this->seedTracks();
-        $curriculums = $this->seedCurriculums($tracks);
+        $curriculums = $this->seedCurriculums();
         $this->seedBatches($curriculums);
         $categories = $this->seedSubjectCategories();
         $subjects = $this->seedSubjects($categories);
-        $classes = $this->seedClasses($gradeLevels, $academicYears, $tracks);
+        $classes = $this->seedClasses($gradeLevels, $academicYears);
         $this->seedClassSubjects($classes, $subjects);
         $this->seedTeacherAssignments($classes, $subjects);
-        $this->seedTrackSubjects($tracks, $gradeLevels, $subjects);
         $this->seedCurriculumSubjects($curriculums, $subjects);
     }
 
@@ -73,31 +69,16 @@ class CurriculumSeeder extends Seeder
         return $years;
     }
 
-    private function seedTracks(): array
-    {
-        if (! Schema::hasTable('track')) {
-            return [];
-        }
-
-        $tracks = [];
-        foreach (['STEM', 'ABM', 'HUMSS', 'GAS'] as $name) {
-            $tracks[$name] = Track::updateOrCreate(['name' => $name])->id;
-        }
-
-        return $tracks;
-    }
-
-    private function seedCurriculums(array $tracks): array
+    private function seedCurriculums(): array
     {
         if (! Schema::hasTable('curriculum')) {
             return [];
         }
 
         $curriculums = [];
-        foreach (['STEM' => 'Senior High STEM Curriculum', 'ABM' => 'Senior High ABM Curriculum'] as $track => $name) {
-            $curriculums[$track] = Curriculum::updateOrCreate(
-                ['name' => $name],
-                ['track_id' => $tracks[$track] ?? null]
+        foreach (['STEM' => 'Senior High STEM Curriculum', 'ABM' => 'Senior High ABM Curriculum'] as $key => $name) {
+            $curriculums[$key] = Curriculum::updateOrCreate(
+                ['name' => $name]
             )->id;
         }
 
@@ -179,7 +160,7 @@ class CurriculumSeeder extends Seeder
         return $subjects;
     }
 
-    private function seedClasses(array $gradeLevels, array $academicYears, array $tracks): array
+    private function seedClasses(array $gradeLevels, array $academicYears): array
     {
         if (! Schema::hasTable('class')) {
             return [];
@@ -188,16 +169,16 @@ class CurriculumSeeder extends Seeder
         $teachers = Teacher::query()->orderBy('id')->get()->values();
         $activeYear = $academicYears['2025-2026'] ?? array_values($academicYears)[0] ?? null;
         $classData = [
-            ['Grade 11 STEM A', 'Grade 11', 'STEM'],
-            ['Grade 11 STEM B', 'Grade 11', 'STEM'],
-            ['Grade 11 ABM A', 'Grade 11', 'ABM'],
-            ['Grade 12 STEM A', 'Grade 12', 'STEM'],
-            ['Grade 12 STEM B', 'Grade 12', 'STEM'],
-            ['Grade 12 ABM A', 'Grade 12', 'ABM'],
+            ['Grade 11 STEM A', 'Grade 11'],
+            ['Grade 11 STEM B', 'Grade 11'],
+            ['Grade 11 ABM A', 'Grade 11'],
+            ['Grade 12 STEM A', 'Grade 12'],
+            ['Grade 12 STEM B', 'Grade 12'],
+            ['Grade 12 ABM A', 'Grade 12'],
         ];
 
         $classes = [];
-        foreach ($classData as $index => [$name, $grade, $track]) {
+        foreach ($classData as $index => [$name, $grade]) {
             $existingClass = SchoolClass::query()->where('name', $name)->first();
             $usedAdviserIds = SchoolClass::query()
                 ->whereNotNull('adviser_id')
@@ -210,7 +191,6 @@ class CurriculumSeeder extends Seeder
                 ['name' => $name],
                 [
                     'grlvl_id' => $gradeLevels[$grade] ?? null,
-                    'track_id' => $tracks[$track] ?? null,
                     'acady_id' => $activeYear,
                     'adviser_id' => $teacher?->id,
                 ]
@@ -231,31 +211,6 @@ class CurriculumSeeder extends Seeder
                 ClassSubject::updateOrCreate([
                     'class_id' => $classId,
                     'sub_id' => $subjectId,
-                ]);
-            }
-        }
-    }
-
-    private function seedTrackSubjects(array $tracks, array $gradeLevels, array $subjects): void
-    {
-        if (! Schema::hasTable('tracksub')) {
-            return;
-        }
-
-        $stemSubjects = ['GMATH', 'STAT', 'ELS', 'PSCI', 'PRECAL', 'BCAL', 'BIO1', 'BIO2'];
-        $abmSubjects = ['GMATH', 'STAT', 'ENTREP', 'PR1', 'PR2', 'WI'];
-
-        foreach (['STEM' => $stemSubjects, 'ABM' => $abmSubjects] as $track => $codes) {
-            foreach ($codes as $code) {
-                if (! isset($tracks[$track], $subjects[$code])) {
-                    continue;
-                }
-
-                TrackSubject::updateOrCreate([
-                    'track_id' => $tracks[$track],
-                    'subject_id' => $subjects[$code],
-                ], [
-                    'grlvl_id' => $gradeLevels['Grade 11'] ?? null,
                 ]);
             }
         }

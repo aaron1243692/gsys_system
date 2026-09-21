@@ -59,6 +59,7 @@ class QuarterGradingTest extends TestCase
         });
         Schema::create('stinfo', function (Blueprint $t) {
             $t->increments('id'); $t->unsignedBigInteger('student_id'); $t->string('name');
+            $t->char('lrn', 12)->nullable()->unique();
             $t->date('birthdate')->nullable(); $t->string('gender')->nullable();
             $t->string('contact')->nullable(); $t->string('address')->nullable();
             $t->integer('class_id')->nullable(); $t->integer('acady_id')->nullable(); $t->integer('grlvl_id')->nullable();
@@ -132,8 +133,8 @@ class QuarterGradingTest extends TestCase
             $data = $this->registrationReturnPayload('return-'.$channel);
             if ($channel === 'web') {
                 $this->post(route('portal.register.store', ['portal' => 'student']), $data)
-                    ->assertRedirect(route('portal.login', ['portal' => 'student']))
-                    ->assertSessionHas('success');
+                    ->assertRedirect(route('portal.registration.success', ['portal' => 'student']))
+                    ->assertSessionHas('registration');
             } else {
                 $this->postJson('/api/student/register', $data)->assertCreated()
                     ->assertJsonPath('data.status', 'PENDING')
@@ -146,9 +147,10 @@ class QuarterGradingTest extends TestCase
             $this->assertSame('PENDING', $account->student->status);
             $this->assertGuest('student');
             if ($channel === 'web') {
-                $this->get(route('portal.login', ['portal' => 'student']))->assertOk()
+                $this->withSession(['registration' => ['portal' => 'student', 'number' => $number]])
+                    ->get(route('portal.registration.success', ['portal' => 'student']))->assertOk()
                     ->assertSee('Registration Submitted')->assertSee($number)
-                    ->assertSee('waiting for approval')->assertDontSee($data['password']);
+                    ->assertSee('Pending Approval')->assertDontSee($data['password']);
             }
             $this->post(route('portal.login.store', ['portal' => 'student']), $data)
                 ->assertRedirect()
@@ -193,6 +195,30 @@ class QuarterGradingTest extends TestCase
         $this->assertDatabaseMissing('students', ['username' => $data['username']]);
         $this->assertDatabaseMissing('student_accounts', ['username' => $data['username']]);
         $this->assertDatabaseMissing('stinfo', ['name' => $data['name']]);
+    }
+
+    public function test_every_student_registration_field_and_lrn_format_are_enforced_on_web_and_api(): void
+    {
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+        $required = ['name','username','email','password','password_confirmation','contact','address','lrn','birthdate','gender','grlvl_id','acady_id','terms','privacy'];
+        foreach ($required as $field) {
+            $data = $this->registrationReturnPayload('missing-'.$field);
+            unset($data[$field]);
+            $this->post(route('portal.register.store', ['portal' => 'student']), $data)->assertSessionHasErrors($field);
+            $this->postJson('/api/student/register', $data)->assertUnprocessable()->assertJsonValidationErrors($field);
+        }
+        foreach (['12345678901', '1234567890123', '12345678901A'] as $index => $lrn) {
+            $data = $this->registrationReturnPayload('bad-lrn-'.$index);
+            $data['lrn'] = $lrn;
+            $this->postJson('/api/student/register', $data)->assertUnprocessable()->assertJsonValidationErrors('lrn');
+        }
+        $valid = $this->registrationReturnPayload('valid-lrn');
+        $valid['lrn'] = '012345678901';
+        $this->postJson('/api/student/register', $valid)->assertCreated();
+        $duplicate = $this->registrationReturnPayload('duplicate-lrn');
+        $duplicate['lrn'] = $valid['lrn'];
+        $this->postJson('/api/student/register', $duplicate)->assertUnprocessable()
+            ->assertJsonValidationErrors('lrn')->assertJsonPath('errors.lrn.0', 'This LRN is already registered.');
     }
 
     public function test_registration_database_failure_rolls_back_and_stays_on_form(): void
@@ -240,6 +266,8 @@ class QuarterGradingTest extends TestCase
         return ['name' => 'Registration '.$username, 'username' => $username,
             'email' => $username.'@example.test', 'password' => 'test-password',
             'password_confirmation' => 'test-password', 'birthdate' => '2010-01-02',
+            'lrn' => substr(str_pad((string) abs(crc32($username)), 12, '0', STR_PAD_LEFT), -12),
+            'contact' => '09171234567', 'address' => 'Cauayan City',
             'gender' => 'Female', 'grlvl_id' => 1, 'acady_id' => 1, 'terms' => 1, 'privacy' => 1];
     }
 
@@ -792,6 +820,7 @@ class QuarterGradingTest extends TestCase
         $studentRegistration = $this->postJson('/api/student/register',[
             'username'=>'new-mobile-student','email'=>'new-mobile-student@example.test',
             'password'=>'test-password','password_confirmation'=>'test-password','name'=>'New Mobile Student',
+            'lrn'=>'123456789012','contact'=>'09171234567','address'=>'Cauayan City',
             'birthdate'=>'2010-01-02','gender'=>'Female','grlvl_id'=>1,'acady_id'=>1,
             'terms'=>true,'privacy'=>true,
         ])->assertCreated()->assertJsonPath('data.status','PENDING');
@@ -817,6 +846,7 @@ class QuarterGradingTest extends TestCase
         $this->post(route('portal.register.store', ['portal' => 'student']), [
             'name' => 'Juan Dela Cruz', 'username' => 'juan-portal', 'email' => 'juan@example.test',
             'password' => 'test-password', 'password_confirmation' => 'test-password',
+            'lrn' => '123456789013', 'contact' => '09171234567', 'address' => 'Cauayan City',
             'birthdate' => '2008-02-01', 'gender' => 'Male', 'grlvl_id' => 1, 'acady_id' => 1,
             'terms' => 1, 'privacy' => 1,
         ])->assertRedirect();

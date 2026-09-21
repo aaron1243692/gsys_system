@@ -5,9 +5,15 @@ namespace App\Services;
 use App\Models\{Guardian, Student, StudentAccount, StudentInfo};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class RegistrationService
 {
+    public function messages(): array
+    {
+        return ['lrn.unique' => 'This LRN is already registered.', 'lrn.digits' => 'The LRN must be exactly 12 digits.'];
+    }
+
     public function rules(string $role): array
     {
         $table = $role === 'student' ? 'student_accounts' : 'guardians';
@@ -16,12 +22,14 @@ class RegistrationService
             'username' => array_values(array_filter(['required', 'alpha_dash', 'max:100', 'unique:'.$table.',username', $role === 'student' ? 'unique:students,username' : null])),
             'email' => array_values(array_filter(['required', 'email', 'max:100', 'unique:'.$table.',email', $role === 'student' ? 'unique:students,email' : null])),
             'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
+            'password_confirmation' => ['required', 'string', 'same:password'],
             'name' => ['required', 'string', 'max:150'],
-            'contact' => ['nullable', 'string', 'max:100'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'contact' => [$role === 'student' ? 'required' : 'nullable', 'string', 'max:100'],
+            'address' => [$role === 'student' ? 'required' : 'nullable', 'string', 'max:255'],
             'terms' => ['accepted'],
             'privacy' => ['accepted'],
         ] + ($role === 'student' ? [
+            'lrn' => ['required', 'digits:12', Rule::unique('stinfo', 'lrn')],
             'birthdate' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:Female,Male'],
             'grlvl_id' => ['required', 'integer', 'exists:grlvl,id'],
@@ -42,6 +50,7 @@ class RegistrationService
 
                 StudentInfo::create([
                     'student_id' => $student->id,
+                    'lrn' => $data['lrn'],
                     'name' => $data['name'],
                     'birthdate' => $data['birthdate'],
                     'gender' => $data['gender'],

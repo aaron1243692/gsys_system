@@ -8,7 +8,6 @@ use App\Models\GradeLevel;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
-use App\Models\Track;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -24,7 +23,7 @@ class SchoolClassController extends Controller
         $academicYearId = $request->query('acady_id');
 
         $classes = SchoolClass::query()
-            ->with(['gradeLevel', 'track', 'academicYear', 'adviser', 'classSubjects.subject.teacher'])
+            ->with(['gradeLevel', 'academicYear', 'adviser', 'classSubjects.subject.teacher'])
             ->when($search !== '', fn ($query) => $query->where('name', 'like', "%{$search}%"))
             ->when($gradeLevelId, fn ($query) => $query->where('grlvl_id', $gradeLevelId))
             ->when($academicYearId, fn ($query) => $query->where('acady_id', $academicYearId))
@@ -36,7 +35,6 @@ class SchoolClassController extends Controller
             'classes' => $classes,
             'gradeLevels' => GradeLevel::query()->orderBy('name')->get(),
             'academicYears' => AcademicYear::query()->orderBy('year_from')->orderBy('name')->get(),
-            'tracks' => Track::query()->orderBy('name')->get(),
             'subjects' => Subject::query()->with('teacher')->orderBy('name')->get(),
             'teachers' => Teacher::query()->orderBy('name')->get(),
             'search' => $search,
@@ -58,6 +56,9 @@ class SchoolClassController extends Controller
 
     public function update(Request $request, SchoolClass $schoolClass): RedirectResponse
     {
+        if ((int) $request->input('adviser_id') !== (int) $schoolClass->adviser_id) {
+            abort_unless($request->user()->can($request->filled('adviser_id') ? 'class_advisers.assign' : 'class_advisers.remove'), 403);
+        }
         try {
             $validated = $this->validateClass($request, $schoolClass);
         } catch (ValidationException $exception) {
@@ -125,7 +126,6 @@ class SchoolClassController extends Controller
     {
         return $request->validate([
             'grlvl_id' => ['required', 'integer', 'exists:grlvl,id'],
-            'track_id' => ['nullable', 'integer', 'exists:track,id'],
             'acady_id' => ['required', 'integer', 'exists:acady,id'],
             'adviser_id' => [
                 'nullable',

@@ -21,7 +21,6 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TeacherLoadController;
-use App\Http\Controllers\TrackController;
 use App\Models\AcademicYear;
 use App\Models\GradeLevel;
 use App\Models\SchoolClass;
@@ -69,12 +68,6 @@ Route::middleware('auth')
         Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');
         Route::put('/subjects/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
         Route::delete('/subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
-        Route::get('/tracks', [TrackController::class, 'index'])->name('tracks');
-        Route::post('/tracks', [TrackController::class, 'store'])->name('tracks.store');
-        Route::put('/tracks/{track}', [TrackController::class, 'update'])->name('tracks.update');
-        Route::delete('/tracks/{track}', [TrackController::class, 'destroy'])->name('tracks.destroy');
-        Route::post('/tracks/{track}/subjects', [TrackController::class, 'storeSubject'])->name('tracks.subjects.store');
-        Route::delete('/track-subjects/{trackSubject}', [TrackController::class, 'destroySubject'])->name('tracks.subjects.destroy');
         Route::get('/subject-map', [CurriculumSubjectController::class, 'index'])->name('subject-map');
         Route::get('/subject-map/load', [CurriculumSubjectController::class, 'load'])->name('subject-map.load');
         Route::post('/subject-map/{curriculum}', [CurriculumSubjectController::class, 'store'])->name('subject-map.store');
@@ -149,11 +142,12 @@ Route::middleware('auth')
             $search = trim((string) request('search'));
 
             $students = StudentInfo::query()
-                ->with(['academicYear', 'gradeLevel', 'schoolClass.track', 'student.portalAccount'])
+                ->with(['academicYear', 'gradeLevel', 'schoolClass', 'student.portalAccount'])
                 ->where('admited', 1)
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('lrn', 'like', "%{$search}%")
                             ->orWhere('lrn', 'like', "%{$search}%")
                             ->orWhereHas('student', fn ($studentQuery) => $studentQuery->where('student_number', 'like', "%{$search}%"))
                             ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
@@ -245,11 +239,12 @@ Route::middleware('auth')
             $search = trim((string) request('search'));
 
             $students = StudentInfo::query()
-                ->with(['academicYear', 'gradeLevel', 'schoolClass.track', 'student.portalAccount'])
+                ->with(['academicYear', 'gradeLevel', 'schoolClass', 'student.portalAccount'])
                 ->pendingRegistration()
                 ->when($search !== '', function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('lrn', 'like', "%{$search}%")
                             ->orWhere('lrn', 'like', "%{$search}%")
                             ->orWhereHas('student', fn ($studentQuery) => $studentQuery->where('student_number', 'like', "%{$search}%"))
                             ->orWhereHas('gradeLevel', fn ($gradeLevelQuery) => $gradeLevelQuery->where('name', 'like', "%{$search}%"))
