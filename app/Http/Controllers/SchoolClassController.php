@@ -54,6 +54,13 @@ class SchoolClassController extends Controller
             ->with('success', 'Class added successfully.');
     }
 
+    public function show(SchoolClass $schoolClass): RedirectResponse
+    {
+        return redirect()
+            ->route('configuration.curriculum.class')
+            ->with('open_modal', 'edit-class-' . $schoolClass->id);
+    }
+
     public function update(Request $request, SchoolClass $schoolClass): RedirectResponse
     {
         if ((int) $request->input('adviser_id') !== (int) $schoolClass->adviser_id) {
@@ -69,9 +76,14 @@ class SchoolClassController extends Controller
                 ->with('open_modal', 'edit-class-' . $schoolClass->id);
         }
 
-        abort_if((int) $schoolClass->acady_id !== (int) $validated['acady_id']
-            && $schoolClass->classSubjects()->whereNotNull('teacher_id')->exists(), 409,
-            'Remove or reassign teaching loads before changing the class school year.');
+        if ((int) $schoolClass->acady_id !== (int) $validated['acady_id']
+            && $schoolClass->classSubjects()->whereNotNull('teacher_id')->exists()) {
+            return redirect()
+                ->back()
+                ->withErrors(['acady_id' => 'Remove or reassign teaching loads before changing the class school year.'])
+                ->withInput()
+                ->with('open_modal', 'edit-class-' . $schoolClass->id);
+        }
 
         $schoolClass->update($validated);
 

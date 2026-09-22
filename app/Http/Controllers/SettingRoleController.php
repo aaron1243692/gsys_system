@@ -6,6 +6,7 @@ use App\Models\Permission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
@@ -125,8 +126,9 @@ class SettingRoleController extends Controller
     public function destroy(Role $role): RedirectResponse
     {
         abort_if($role->name === 'admin', 403, 'The administrator role cannot be deleted.');
-        abort_if(\Illuminate\Support\Facades\DB::table('model_has_roles')->where('role_id', $role->id)->exists(), 409,
-            'Reassign users before deleting this role.');
+        if (\Illuminate\Support\Facades\DB::table('model_has_roles')->where('role_id', $role->id)->exists()) {
+            throw ValidationException::withMessages(['role' => 'Reassign users before deleting this role.']);
+        }
         $role->delete();
 
         return redirect()

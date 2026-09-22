@@ -56,6 +56,7 @@ Route::middleware('auth')
         Route::delete('/academic-year/{academicYear}', [AcademicYearController::class, 'destroy'])->name('academic-year.destroy');
         Route::get('/class', [SchoolClassController::class, 'index'])->name('class');
         Route::post('/class', [SchoolClassController::class, 'store'])->name('class.store');
+        Route::get('/class/{schoolClass}', [SchoolClassController::class, 'show'])->name('class.show');
         Route::put('/class/{schoolClass}', [SchoolClassController::class, 'update'])->name('class.update');
         Route::delete('/class/{schoolClass}', [SchoolClassController::class, 'destroy'])->name('class.destroy');
         Route::post('/class/{schoolClass}/subjects', [SchoolClassController::class, 'storeSubject'])->name('class.subjects.store');

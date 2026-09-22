@@ -60,7 +60,9 @@ class AccountReviewController extends Controller
                     throw ValidationException::withMessages(['action' => "Approve the student's pre-registration and complete the academic placement before activation."]);
             }
             $status=match($action){'activate'=>'ACTIVE','reject'=>'REJECTED','deactivate'=>'DEACTIVATED'};
-            abort_if($account->status===$status,409,'Account already has this status.');
+            if ($account->status === $status) {
+                throw ValidationException::withMessages(['action' => 'Account already has this status.']);
+            }
             $prefix=match($action){'activate'=>'activated','reject'=>'rejected','deactivate'=>'deactivated'};
             $account->forceFill(['status'=>$status,$prefix.'_by'=>$request->user('web')->id,$prefix.'_at'=>now()] + ($action==='reject'?['rejection_reason'=>$data['reason']]:[]))->save();
             if ($type === 'student' && $account->student) {

@@ -4,6 +4,7 @@ use App\Models\GradeSheet;
 use App\Services\{Audit,GradeWorkflow};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 class GradeApprovalController extends Controller
 {
     public function index(Request $request) {
@@ -20,7 +21,9 @@ class GradeApprovalController extends Controller
         abort_unless($request->user('web')->can($data['action'] === 'approve' ? 'grades.approve' : 'grades.return'), 403);
         DB::transaction(function() use($request,$sheet,$workflow,$data) {
             $sheet=GradeSheet::whereKey($sheet->id)->lockForUpdate()->firstOrFail();
-            abort_unless($sheet->status==='SUBMITTED',409,'Only a submitted sheet can be reviewed.');
+            if ($sheet->status !== 'SUBMITTED') {
+                throw ValidationException::withMessages(['action' => 'Only a submitted sheet can be reviewed.']);
+            }
             if($data['action']==='approve') {
                 $workflow->assertComplete($sheet);
                 $sheet->fill(['status'=>'APPROVED','approved_by'=>$request->user('web')->id,'approved_at'=>now()]);

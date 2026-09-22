@@ -2,9 +2,7 @@
     $sidebarLinkClass = fn (bool $active) => ($active
         ? 'bg-white text-blue-950 shadow-lg shadow-blue-950/20'
         : 'text-blue-100 hover:bg-white/10 hover:text-white')
-        . ' flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-decoration-none transition-colors';
-
-    $sidebarIconClass = fn (bool $active) => 'h-5 w-5 shrink-0' . ($active ? '' : ' brightness-0 invert opacity-80');
+        . ' flex items-center rounded-lg px-3 py-2.5 text-sm font-semibold text-decoration-none transition-colors';
 
     $isConfigurationGroup = request()->routeIs('configuration.curriculum.*', 'configuration.grade-encoding-schedule');
     $isAcademicGroup = request()->routeIs('academic.*');
@@ -42,7 +40,6 @@
         <p class="mb-2 px-3 text-xs font-bold uppercase tracking-widest text-blue-300">Pages</p>
 
         <a href="{{ route('dashboard') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('dashboard')) }}" aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}">
-            <img src="{{ asset('icons/list.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('dashboard')) }}">
             <span>Dashboard</span>
         </a>
 
@@ -52,26 +49,21 @@
         </button>
         <div id="sidebar-configuration-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             @if(auth()->user()?->hasRole('admin'))
-            <a href="{{ route('configuration.grade-encoding-schedule') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.grade-encoding-schedule')) }}"><img src="{{ asset('icons/schedule.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.grade-encoding-schedule')) }}"><span>Grade Encoding Schedule</span></a>
+            <a href="{{ route('configuration.grade-encoding-schedule') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.grade-encoding-schedule')) }}"><span>Grade Encoding Schedule</span></a>
             @endif
             <a href="{{ route('configuration.curriculum.grade-level') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.grade-level')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.grade-level') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.grade-level')) }}">
                 <span>Grade Level</span>
             </a>
             <a href="{{ route('configuration.curriculum.academic-year') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.academic-year')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.academic-year') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.academic-year')) }}">
                 <span>Academic Year</span>
             </a>
             <a href="{{ route('configuration.curriculum.class') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.class')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.class') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.class')) }}">
                 <span>Class</span>
             </a>
             <a href="{{ route('configuration.curriculum.subject-category') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.subject-category')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.subject-category') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.subject-category')) }}">
                 <span>Subject Category</span>
             </a>
             <a href="{{ route('configuration.curriculum.subjects') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.curriculum.subjects')) }}" aria-current="{{ request()->routeIs('configuration.curriculum.subjects') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/crown.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.curriculum.subjects')) }}">
                 <span>Subjects</span>
             </a>
         </div>
@@ -82,23 +74,18 @@
         </button>
         <div id="sidebar-academic-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('academic.schedule-load.class-schedule') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.schedule-load.class-schedule')) }}" aria-current="{{ request()->routeIs('academic.schedule-load.class-schedule') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/schedule.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.schedule-load.class-schedule')) }}">
                 <span>Class Schedule</span>
             </a>
             <a href="{{ route('academic.schedule-load.teacher-load') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.schedule-load.teacher-load')) }}" aria-current="{{ request()->routeIs('academic.schedule-load.teacher-load') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/emsched.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.schedule-load.teacher-load')) }}">
                 <span>Teacher Load</span>
             </a>
             <a href="{{ route('academic.schedule-load.rooms') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.schedule-load.rooms')) }}" aria-current="{{ request()->routeIs('academic.schedule-load.rooms') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/higher-education.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.schedule-load.rooms')) }}">
                 <span>Rooms</span>
             </a>
             <a href="{{ route('academic.students.index') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.students.index')) }}" aria-current="{{ request()->routeIs('academic.students.index') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/backpack.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.students.index')) }}">
                 <span>Students</span>
             </a>
             <a href="{{ route('academic.students.pre-enlistment') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('academic.students.pre-enlistment')) }}" aria-current="{{ request()->routeIs('academic.students.pre-enlistment') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/academic-success.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('academic.students.pre-enlistment')) }}">
                 <span>Pre-Registration</span>
             </a>
         </div>
@@ -109,19 +96,15 @@
         </button>
         <div id="sidebar-reports-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('report.performance.top-student') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('report.performance.top-student')) }}" aria-current="{{ request()->routeIs('report.performance.top-student') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/print.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('report.performance.top-student')) }}">
                 <span>Top Student</span>
             </a>
             <a href="{{ route('report.performance.top-class') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('report.performance.top-class')) }}" aria-current="{{ request()->routeIs('report.performance.top-class') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/print.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('report.performance.top-class')) }}">
                 <span>Top Class</span>
             </a>
             <a href="{{ route('report.grades') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('report.grades')) }}" aria-current="{{ request()->routeIs('report.grades') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/book.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('report.grades')) }}">
                 <span>Grades</span>
             </a>
             <a href="{{ route('report.grades.approval') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('report.grades.approval')) }}" aria-current="{{ request()->routeIs('report.grades.approval') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/pencil.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('report.grades.approval')) }}">
                 <span>Approval</span>
             </a>
         </div>
@@ -132,19 +115,15 @@
         </button>
         <div id="sidebar-accounts-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('configuration.accounts.registrations') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.registrations')) }}" aria-current="{{ request()->routeIs('configuration.accounts.registrations') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/list.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.registrations')) }}">
                 <span>Account Registrations</span>
             </a>
             <a href="{{ route('configuration.accounts.students') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.students')) }}" aria-current="{{ request()->routeIs('configuration.accounts.students') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/children.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.students')) }}">
                 <span>Students</span>
             </a>
             <a href="{{ route('configuration.accounts.guardians') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.guardians')) }}" aria-current="{{ request()->routeIs('configuration.accounts.guardians') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/adult.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.guardians')) }}">
                 <span>Guardians</span>
             </a>
             <a href="{{ route('configuration.accounts.teachers') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.accounts.teachers')) }}" aria-current="{{ request()->routeIs('configuration.accounts.teachers') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/employee.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.accounts.teachers')) }}">
                 <span>Teachers</span>
             </a>
         </div>
@@ -155,11 +134,9 @@
         </button>
         <div id="sidebar-setting-menu" data-sidebar-group-menu class="flex flex-col gap-1">
             <a href="{{ route('configuration.setting.users') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.setting.users')) }}" aria-current="{{ request()->routeIs('configuration.setting.users') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/user.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.setting.users')) }}">
                 <span>Users</span>
             </a>
             <a href="{{ route('configuration.setting.roles') }}" data-sidebar-link class="{{ $sidebarLinkClass(request()->routeIs('configuration.setting.roles')) }}" aria-current="{{ request()->routeIs('configuration.setting.roles') ? 'page' : 'false' }}">
-                <img src="{{ asset('icons/key.png') }}" alt="" class="{{ $sidebarIconClass(request()->routeIs('configuration.setting.roles')) }}">
                 <span>Roles</span>
             </a>
         </div>
